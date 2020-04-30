@@ -10,6 +10,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import HeadsetIcon from '@material-ui/icons/Headset';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 
@@ -22,45 +23,24 @@ const useStyles = makeStyles((theme) => ({
   },
   wideButton: {
     fontSize: '48px'
+  },
+  gridContainer: {
+    display:'flex',
+    padding: '10px',
+    justifyContent:'space-evenly',
+    alignItems:'center'
   }
 }));
 
-export default function NewReviewForm() {
+export default function ReviewStep1() {
   const classes = useStyles();
   return (
     <React.Fragment>
+         <TextField id="standard-basic" label="Merkki" />
+         <TextField id="standard-basic" label="Malli" />
+         <TextField id="standard-basic" label="Tarkenne" placeholder="Esim. tuotekoodi" />
+         <TextField id="standard-basic" label="EAN-koodi" placeholder="0000000000000" />
 
-      <Grid container spacing={1}>
-        <Grid item xs={2} sm={2}>
-          <Button
-          variant="outlined"
-          color="primary"
-          size="large"
-          startIcon={<PhoneIphoneIcon style={{ fontSize: 40 }} />}>
-          Puhelimet
-        </Button>
-        </Grid>
-        <Grid item xs={2} sm={2}>
-          <Button
-          variant="outlined"
-          color="primary"
-          size="large"
-          startIcon={<HeadsetIcon style={{ fontSize: 40 }} />}>
-          Audio
-        </Button>
-        </Grid>
-        <Grid item xs={2} sm={2}>
-          <Button
-          variant="outlined"
-          color="primary"
-          size="large"
-          startIcon={<PhotoCameraIcon style={{ fontSize: 40 }} />}>
-          Kamerat
-        </Button>
-        </Grid>
-        
-       
-      </Grid>
     </React.Fragment>
   );
 }

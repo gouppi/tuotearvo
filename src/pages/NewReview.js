@@ -7,7 +7,10 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
-import NewReviewForm from '../components/NewReviewForm';
+import ReviewStep0 from '../components/NewReview/ReviewStep0';
+import ReviewStep1 from '../components/NewReview/ReviewStep1';
+import ReviewStep2 from '../components/NewReview/ReviewStep2';
+
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -39,11 +42,11 @@ const steps = ['Valitse tuotekategoria', 'Anna tuotetiedot', 'Kirjoita arvostelu
 function getStepContent(step) {
     switch (step) {
       case 0:
-        return <NewReviewForm/>;
+        return <ReviewStep0/>;
       case 1:
-        return <NewReviewForm/>;
+        return <ReviewStep1/>;
       case 2:
-        return <NewReviewForm/>;
+        return <ReviewStep2/>;
       default:
         throw new Error('Unknown step');
     }
