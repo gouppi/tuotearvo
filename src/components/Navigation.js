@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     kontti: {
-        padding:0
+        
     },
       toolbar: {
         display:'flex',
