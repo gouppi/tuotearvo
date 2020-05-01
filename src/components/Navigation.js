@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
       link: {
         margin: theme.spacing(1, 1.5),
       },
+      lastlink: {
+        margin: theme.spacing(1, 0),
+      },
       navlink: {
         marginRight: theme.spacing(5.5),
       },
@@ -48,7 +51,7 @@ export default function Navigation() {
         <React.Fragment>
             <Container maxWidth="lg" className={classes.kontti}>
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
-                    <ToolBar className={classes.toolbar}>
+                    <ToolBar className={classes.toolbar} disableGutters={true}>
                         <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         TUOTEARVOSTELUT
                         </Typography>
@@ -67,7 +70,7 @@ export default function Navigation() {
                             <Button href="#" color="secondary" variant="contained" className={classes.link}>
                                 Rekisteröidy
                             </Button>
-                            <Button href="#" color="primary" variant="contained" className={classes.link}>
+                            <Button href="#" color="primary" variant="contained" className={classes.lastlink}>
                                 Kirjaudu sisään
                             </Button>
                         </div>
@@ -77,7 +80,7 @@ export default function Navigation() {
         <Divider />
         <Container maxWidth="lg" className={classes.kontti}>
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
-                    <ToolBar variant="dense" className={classes.toolbar}>
+                    <ToolBar variant="dense" className={classes.toolbar} disableGutters={true}>
                         <nav>
                             <Link variant="button" color="textPrimary" href="#" className={classes.navlink}>
                             Koti

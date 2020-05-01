@@ -17,6 +17,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: '10px'
+    },
     layout: {
         padding: '10px',
         width: 'auto',
