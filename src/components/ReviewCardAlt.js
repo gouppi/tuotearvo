@@ -38,7 +38,7 @@ export default function ImgMediaCard(props) {
             title="Contemplative Reptile"
             />
             <CardContent>
-            <Typography style={{fontWeight:100,fontSize:'1rem',overflow:'hidden', display:'-webkit-box', '-webkit-box-orient':'vertical', '-webkit-line-clamp':'2', textOverflow:'ellipsis' }} gutterBottom variant="h6">
+            <Typography style={{fontWeight:100,fontSize:'1rem',overflow:'hidden', display:'-webkit-box', 'WebkitBoxOrient':'vertical', 'WebkitLineClamp':'2', textOverflow:'ellipsis' }} gutterBottom variant="h6">
                 {post.title}
             </Typography>
                 <Typography variant="subtitle2" component="p">30.4.2020 klo 20:33:14</Typography>

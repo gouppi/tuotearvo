@@ -21,7 +21,7 @@ export default function SingleReview(props) {
         <Grid item>
           <Avatar alt="Lorem Ipsum" src={imgLink} />
         </Grid>
-        <Grid justifyContent="left" item xs zeroMinWidth>
+        <Grid item xs zeroMinWidth>
         <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
               {review.date ? review.date : 'lisätty 15 minuuttia sitten'}
            </Typography>

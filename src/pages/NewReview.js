@@ -1,11 +1,6 @@
-import React, {useState} from 'react'
-import Navigation from '../components/Navigation';
+import React from 'react'
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import {makeStyles} from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
 import ReviewStep0 from '../components/NewReview/ReviewStep0';
 import ReviewStep1 from '../components/NewReview/ReviewStep1';

@@ -1,5 +1,4 @@
 import React from 'react'
-import Navigation from '../components/Navigation';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
@@ -12,24 +11,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Badge from '@material-ui/core/Badge';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
+import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route} from 'react-router-dom';
 
-import SingleReviewComponent from '../components/SingleReview';
-function createData(key, value) {
-    return { key,value};
-  }
+import SingleReviewComponent from '../components/SingleReview/SingleReview';
+import TechnicalInfo from '../components/SingleReview/TechnicalTable';
+
   
-  const rows = [
-    createData('Valmistaja', 'Apple'),
-    createData('Tuotekoodi', 'MRXJ2ZM/A / MRXJ2'),
-    createData('EAN', '0190198764829'),
-    createData('UNSPSC-koodi', '43191609'),
-    createData('PID', '539585')
-  ];
+ 
 
   const superLong = `Käytän Airpodeja monipuolisesti podcast-, ääni-, puhelin-, videoneuvottelu- ja musiikkikäytössä. Ne helpottavat etätyötä erinomaisesti ja voin entistä paremmin kommunikoida ja kuunnella missä tilanteissa vain.\n\n
   Entuudestaan minulla on langattomat Bose Soundsport korvanapit ja on ollut myös Airpodit (ver 1).
@@ -99,8 +87,11 @@ const AntTabs = withStyles({
 export default function SingleReview() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    
+    let { path, url } = useRouteMatch();
+
+
     const handleChange = (event, newValue) => {
+        console.log("Change event");
         setValue(newValue);
       };
 
@@ -110,16 +101,9 @@ export default function SingleReview() {
         <React.Fragment>
             
             <Container maxWidth="md"  >
-            <CardMedia
-                        style={{marginTop:'10px', maxWidth:1200, margin: '5px auto'}}
-                        component="img"
-                        alt="Contemplative Reptile"
-                        height="auto"
-                        image="https://i.picsum.photos/id/1021/800/160.jpg"
-                        title="Contemplative Reptile"
-                        />
+
                 <Paper variant='outlined' square className={classes.rootContainer}>
-                <Grid container spacing={2} bottomGutters direction="row">
+                <Grid container spacing={2} direction="row">
                     <Grid item xs={12}>
                         <Typography style={{fontWeight:100}} variant="h5">Apple AirPods ja langaton latauskotelo -nappikuulokkeet, MRXJ2</Typography>
                         </Grid>
@@ -150,34 +134,25 @@ export default function SingleReview() {
                     <Grid item xs={12} sm={6} lg={6}>
                         <div className={classes.root}>
                             <div className={classes.demo1}>
-                                <AntTabs centered value={value} onChange={handleChange} aria-label="ant example">
-                                <AntTab label="Tuotetiedot" />
-                                <AntTab label="Arvostelut">
-                                    </AntTab>
-                                <AntTab label="Saatavilla kaupoista" />
-                                </AntTabs>
+                                <BrowserRouter>
+                                  <AntTabs centered value={value} onChange={handleChange} aria-label="ant example">
+                                    <AntTab component={Link} to={`${url}/tiedot`} label="Tuotetiedot" />
+                                    <AntTab component={Link} to={`${url}/arvostelut`}  label="Arvostelut" />
+                                    <AntTab component={Link} to={`${url}/kaupat`} label="Saatavilla kaupoista" />
+                                  </AntTabs>
+
+                                  <Switch>
+                                   
+                                    <Route path={`${path}/:subPage`}>
+                                      <SubPage />
+                                    </Route>
+                                  </Switch>
+                                </BrowserRouter>
+                                  
                                 <Typography className={classes.padding} />
                             </div>
                         </div>
-                        <TableContainer component={Paper}>
-                            <Table className={classes.table} aria-label="simple table">
-                                <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.key}>
-                                    <TableCell style={{fontStyle:'italic'}} component="th" scope="row">
-                                        {row.key}
-                                    </TableCell>
-                                    <TableCell align="left">{row.value}</TableCell>
-                                    </TableRow>
-                                ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-
-                        <h3>Tykätyin arvostelu</h3>
-                        <SingleReviewComponent isReviewed text={bestReview} score={5} date="3. Heinäkuuta 2019"/>
-                        <h3>Viimeisin arvostelu</h3>
-                        <SingleReviewComponent/>
+                        
                     </Grid>
                 </Grid>
 
@@ -202,4 +177,46 @@ export default function SingleReview() {
 
         </React.Fragment>
     );
+}
+
+function Topic() {
+  // The <Route> that rendered this component has a
+  // path of `/topics/:topicId`. The `:topicId` portion
+  // of the URL indicates a placeholder that we can
+  // get from `useParams()`.
+  let { topicId } = useParams();
+
+  return (
+    <div>
+      <h3>{topicId}</h3>
+    </div>
+  );
+}
+
+
+function SubPage() {
+  // The <Route> that rendered this component has a
+  // path of `/topics/:subPage`. The `:subPage` portion
+  // of the URL indicates a placeholder that we can
+  // get from `useParams()`.
+  const bestReview = "Vuoden aikana n. 1 000 euroa Bluetooth-kuulokkeisiin sijoittaneena on pakko tunnustaa, että nämä ovat loppujen lopuksi parhaat...";
+
+  let { subPage } = useParams();
+ 
+  let renderThis = null;
+  if (subPage === 'tiedot') {
+    renderThis = <TechnicalInfo/>
+  }
+  else if (subPage === 'arvostelut') {
+    renderThis = (<React.Fragment>
+      <h3>Tykätyin arvostelu</h3>
+      <SingleReviewComponent isReviewed text={bestReview} score={5} date="3. Heinäkuuta 2019"/>
+      <h3>Viimeisin arvostelu</h3>
+      <SingleReviewComponent/>
+    </React.Fragment>)
+  } else {
+    renderThis = <h3>Renderöi tässä kauppoja</h3>
+  }
+
+  return renderThis;
 }
