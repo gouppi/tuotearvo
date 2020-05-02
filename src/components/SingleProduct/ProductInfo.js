@@ -18,14 +18,14 @@ const rows = [
     createData('PID', '539585')
   ];
 
-export default function TechnicalTable() {
+export default function ProductInfo() {
     return (
         <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+            <Table size="small"aria-label="simple table">
                 <TableBody>
                 {rows.map((row) => (
                     <TableRow key={row.key}>
-                    <TableCell style={{fontStyle:'italic'}} component="th" scope="row">
+                    <TableCell  component="th" scope="row">
                         {row.key}
                     </TableCell>
                     <TableCell align="left">{row.value}</TableCell>

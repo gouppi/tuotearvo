@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
         
       },
       toolbarTitle: {
-          
+          textDecoration:'none'
       },
       link: {
         margin: theme.spacing(1, 1.5),
@@ -50,12 +50,16 @@ export default function Navigation() {
     const classes = useStyles();
     return (
         <React.Fragment>
+            <Container style={{backgroundColor:'white'}} maxWidth="disabled" disableGutters>
             <Container maxWidth="lg" className={classes.kontti}>
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
                     <ToolBar className={classes.toolbar} disableGutters={true}>
-                        <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                        TUOTEARVOSTELUT
-                        </Typography>
+                        
+                        <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
+                            <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
+                                TUOTEARVOSTELUT
+                            </Typography>
+                        </LinkUI>
                         <FormControl className={classes.searchBox}>
                             <Input placeholder="Etsi arvosteluja tuotteille"
                             id="input-with-icon-adornment"
@@ -86,13 +90,13 @@ export default function Navigation() {
                             <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
                                 Koti
                             </LinkUI>
-                            <LinkUI component={Link} to="/arvostelut" variant="button" color="textPrimary" className={classes.navlink}>
+                            <LinkUI component={Link} to="/reviews" variant="button" color="textPrimary" className={classes.navlink}>
                                 Arvostelut
                             </LinkUI>
-                            <LinkUI component={Link} variant="button" to="/yksittainen" color="textPrimary" className={classes.navlink}>
+                            <LinkUI component={Link} variant="button" to="/product/h3x12142" color="textPrimary" className={classes.navlink}>
                                 Tuotesivu
                             </LinkUI> 
-                            <LinkUI component={Link} variant="button" to="/luo" color="textPrimary" className={classes.navlink}>
+                            <LinkUI component={Link} variant="button" to="/create" color="textPrimary" className={classes.navlink}>
                                 Lisää Arvostelu
                             </LinkUI>                    
                         </nav>                     
@@ -100,6 +104,7 @@ export default function Navigation() {
                 </AppBar>
             </Container>
         <Divider />
+        </Container>
         </React.Fragment>
     );
 }

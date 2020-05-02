@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import FormatQuote from '@material-ui/icons/FormatQuote';
 import Container from '@material-ui/core/Container';
+import LinkUI from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 const useStyles = makeStyles({
   root: {
     //maxWidth: 250,
@@ -28,6 +30,7 @@ export default function ImgMediaCard(props) {
 
   return (
     <Grid item xs={6} md={3}>
+        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${post.id}/stores`}>
         <Card className={classes.root}>
         <CardActionArea>
             <CardMedia
@@ -49,6 +52,7 @@ export default function ImgMediaCard(props) {
             </CardContent>
         </CardActionArea>
         </Card>
+        </LinkUI>
     </Grid>
   );
 

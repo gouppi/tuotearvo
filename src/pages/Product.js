@@ -11,10 +11,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Badge from '@material-ui/core/Badge';
 
-import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route,Redirect} from 'react-router-dom';
 
-import SingleReviewComponent from '../components/SingleReview/SingleReview';
-import TechnicalInfo from '../components/SingleReview/TechnicalTable';
+import SingleReviewComponent from '../components/Review/SingleReview';
+import ProductInfo from '../components/SingleProduct/ProductInfo';
+import ProductStores from '../components/SingleProduct/ProductStores';
 
   
  
@@ -55,7 +56,6 @@ const AntTabs = withStyles({
       textTransform: 'none',
       minWidth: 72,
       fontWeight: theme.typography.fontWeightRegular,
-      marginRight: theme.spacing(4),
       fontFamily: [
         '-apple-system',
         'BlinkMacSystemFont',
@@ -84,10 +84,14 @@ const AntTabs = withStyles({
   }))((props) => <Tab disableRipple {...props} />);
 
 
-export default function SingleReview() {
+export default function Product() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     let { path, url } = useRouteMatch();
+    let {productId} = useParams();
+
+    console.log("path: " + path, "url:" + url);
+    
 
 
     const handleChange = (event, newValue) => {
@@ -95,19 +99,14 @@ export default function SingleReview() {
         setValue(newValue);
       };
 
-    const bestReview = "Vuoden aikana n. 1 000 euroa Bluetooth-kuulokkeisiin sijoittaneena on pakko tunnustaa, että nämä ovat loppujen lopuksi parhaat...";
-
     return (
         <React.Fragment>
-            
-            <Container maxWidth="md"  >
-
                 <Paper variant='outlined' square className={classes.rootContainer}>
                 <Grid container spacing={2} direction="row">
                     <Grid item xs={12}>
-                        <Typography style={{fontWeight:100}} variant="h5">Apple AirPods ja langaton latauskotelo -nappikuulokkeet, MRXJ2</Typography>
+                        <Typography style={{fontWeight:100}} variant="h5">Apple AirPods ja langaton latauskotelo -nappikuulokkeet {productId}</Typography>
                         </Grid>
-                    <Grid item xs={12} sm={6} lg={6}>
+                    <Grid item xs={12} sm={5} lg={5}>
                     <Box className="foobar">
                         <Badge anchorOrigin={{vertical:'bottom', horizontal:'right'}} badgeContent={3.4} color="secondary">
                         <Rating
@@ -125,26 +124,31 @@ export default function SingleReview() {
                     <CardMedia
                         component="img"
                         alt="Contemplative Reptile"
-                        height="auto"
+                        style={{maxWidth:'128px'}}
+                        width="auto"
                         image="https://www.data-systems.fi/wp-content/uploads/2019/08/69839999_1496498747.jpeg"
                         title="Contemplative Reptile"
                         />
 
                     </Grid>
-                    <Grid item xs={12} sm={6} lg={6}>
+                    <Grid item xs={12} sm={7} lg={7}>
                         <div className={classes.root}>
                             <div className={classes.demo1}>
                                 <BrowserRouter>
-                                  <AntTabs centered value={value} onChange={handleChange} aria-label="ant example">
-                                    <AntTab component={Link} to={`${url}/tiedot`} label="Tuotetiedot" />
-                                    <AntTab component={Link} to={`${url}/arvostelut`}  label="Arvostelut" />
-                                    <AntTab component={Link} to={`${url}/kaupat`} label="Saatavilla kaupoista" />
+                                  <AntTabs variant="fullWidth" centered value={value} onChange={handleChange} aria-label="ant example">
+                                    <AntTab component={Link} to={`${url}/stores`} label="Saatavilla kaupoista" />
+                                    <AntTab component={Link} to={`${url}/info`}  label="Tuotetiedot" />
                                   </AntTabs>
 
                                   <Switch>
-                                   
-                                    <Route path={`${path}/:subPage`}>
-                                      <SubPage />
+                                    <Route exact path={`${url}`}>
+                                      <Redirect to={`${url}/stores`}></Redirect>
+                                    </Route>
+                                    <Route strict path={`${url}/:subPage`}>
+                                      <SubPage baseUrl={url} setState={setValue} />
+                                    </Route>
+                                    <Route strict path={`${url}`}>
+                                      <Redirect from={`${url}/*`} to={`${url}/stores`} />
                                     </Route>
                                   </Switch>
                                 </BrowserRouter>
@@ -158,7 +162,7 @@ export default function SingleReview() {
 
                 <Grid container spacing={2} direction="row">
                     <Grid item xs={12} >
-                        <Typography style={{fontWeight:100}} variant="h5">Arvostelut</Typography>
+                        <Typography style={{fontWeight:100}} variant="h5">123 Tuotearvostelua </Typography>
                     </Grid>
                     <Grid item xs={12} >
                         <Paper elevation={3} style={{paddingBottom:'5px'}}>
@@ -173,50 +177,35 @@ export default function SingleReview() {
                 </Grid>
 
                 </Paper>    
-            </Container>
 
         </React.Fragment>
     );
 }
 
-function Topic() {
-  // The <Route> that rendered this component has a
-  // path of `/topics/:topicId`. The `:topicId` portion
-  // of the URL indicates a placeholder that we can
-  // get from `useParams()`.
-  let { topicId } = useParams();
-
-  return (
-    <div>
-      <h3>{topicId}</h3>
-    </div>
-  );
-}
-
-
-function SubPage() {
-  // The <Route> that rendered this component has a
-  // path of `/topics/:subPage`. The `:subPage` portion
-  // of the URL indicates a placeholder that we can
-  // get from `useParams()`.
-  const bestReview = "Vuoden aikana n. 1 000 euroa Bluetooth-kuulokkeisiin sijoittaneena on pakko tunnustaa, että nämä ovat loppujen lopuksi parhaat...";
-
+function SubPage(props) {
   let { subPage } = useParams();
- 
-  let renderThis = null;
-  if (subPage === 'tiedot') {
-    renderThis = <TechnicalInfo/>
-  }
-  else if (subPage === 'arvostelut') {
-    renderThis = (<React.Fragment>
-      <h3>Tykätyin arvostelu</h3>
-      <SingleReviewComponent isReviewed text={bestReview} score={5} date="3. Heinäkuuta 2019"/>
-      <h3>Viimeisin arvostelu</h3>
-      <SingleReviewComponent/>
-    </React.Fragment>)
-  } else {
-    renderThis = <h3>Renderöi tässä kauppoja</h3>
+  // TODO: this works, but e.g. /products/PRODUCT_ID/stores/foo/bar/asdfasdf <- still works. Would be nice to fix.
+  let {baseUrl, setState} = props;
+  console.log("Ollaan SubPage - funkkarissa, baseUrl on: " + baseUrl);
+
+  let routes = {
+  'info': {
+    'page': <ProductInfo/>, 
+    'index':1
+  },
+    'stores': {
+      'page': <ProductStores />,
+      'index': 0
+    }
+  };
+
+  let returnable = null;
+  if (routes.hasOwnProperty(subPage)) {
+    setState(routes[subPage].index);
+    returnable = routes[subPage].page;
   }
 
-  return renderThis;
+  return returnable ? returnable : <Redirect from={`/${baseUrl}/*`} to={`reviews`} />
+
+
 }
