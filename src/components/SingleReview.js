@@ -15,6 +15,7 @@ const imgLink =
 export default function SingleReview(props) {
     const review = {...props};
     const defaultText = "Pettymys oli melkoinen, kun 3 viikon käytön jälkeen toinen meni tukkoon. Putsattiin applella...";
+    
     return (
         <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
         <Grid item>

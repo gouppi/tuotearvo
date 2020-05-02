@@ -69,7 +69,6 @@ export default function NewReview() {
 
     return (
         <React.Fragment>
-            <Navigation></Navigation>
             <main className={classes.layout}>
 
                 <Paper className={classes.paper}>

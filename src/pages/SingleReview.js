@@ -108,8 +108,7 @@ export default function SingleReview() {
 
     return (
         <React.Fragment>
-            <Navigation></Navigation>
-
+            
             <Container maxWidth="md"  >
             <CardMedia
                         style={{marginTop:'10px', maxWidth:1200, margin: '5px auto'}}

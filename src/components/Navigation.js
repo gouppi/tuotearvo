@@ -2,7 +2,8 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import LinkUI from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Search from '@material-ui/icons/Search';
@@ -82,15 +83,18 @@ export default function Navigation() {
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
                     <ToolBar variant="dense" className={classes.toolbar} disableGutters={true}>
                         <nav>
-                            <Link variant="button" color="textPrimary" href="#" className={classes.navlink}>
-                            Koti
-                            </Link>
-                            <Link variant="button" color="textPrimary" href="#" className={classes.navlink}>
-                            Arvostelut
-                            </Link>
-                            <Link variant="button" color="secondary" href="#" className={classes.navlink}>
-                            Lisää Arvostelu
-                            </Link>                    
+                            <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
+                                Koti
+                            </LinkUI>
+                            <LinkUI component={Link} to="/arvostelut" variant="button" color="textPrimary" className={classes.navlink}>
+                                Arvostelut
+                            </LinkUI>
+                            <LinkUI component={Link} variant="button" to="/yksittainen" color="textPrimary" className={classes.navlink}>
+                                Tuotesivu
+                            </LinkUI> 
+                            <LinkUI component={Link} variant="button" to="/luo" color="textPrimary" className={classes.navlink}>
+                                Lisää Arvostelu
+                            </LinkUI>                    
                         </nav>                     
                     </ToolBar>
                 </AppBar>

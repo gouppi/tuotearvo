@@ -81,14 +81,13 @@ export default function Reviews() {
     return (
         <React.Fragment>
           <CssBaseline />
-          <Navigation></Navigation>
-
-          <Container maxWidth="lg"  className={classes.rootContainer}>
+          
+          <Container maxWidth="md"  className={classes.rootContainer}>
                 <main>
                 <Typography variant="h6" color="textPrimary">
   Viimeisimmät arvostelut
 </Typography>
-              <Grid container spacing={3}>
+              <Grid container spacing={4}>
                 {featuredPosts.map((post) => (
                   <ReviewCardAlt key={post.title} post={post} />
                 ))}
