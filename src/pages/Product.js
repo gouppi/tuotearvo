@@ -124,7 +124,7 @@ export default function Product() {
                     <CardMedia
                         component="img"
                         alt="Contemplative Reptile"
-                        style={{maxWidth:'128px'}}
+                        style={{maxWidth:'200px'}}
                         width="auto"
                         image="https://www.data-systems.fi/wp-content/uploads/2019/08/69839999_1496498747.jpeg"
                         title="Contemplative Reptile"

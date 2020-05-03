@@ -48,7 +48,12 @@ export default function ProductStores() {
                 </Typography>
                 </Paper>
             </Grid>
-            ))} 
+            ))}
+            <Grid item xs={12}>
+                <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
+                    Katso loput [NUM] kauppaa tästä
+                </Typography>
+            </Grid>
         </Grid>
        )
             

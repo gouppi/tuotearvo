@@ -93,11 +93,10 @@ export default function Navigation() {
                             <LinkUI component={Link} to="/reviews" variant="button" color="textPrimary" className={classes.navlink}>
                                 Arvostelut
                             </LinkUI>
-                            <LinkUI component={Link} variant="button" to="/product/h3x12142" color="textPrimary" className={classes.navlink}>
-                                Tuotesivu
-                            </LinkUI> 
-                            <LinkUI component={Link} variant="button" to="/create" color="textPrimary" className={classes.navlink}>
-                                Lisää Arvostelu
+                            <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>
+                            <Button href="#" color="primary" variant="outlined">
+                                Uusi arvostelu
+                            </Button>
                             </LinkUI>                    
                         </nav>                     
                     </ToolBar>

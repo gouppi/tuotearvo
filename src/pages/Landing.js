@@ -4,7 +4,8 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
 import ReviewCardAlt from '../components/Review/ReviewCardAlt';
-
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 const featuredPosts = [
     {
       title: 'Sony WF-1000XM3 -Bluetooth-vastamelukuulokkeet, musta',
@@ -49,14 +50,30 @@ export default function Landing() {
     return (
         <Container maxWidth="md">
             
-            <Typography style={{paddingTop:'10px',fontWeight:100}} variant="h6">Hei taas! Nämä arvostelut ovat tulleet viimeisimmän käyntisi jälkeen:</Typography>
-            <Grid container spacing={4}>
+            <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Hei taas! Nämä arvostelut ovat tulleet viimeisimmän käyntisi jälkeen:</Typography>
+            <Grid style={{paddingBottom:'0.5em'}} container spacing={4}>
                 {featuredPosts.map((post) => (
                     <ReviewCardAlt key={post.title} post={post} />
                 ))}
               </Grid>
-            <Typography style={{paddingTop:'10px',fontWeight:100}} variant="h6">:</Typography>
-            
+            <Typography style={{paddingBottom:'1em',paddingTop:'50px',fontWeight:100}} variant="h4">Kuinka TuoteArvostelut toimii</Typography>
+            <Grid container spacing={1}>
+                <Grid item xs={6} md={4}>
+                    <Paper>
+                        <Typography style={{fontWeight:100}} variant="subtitle1">Kuinka TuoteArvostelut toimii</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                    <Paper>
+                        <Typography style={{fontWeight:100}} variant="subtitle1">Kuinka TuoteArvostelut toimii</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                    <Paper square>                    
+                        <Typography style={{fontWeight:100}} variant="subtitle1">Kuinka TuoteArvostelut toimii</Typography>
+                    </Paper>
+                </Grid>
+            </Grid>
         </Container>
     );
 }
