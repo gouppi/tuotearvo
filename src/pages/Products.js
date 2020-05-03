@@ -86,24 +86,16 @@ export default function Products() {
     const classes = useStyles();
 
     return (
-        <React.Fragment>
-          <CssBaseline />
-          
-          <Container maxWidth="md"  className={classes.rootContainer}>
-                <main>
-                <Typography variant="h6" color="textPrimary">
-  Viimeisimmät arvostelut
-</Typography>
-              <Grid container spacing={4}>
-                {featuredPosts.map((post) => (
-                  <ReviewCardAlt key={post.title} post={post} />
-                  
-                ))}
-              </Grid>
-              
-            </main>
-          </Container>
-          
-        </React.Fragment>
+      <React.Fragment>
+        <CssBaseline />    
+        <Container maxWidth="md"  className={classes.rootContainer}>
+          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Uusimmat arvostelut:</Typography>
+          <Grid container spacing={4}>
+              {featuredPosts.map((post) => (
+                <ReviewCardAlt key={post.title} post={post} />
+              ))}
+          </Grid>
+        </Container>
+      </React.Fragment>
     );
 }

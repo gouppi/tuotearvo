@@ -19,9 +19,15 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import MoodIcon from '@material-ui/icons/Mood';
 import UploadDropZone from '../UploadDropZone';
 
+import SadIcon from '@material-ui/icons/SentimentDissatisfiedOutlined';
+import HappyIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
+
 
 export default function ReviewModal(props) {
     const {open,handleClose} = props;
+
+   
+
     return (
     <div>
       <Dialog maxWidth="md" fullWidth open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -31,7 +37,7 @@ export default function ReviewModal(props) {
         
         <DialogContent>
             <Grid container spacing={4}>
-                <Grid item md={12}>
+                <Grid item md={6}>
                 <Typography variant="h6" style={{fontWeight:100}}>Kuinka monta tähteä annat tuotteelle?</Typography>                    
                 <Rating
                     size="large"
@@ -39,20 +45,44 @@ export default function ReviewModal(props) {
                     name="simple-controlled"
                     />
                 </Grid>
-                <Grid item md={12}>
-                <Typography variant="h6" style={{fontWeight:100}}>Ostaisitko tuotteen uudestaan?</Typography>                    
+                <Grid item md={6}>
+                <Typography variant="h6" style={{fontWeight:100}}>Suositteletko tuotetta muille?</Typography>                    
                 <FormControlLabel
-        control={<Checkbox icon={<MoodIcon />} checkedIcon={<MoodIcon />} color="primary" name="checkedH" />}
+        control={<Checkbox icon={<HappyIcon />} checkedIcon={<HappyIcon />} name="checkedH" />}
         label="Ehdottomasti!"
       />
                 </Grid>
-                <Grid item md={4}>
-                    <TextField
-                        margin="dense"
-                        id="name"
-                        label="Sähköpostiosoitteesi"
-                        type="email"
-                        fullWidth
+                <Grid item md={12}>
+                <TextField
+                    id="outlined-textarea"
+                    label="Sanallinen arvostelu"
+                    placeholder="Anna sanallinen arvostelusi"
+                    multiline
+                    fullWidth
+                    rows={3}
+                    variant="outlined"
+                    />
+                </Grid>
+                <Grid item md={6}>
+                <TextField
+                    id="outlined-textarea"
+                    label="Sähköpostiosoite"
+                    placeholder="Anna sähköpostiosoitteesi"
+                    required
+                    fullWidth
+                    variant="outlined"
+                    type="email"
+                    />
+                </Grid>
+                <Grid item md={6}>
+                <TextField
+                    id="outlined-textarea"
+                    label="Nimimerkki"
+                    placeholder="Syötä nimimerkkisi"
+                    required
+                    variant="outlined"
+                    fullWidth
+                    type="nickname"
                     />
                 </Grid>
                 
