@@ -25,7 +25,7 @@ export default function ProductStores() {
             {stores.map((store) => (
             <Grid item xs={6}>
                 <Paper>
-                <Container style={{display:'flex',alignItems:'center',margin:'5px',padding:'5px'}} square>
+                <Container style={{display:'flex',alignItems:'center',margin:'5px',padding:'5px'}} square={true}>
                     
                     <Avatar variant="square" style={{width:'24px', height:'24px', paddingRight:'5px'}} alt="Kauppa" src={store.img}/>
                     <Typography variant="h5">{store.price}</Typography>
