@@ -11,6 +11,8 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 
+import Container from '@material-ui/core/Container';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: '10px'
@@ -64,39 +66,33 @@ export default function NewReview() {
 
     return (
         <React.Fragment>
-            <main className={classes.layout}>
-
-                <Paper className={classes.paper}>
-                <Typography variant="h4" align="center" className="paperTitle">
-                        Lisää arvostelu
-                    </Typography>
-                    <Stepper activeStep={activeStep} className={classes.stepper}>
-                        {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                        ))}
-                    </Stepper>
-                    <React.Fragment>
-                        {getStepContent(activeStep)}
-                        <div className={classes.buttons}>
-                            {activeStep !== 0 && (
-                                <Button onClick={handleBack} className={classes.button}>
-                                Back
-                                </Button>
-                            )}
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNext}
-                                className={classes.button}
-                            >
-                                {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                            </Button>
-                        </div>
-                    </React.Fragment>
-                </Paper>
-            </main>
+            <Typography variant="h4" align="center" className="paperTitle">
+                Lisää arvostelu
+            </Typography>
+            <Stepper activeStep={activeStep} className={classes.stepper}>
+                {steps.map((label) => (
+                <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                </Step>
+                ))}
+            </Stepper>
+                {getStepContent(activeStep)}
+                <div className={classes.buttons}>
+                    {activeStep !== 0 && (
+                        <Button onClick={handleBack} className={classes.button}>
+                        Back
+                        </Button>
+                    )}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                    </Button>
+                </div>
         </React.Fragment>
+                    
     );
 }
