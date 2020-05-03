@@ -17,7 +17,7 @@ import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route,Redirect} f
 import SingleReviewComponent from '../components/Review/SingleReview';
 import ProductInfo from '../components/SingleProduct/ProductInfo';
 import ProductStores from '../components/SingleProduct/ProductStores';
-
+import ReviewModal from '../components/NewReview/ReviewModal';
   
  
 
@@ -88,12 +88,18 @@ const AntTabs = withStyles({
 export default function Product() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [open, setOpen] = React.useState(false);
+
     let { path, url } = useRouteMatch();
     let {productId} = useParams();
 
-    console.log("path: " + path, "url:" + url);
-    
-
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
 
     const handleChange = (event, newValue) => {
         console.log("Change event");
@@ -166,7 +172,7 @@ export default function Product() {
                         <Typography style={{fontWeight:100}} variant="h5">123 Tuotearvostelua </Typography>
                     </Grid>
                     <Grid style={{display:'flex'}} item xs={4}>
-                      <Button size="small" variant="contained" color="secondary">Kirjoita oma arvostelusi</Button>
+                      <Button onClick={handleClickOpen} size="small" variant="contained" color="secondary">Kirjoita oma arvostelusi</Button>
                     </Grid>
                     <Grid item xs={12} >
                         <Paper elevation={3} style={{paddingBottom:'5px'}}>
@@ -201,7 +207,7 @@ export default function Product() {
                 </Grid>
 
                 </Paper>    
-
+                <ReviewModal open={open} handleClose={handleClose}></ReviewModal>
         </React.Fragment>
     );
 }
