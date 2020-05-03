@@ -1,6 +1,5 @@
 import React from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
@@ -10,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route,Redirect} from 'react-router-dom';
 
@@ -161,8 +162,11 @@ export default function Product() {
                 </Grid>
 
                 <Grid container spacing={2} direction="row">
-                    <Grid item xs={12} >
+                    <Grid item xs={8} >
                         <Typography style={{fontWeight:100}} variant="h5">123 Tuotearvostelua </Typography>
+                    </Grid>
+                    <Grid style={{display:'flex'}} item xs={4}>
+                      <Button size="small" variant="contained" color="secondary">Kirjoita oma arvostelusi</Button>
                     </Grid>
                     <Grid item xs={12} >
                         <Paper elevation={3} style={{paddingBottom:'5px'}}>
@@ -174,6 +178,26 @@ export default function Product() {
                             <SingleReviewComponent/>
                         </Paper>
                     </Grid>
+                    <Grid item xs={12}>
+                      <Paper elevation={3} style={{paddingBottom:'5px'}}>
+                        <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
+                          <Grid item>
+                            <Skeleton variant="circle" width={40} height={40} animation="wave" />
+                          </Grid>
+                          <Grid item xs zeroMinWidth>
+                            <Skeleton variant="text" width={150} animation="wave" />
+                            <Box style={{display:'flex', alignItems:'center'}}>
+                              <Skeleton variant="rect" width={150} animation="wave" />
+                            </Box>
+                            <Box style={{marginTop:'5px'}}>
+                              <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
+                              <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
+                              </Box>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
+                    
                 </Grid>
 
                 </Paper>    
@@ -201,7 +225,8 @@ function SubPage(props) {
 
   let returnable = null;
   if (routes.hasOwnProperty(subPage)) {
-    setState(routes[subPage].index);
+    //Staten muuttaminen täällä antaa error-messagen :(
+    //setState(routes[subPage].index);
     returnable = routes[subPage].page;
   }
 

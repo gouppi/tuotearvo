@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
 import ReviewCardAlt from '../components/Review/ReviewCardAlt';
-import Divider from '@material-ui/core/Divider';
+//import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 const featuredPosts = [
     {

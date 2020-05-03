@@ -50,7 +50,7 @@ export default function Navigation() {
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Container style={{backgroundColor:'white'}} maxWidth="disabled" disableGutters>
+            <Container style={{backgroundColor:'white'}} maxWidth={false} disableGutters>
             <Container maxWidth="lg" className={classes.kontti}>
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
                     <ToolBar className={classes.toolbar} disableGutters={true}>
@@ -94,9 +94,8 @@ export default function Navigation() {
                                 Arvostelut
                             </LinkUI>
                             <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>
-                            <Button href="#" color="primary" variant="outlined">
                                 Uusi arvostelu
-                            </Button>
+                            
                             </LinkUI>                    
                         </nav>                     
                     </ToolBar>

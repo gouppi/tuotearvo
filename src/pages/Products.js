@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
-import ReviewCard from '../components/Review/ReviewCard';
+//import ReviewCard from '../components/Review/ReviewCard';
 import ReviewCardAlt from '../components/Review/ReviewCardAlt';
-import Navigation from '../components/Navigation';
+//import Navigation from '../components/Navigation';
 import Typography from '@material-ui/core/Typography';
-import {Link} from 'react-router-dom';
+//import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     layout: {

@@ -6,7 +6,7 @@ import Landing from './pages/Landing';
 import Navigation from './components/Navigation';
 import CardMedia from '@material-ui/core/CardMedia';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+//import Box from '@material-ui/core/Box';
 import './App.css';
 import {BrowserRouter as Router,
   Switch,
@@ -45,6 +45,7 @@ function App() {
           </Route>
           <Redirect from="*" to={"/"} />
         </Switch>
+        
       </Container>
     </Router>
     </div>

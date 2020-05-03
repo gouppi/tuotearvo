@@ -1,19 +1,9 @@
 import React from 'react'
-import Table from '@material-ui/core/Table';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
-
 import EuroIcon from '@material-ui/icons/Euro';
-
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
-
 import Container from '@material-ui/core/Container';
 
 export default function ProductStores() {
