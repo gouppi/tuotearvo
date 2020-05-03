@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +13,7 @@ import Input from '@material-ui/core/Input';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 
+import AuthModal from './Auth/AuthModal';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -48,6 +49,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navigation() {
     const classes = useStyles();
+    const [open, setOpen] = React.useState('');
+    
+    const loginClickOpen = () => {
+        setOpen('login');
+    }
+    const registerClickOpen = () => {
+        setOpen('register');
+    }
+  
+    const handleClose = () => {
+      setOpen('');
+      
+    };
+
+
+
     return (
         <React.Fragment>
             <Container style={{backgroundColor:'white'}} maxWidth={false} disableGutters>
@@ -72,10 +89,10 @@ export default function Navigation() {
                             />
                         </FormControl>
                         <div>
-                            <Button href="#" color="secondary" variant="contained" className={classes.link}>
+                            <Button onClick={registerClickOpen} color="secondary" variant="contained" className={classes.link}>
                                 Rekisteröidy
                             </Button>
-                            <Button href="#" color="primary" variant="contained" className={classes.lastlink}>
+                            <Button onClick={loginClickOpen} color="primary" variant="contained" className={classes.lastlink}>
                                 Kirjaudu sisään
                             </Button>
                         </div>
@@ -103,6 +120,7 @@ export default function Navigation() {
             </Container>
         <Divider />
         </Container>
+        <AuthModal open={open} reg={registerClickOpen} log={loginClickOpen} handleClose={handleClose}/>
         </React.Fragment>
     );
 }
