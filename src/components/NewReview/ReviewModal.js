@@ -32,25 +32,50 @@ export default function ReviewModal(props) {
     <div>
       <Dialog maxWidth="md" fullWidth open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         {/* <<DialogTitle id="form-dialog-title">Arvostele tuote</DialogTitle> */}
-        <Alert severity="warning">Et ole kirjautuneena sisään. Kirjautuneena saat jokaisesta hyväksytystä tuotearvostelusta lisäpisteitä, joilla voit lunastaa palkintoja.</Alert>
+        {/* <Alert severity="warning">Et ole kirjautuneena sisään. Kirjautuneena saat jokaisesta hyväksytystä tuotearvostelusta lisäpisteitä, joilla voit lunastaa palkintoja.</Alert> */}
 
         
         <DialogContent>
             <Grid container spacing={4}>
-                <Grid item md={6}>
-                <Typography variant="h6" style={{fontWeight:100}}>Kuinka monta tähteä annat tuotteelle?</Typography>                    
-                <Rating
-                    size="large"
-                    precision={1}    
-                    name="simple-controlled"
-                    />
-                </Grid>
-                <Grid item md={6}>
-                <Typography variant="h6" style={{fontWeight:100}}>Suositteletko tuotetta muille?</Typography>                    
+                <Grid container item md={6}>
+                  <Grid item>
+                    <Typography variant="h6" style={{fontWeight:100}}>Kuinka monta tähteä annat tuotteelle?</Typography>                    
+                    <Rating
+                      size="medium"
+                      precision={1}    
+                      name="simple-controlled"
+                      />
+                  </Grid>
+                  <Grid item>
+                  <Typography variant="h6" style={{fontWeight:100}}>Suositteletko tuotetta muille?</Typography>                    
                 <FormControlLabel
         control={<Checkbox icon={<HappyIcon />} checkedIcon={<HappyIcon />} name="checkedH" />}
         label="Ehdottomasti!"
       />
+                  </Grid>
+                
+                </Grid>
+                <Grid container item md={6}>
+                  <Grid item xs={12}>
+                    
+                    <Typography variant="p" style={{fontWeight:100}}>Anna arviosi myös näihin</Typography>                    
+                  </Grid>
+                  <Grid item xs={12}>
+                  <Typography component="legend">Tuotteen laatu</Typography>
+                    <Rating
+                        size="small"
+                        precision={1}    
+                        name="simple-controlled2"
+                        />
+                  </Grid>
+                  <Grid item xs={12}>
+                  <Typography component="legend">Vastinetta rahalle</Typography>
+                    <Rating
+                        size="small"
+                        precision={1}    
+                        name="simple-controlled3"
+                        />
+                  </Grid>
                 </Grid>
                 <Grid item md={12}>
                 <TextField
@@ -59,7 +84,7 @@ export default function ReviewModal(props) {
                     placeholder="Anna sanallinen arvostelusi"
                     multiline
                     fullWidth
-                    rows={3}
+                    rows={5}
                     variant="outlined"
                     />
                 </Grid>

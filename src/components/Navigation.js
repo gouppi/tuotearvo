@@ -112,8 +112,7 @@ export default function Navigation() {
                             </LinkUI>
                             <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>
                                 Uusi arvostelu
-                            
-                            </LinkUI>                    
+                            </LinkUI>               
                         </nav>                     
                     </ToolBar>
                 </AppBar>

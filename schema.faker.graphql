@@ -1,0 +1,61 @@
+# This is sample SDL schema for GraphQL Faker.
+#
+# There are two directives you can use to enhance fake data:
+#   - @fake
+#   - @examples
+# Each directive has autocompletion working so start by typing @
+#
+# Press save or Cmd+Enter to apply the changes and update server. Switch to GraphiQL
+# on the left panel to immediately test your changes.
+# This tool also supports extending existing APIs. Check graphql-faker --help
+#
+# Developed with ❤️ by APIs.guru | https://github.com/APIs-guru/graphql-faker
+
+type Query {
+  product(id: ID): Product
+}
+
+
+type Product {
+  id: ID
+  name: String @fake(type:productName)
+  manufacturer: Manufacturer!,
+  categories: [Category!]! @listLength(min:1, max:3)
+  eans: [String!]! @fake(type:uuid) @listLength(min:1, max:5)
+  reviews: [Review!]! @listLength(min:0, max:5)
+}
+
+type Manufacturer {
+  id: ID
+  name: String @examples(values: ["Samsung", "Huawei", "Nokia", "Apple"])
+  link: String @fake(type:url)
+}
+
+type Category {
+  id: ID
+  name: String @examples(values: ["Puhelimet", "Tietokoneet", "Navigaattorit", "Digikamerat"])
+}
+
+type Votes {
+  upvotes: Int @fake(type:number, options:{minNumber:0, maxNumber:100}),
+  downvotes: Int @fake(type:number, options:{minNumber:0, maxNumber:100}),
+}
+
+type Review {
+  id: ID
+  created_at: String @fake(type:recentDate)
+  text: String @fake(type:lorem, options:{loremSize:sentences} )
+  external: Boolean
+  user: User! 
+  votes:Votes
+   
+}
+
+type User {
+  id: ID
+  username: String @fake(type:firstName)
+  avatar: String @fake(type:avatarUrl)
+}
+
+
+
