@@ -11,9 +11,9 @@
 #
 # Developed with ❤️ by APIs.guru | https://github.com/APIs-guru/graphql-faker
 
-type Query {
-  product(id: ID): Product
-  allProducts: [Product!]! @listLength(min:2, max:10)
+extend type Query {
+  product: Product
+  allProducts: [Product!]! @listLength(min:1, max:13)
 }
 
 

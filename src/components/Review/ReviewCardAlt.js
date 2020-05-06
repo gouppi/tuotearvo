@@ -25,24 +25,24 @@ const useStyles = makeStyles({
 
 export default function ImgMediaCard(props) {
   const classes = useStyles();
-  const { post } = props;
-
+  const { id,name,image } = props.data;
+  console.log("Id: ", id, "Name: ", name, "Image: ", image);
 
   return (
     <Grid item xs={6} md={3}>
-        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${post.id}/stores`}>
+        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}>
         <Card className={classes.root}>
         <CardActionArea>
             <CardMedia
             component="img"
             alt="Contemplative Reptile"
             height="140"
-            image={post.image}
+            image={image}
             title="Contemplative Reptile"
             />
             <CardContent>
             <Typography style={{fontWeight:100,fontSize:'1rem',overflow:'hidden', display:'-webkit-box', 'WebkitBoxOrient':'vertical', 'WebkitLineClamp':'2', textOverflow:'ellipsis' }} gutterBottom variant="h6">
-                {post.title}
+                {name}
             </Typography>
                 <Typography variant="subtitle2" component="p">30.4.2020 klo 20:33:14</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
