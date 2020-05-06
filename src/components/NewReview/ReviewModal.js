@@ -4,22 +4,22 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogTitle from '@material-ui/core/DialogTitle';
 import Rating from '@material-ui/lab/Rating';
 import { Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Alert from '@material-ui/lab/Alert';
+// import Box from '@material-ui/core/Box';
+// import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';  
 
-import FormGroup from '@material-ui/core/FormGroup';
+// import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import MoodIcon from '@material-ui/icons/Mood';
-import UploadDropZone from '../UploadDropZone';
+// import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+// import MoodIcon from '@material-ui/icons/Mood';
+// import UploadDropZone from '../UploadDropZone';
 
-import SadIcon from '@material-ui/icons/SentimentDissatisfiedOutlined';
+// import SadIcon from '@material-ui/icons/SentimentDissatisfiedOutlined';
 import HappyIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 
 

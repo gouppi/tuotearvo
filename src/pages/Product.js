@@ -90,7 +90,7 @@ export default function Product() {
     const [value, setValue] = React.useState(0);
     const [open, setOpen] = React.useState(false);
 
-    let { path, url } = useRouteMatch();
+    let {  url } = useRouteMatch();
     let {productId} = useParams();
 
     const handleClickOpen = () => {
@@ -215,7 +215,9 @@ export default function Product() {
 function SubPage(props) {
   let { subPage } = useParams();
   // TODO: this works, but e.g. /products/PRODUCT_ID/stores/foo/bar/asdfasdf <- still works. Would be nice to fix.
-  let {baseUrl, setState} = props;
+  //let {baseUrl, setState} = props;
+  let {baseUrl} = props;
+
   console.log("Ollaan SubPage - funkkarissa, baseUrl on: " + baseUrl);
 
   let routes = {
