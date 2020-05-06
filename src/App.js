@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import NewReview from './pages/NewReview';
 import Products from './pages/Products';
 import Product from './pages/Product';

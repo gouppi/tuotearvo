@@ -1,7 +1,6 @@
 import React from 'react'
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import ReviewStep0 from '../components/NewReview/ReviewStep0';
 import ReviewStep1 from '../components/NewReview/ReviewStep1';
 import ReviewStep2 from '../components/NewReview/ReviewStep2';
@@ -10,8 +9,6 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-
-import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
     root: {
