@@ -50,20 +50,21 @@ const useStyles = makeStyles((theme) => ({
 export default function Navigation() {
     const classes = useStyles();
     const [open, setOpen] = React.useState('');
+    const [dialogOpen, setDialogOpen] = React.useState(false);
     
     const loginClickOpen = () => {
         setOpen('login');
+        setDialogOpen(true);
     }
     const registerClickOpen = () => {
         setOpen('register');
+        setDialogOpen(true);
     }
   
     const handleClose = () => {
       setOpen('');
-      
+      setDialogOpen(false);
     };
-
-
 
     return (
         <React.Fragment>
@@ -119,7 +120,7 @@ export default function Navigation() {
             </Container>
         <Divider />
         </Container>
-        <AuthModal open={open} reg={registerClickOpen} log={loginClickOpen} handleClose={handleClose}/>
+        <AuthModal dialogOpen={dialogOpen} open={open} reg={registerClickOpen} log={loginClickOpen} handleClose={handleClose}/>
         </React.Fragment>
     );
 }

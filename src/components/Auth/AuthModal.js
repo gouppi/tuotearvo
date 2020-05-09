@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AuthModal(props) {
   //const classes = useStyles();
-  const {open, reg,log, handleClose} = props;
+  const {dialogOpen, open, reg,log, handleClose} = props;
 
   //const [innerOpen, setInnerOpen] = React.useState(false);
 
@@ -60,7 +60,7 @@ export default function AuthModal(props) {
   }
 
   return (
-    <Dialog maxWidth="md" fullWidth open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+    <Dialog maxWidth="md" fullWidth open={dialogOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogContent>
       <Container component="main" maxWidth="xs">
       <CssBaseline />
