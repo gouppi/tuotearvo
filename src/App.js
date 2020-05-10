@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Container from '@material-ui/core/Container';
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+import SearchResults from './pages/SearchResults';
 
 //import Box from '@material-ui/core/Box';
 import './App.css';
@@ -50,6 +51,9 @@ function App() {
             </Route>
             <Route path="/create">
               <NewReview />
+            </Route>
+            <Route path="/search">
+              <SearchResults />
             </Route>
             <Redirect from="*" to={"/"} />
           </Switch>
