@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import ReviewStep0 from '../components/NewReview/ReviewStep0';
 import ReviewStep1 from '../components/NewReview/ReviewStep1';
 import ReviewStep2 from '../components/NewReview/ReviewStep2';
+import ReviewStep3 from '../components/NewReview/ReviewStep3';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -29,6 +30,8 @@ function getStepContent(step, nextStep) {
         return <ReviewStep1 nextStep={nextStep}/>;
       case 2:
         return <ReviewStep2 nextStep={nextStep}/>;
+      case 3:
+        return <ReviewStep3/>;
       default:
         throw new Error('Unknown step');
     }
@@ -71,7 +74,7 @@ export default function NewReview() {
                                 color="primary"
                                 onClick={handleNext}
                                 className={classes.button}>
-                                {activeStep === steps.length - 1 ? 'Place order' : 'Seuraava'}
+                                {activeStep === steps.length - 1 ? 'Valmis  ' : 'Seuraava'}
                             </Button>
                         </div>
                     </StepContent>
