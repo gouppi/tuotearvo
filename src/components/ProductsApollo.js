@@ -31,7 +31,7 @@ const ProductsApollo = () => (
             console.log(error);
             return <p>Error :(</p>;
         }
-        console.log(data);
+        //console.log(data);
         return data.allProducts.map((product) => (
             <ReviewCardAlt key={product.id} data={product} />
         ));

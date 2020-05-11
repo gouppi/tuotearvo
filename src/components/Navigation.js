@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
       }
 }));
 
-export default function Navigation() {
+export default function Navigation(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState('');
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -82,6 +82,7 @@ export default function Navigation() {
         }
         timeout = setTimeout(() => {
             history.push("/search?q=" + e);
+            props.setSearchTerm(e);
         }, 800)
     };
 

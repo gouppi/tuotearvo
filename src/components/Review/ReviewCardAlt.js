@@ -26,11 +26,11 @@ const useStyles = makeStyles({
 export default function ImgMediaCard(props) {
   const classes = useStyles();
   const { id,name,image } = props.data;
-  console.log("Id: ", id, "Name: ", name, "Image: ", image);
+ // console.log("Id: ", id, "Name: ", name, "Image: ", image);
 
   return (
     <Grid item xs={6} md={3}>
-        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}>
+        {/* <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}> */}
         <Card className={classes.root}>
         <CardActionArea>
             <CardMedia
@@ -52,7 +52,7 @@ export default function ImgMediaCard(props) {
             </CardContent>
         </CardActionArea>
         </Card>
-        </LinkUI>
+        {/* </LinkUI> */}
     </Grid>
   );
 

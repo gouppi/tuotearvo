@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -31,13 +31,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResults(props) {
     const classes = useStyles();
-    console.log(props);
+    let searchTerm = props.searchTerm ? props.searchTerm : new URLSearchParams(window.location.search).get("q");
+  
+    useEffect(() => {
+      // TODO: tähän api-kutsu searchiin      
+    },[searchTerm]); 
+
 
     return (
       <React.Fragment>
         <CssBaseline />    
         <Container maxWidth="md"  className={classes.rootContainer}>
-          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tulokset haullesi:</Typography>
+          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tulokset haullesi <i>{searchTerm}</i>: </Typography>
           <Grid container spacing={4}>
               <ProductsApollo/>
           </Grid>
