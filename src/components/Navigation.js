@@ -54,6 +54,7 @@ export default function Navigation() {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [searchTimeout, setSearchTimeout] = React.useState(0);
     let history = useHistory();
+    let timeout = 0;
 
     // Opens Pop-up dialog, changes state to login
     const loginClickOpen = () => {
@@ -73,11 +74,15 @@ export default function Navigation() {
     
     // Handles top search input redirection
     const handleSearch = (e) => {
-        let searchTerm = e ? e : null;
-        if (searchTerm ) {
-            history.push("/search?q=" + searchTerm);
-            // TODO: Debounce here, don't search immediately: https://stackoverflow.com/questions/23123138/perform-debounce-in-react-js
+        if (!e) {
+            return;
         }
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => {
+            history.push("/search?q=" + e);
+        }, 800)
     };
 
 
