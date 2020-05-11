@@ -12,6 +12,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Input from '@material-ui/core/Input';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
+import { useHistory } from "react-router-dom";
 
 import AuthModal from './Auth/AuthModal';
 
@@ -51,20 +52,34 @@ export default function Navigation() {
     const classes = useStyles();
     const [open, setOpen] = React.useState('');
     const [dialogOpen, setDialogOpen] = React.useState(false);
-    
+    const [searchTimeout, setSearchTimeout] = React.useState(0);
+    let history = useHistory();
+
+    // Opens Pop-up dialog, changes state to login
     const loginClickOpen = () => {
         setOpen('login');
         setDialogOpen(true);
     }
+    // Opens Pop-up dialog, changes state to register
     const registerClickOpen = () => {
         setOpen('register');
         setDialogOpen(true);
     }
-  
+    // Closes pop-up dialog
     const handleClose = () => {
       setOpen('');
       setDialogOpen(false);
     };
+    
+    // Handles top search input redirection
+    const handleSearch = (e) => {
+        let searchTerm = e ? e : null;
+        if (searchTerm ) {
+            history.push("/search?q=" + searchTerm);
+            // TODO: Debounce here, don't search immediately: https://stackoverflow.com/questions/23123138/perform-debounce-in-react-js
+        }
+    };
+
 
     return (
         <React.Fragment>
@@ -82,9 +97,10 @@ export default function Navigation() {
                             <Input placeholder="Etsi arvosteluja tuotteille"
                             id="input-with-icon-adornment"
                             variant="outlined"
+                            onChange={e => {handleSearch(e.target.value)}}
                             startAdornment={
                                 <InputAdornment position="start">
-                                <Search />
+                                <Search/> 
                                 </InputAdornment>
                             }
                             />
