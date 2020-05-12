@@ -1,6 +1,7 @@
 version: '3'
 services:
   postgres:
+    name: tuotearvostelu
     image: postgres
     environment:
       - POSTGRES_DB=arvostelu
