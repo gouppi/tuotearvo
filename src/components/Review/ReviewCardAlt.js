@@ -30,7 +30,7 @@ export default function ImgMediaCard(props) {
 
   return (
     <Grid item xs={6} md={3}>
-        {/* <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}> */}
+        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}>
         <Card className={classes.root}>
         <CardActionArea>
             <CardMedia
@@ -52,7 +52,7 @@ export default function ImgMediaCard(props) {
             </CardContent>
         </CardActionArea>
         </Card>
-        {/* </LinkUI> */}
+        </LinkUI>
     </Grid>
   );
 
