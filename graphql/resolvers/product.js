@@ -1,7 +1,12 @@
 module.exports = {
     products: async (args,context,info) => {
         let products = await context.models.Product.findAll({
-            include: context.models.Review
+            include: {
+                model: context.models.Review,
+                include: {
+                    model: context.models.User
+                }
+            }
         });
         return products ? products : [];
     }

@@ -8,6 +8,7 @@ var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
 const models = {
     Product: sequelize.import('./Product'),
     Review: sequelize.import('./Review'),
+    User: sequelize.import('./User'),
 };
 
 Object.keys(models).forEach((modelName) => {
