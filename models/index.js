@@ -1,6 +1,4 @@
 const Sequelize = require('sequelize');
-//const ProductModel = require('./Product');
-//const ReviewModel = require('./Review');
 
 var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
     host: 'localhost',
@@ -8,7 +6,8 @@ var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
 });
 
 const models = {
-    Product: sequelize.import('./Product')
+    Product: sequelize.import('./Product'),
+    Review: sequelize.import('./Review'),
 };
 
 Object.keys(models).forEach((modelName) => {

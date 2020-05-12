@@ -5,12 +5,16 @@ module.exports = (sequelize, type) => {
           primaryKey: true,
           autoIncrement: true
         },
-        name: type.STRING, 
+        name: type.STRING,
+        image: type.STRING,
+
     }, {
       underscored:true
     });
 
-    Product.associate = (models) => {};
+    Product.associate = (models) => {
+      Product.hasMany(models.Review);
+    };
 
     return Product;
 }

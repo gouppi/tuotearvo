@@ -16,7 +16,26 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
 }));
 
+const seed = () => {
+  return Promise.all([
+    models.Product.create({ name: 'Testituote 1'}),
+    models.Product.create({ name: 'Testituote 2'}),
+    models.Review.create({text:"Oli ihan kiva tuote"}),
+    models.Review.create({text:"Ei ollut ihan niin kiva"}),
+    models.Review.create({text:"Kakkostuotteen eka arvostelija oon"}),
+  ]).then(([tuote1,tuote2,arvostelu1,arvostelu2,arvostelu3]) => {
+    return Promise.all([
+      arvostelu1.setProduct(tuote1),
+      arvostelu2.setProduct(tuote1),
+      arvostelu3.setProduct(tuote2)
+    ])
+  })
+  .catch(error => console.log(error));
+};
+
 models.sequelize.sync({force:true}).then(() => {
+  seed();
+}).then(() => {
   app.listen(4000);
   console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 });
