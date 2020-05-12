@@ -8,7 +8,7 @@ const ProductsApollo = () => (
     <Query
         query={gql`
         {
-            allProducts {
+            products {
                 id
                 name
                 image
@@ -32,7 +32,7 @@ const ProductsApollo = () => (
             return <p>Error :(</p>;
         }
         //console.log(data);
-        return data.allProducts.map((product) => (
+        return data.products.map((product) => (
             <ReviewCardAlt key={product.id} data={product} />
         ));
         }}

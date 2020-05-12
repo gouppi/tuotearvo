@@ -6,16 +6,16 @@ module.exports = buildSchema(`
         name: String!
         image: String!
         reviews: [Review!]!
-        created_at: String!
-        updated_at: String!
+        created_at: String
+        updated_at: String
     }
 
     type Review {
         id: ID!
         text: String
         user: User
-        created_at: String!
-        updated_at: String!
+        created_at: String
+        updated_at: String
     }
 
     type User {

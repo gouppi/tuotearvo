@@ -19,8 +19,8 @@ app.use('/graphql', graphqlHTTP({
 const seed = () => {
   return Promise.all([
     models.User.create({username:'Pekka Perusjätkä', avatar:'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}),
-    models.Product.create({ name: 'Testituote 1'}),
-    models.Product.create({ name: 'Testituote 2'}),
+    models.Product.create({ name: 'Testituote 1', image:'https://placekitten.com/g/200/200'}),
+    models.Product.create({ name: 'Testituote 2', image:'https://placekitten.com/g/200/200'}),
     models.Review.create({text:"Oli ihan kiva tuote"}),
     models.Review.create({text:"Ei ollut ihan niin kiva"}),
     models.Review.create({text:"Kakkostuotteen eka arvostelija oon"}),
