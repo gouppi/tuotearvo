@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=arvostelu
+      - POSTGRES_USER=arvostelu
+      - POSTGRES_PASSWORD=arvostelu
+    ports:
+      - "5432:5432"
