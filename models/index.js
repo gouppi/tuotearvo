@@ -6,7 +6,9 @@ var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
 });
 
 const models = {
+    Brand: sequelize.import('./Brand'),
     Product: sequelize.import('./Product'),
+    Ean: sequelize.import('./Ean'),
     Review: sequelize.import('./Review'),
     User: sequelize.import('./User'),
 };
