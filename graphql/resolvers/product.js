@@ -10,6 +10,9 @@ module.exports = {
                 },
                 {
                     model: context.models.Ean
+                },
+                {
+                    model: context.models.Brand
                 }
             ]
         });
