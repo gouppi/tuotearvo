@@ -48,7 +48,8 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        products(id: Int): [Product!]! 
+        products(id: Int): [Product!]!
+        search(q: String!): [Product!]
     }
 
     schema {

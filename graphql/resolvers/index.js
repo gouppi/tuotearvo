@@ -1,7 +1,9 @@
 const productResolver = require('./product');
+const searchResolver = require('./search');
 
 const rootResolver = {
-    ...productResolver
+    ...productResolver,
+    ...searchResolver
 };
 
 module.exports = rootResolver;

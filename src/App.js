@@ -40,7 +40,7 @@ function App() {
                             component="img"
                             alt="Contemplative Reptile"
                             height="auto"
-                            image="https://i.picsum.photos/id/1021/800/130.jpg"
+                            image="https://picsum.photos/800/160"
                             title="MAINOSPAIKKA"
                             />
                             </Container>

@@ -20,20 +20,8 @@ import ProductStores from '../components/SingleProduct/ProductStores';
 import ReviewModal from '../components/NewReview/ReviewModal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-  
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-
-  const superLong = `Käytän Airpodeja monipuolisesti podcast-, ääni-, puhelin-, videoneuvottelu- ja musiikkikäytössä. Ne helpottavat etätyötä erinomaisesti ja voin entistä paremmin kommunikoida ja kuunnella missä tilanteissa vain.\n\n
-  Entuudestaan minulla on langattomat Bose Soundsport korvanapit ja on ollut myös Airpodit (ver 1).
-
-  Vastamelutoiminto on vakuuttava ja toimii todella hyvin. Vastamelun ja normaalitilan saa helposti vaihdettua korvanapista. Normaalitila vahvistaa lievästi ääniä kuulolaitteen kaltaisesti ja tuntuu, että kaikki ympärillä kahisee. Vahvistusta ei tietääkseni saa pois. Latauskotelo erittäin kätevä, kuten vanhemmissakin malleissa, mutta voi nyt ladata langattomasti. Nämä Airpodit, toisin kuin aiemmat, eivät tunnu jatkuvasti tippuvan korvilta. Toki tippuvat helpommin kuin Boset. Käytän pienintä sovitetta. Käyttömukavuus on hyvä, mutta korvat alkaa kipuilla parin tunnin yhtämittaisen käytön jälkeen toisin kuin Boseissa.
-  
-  Äänenlaatu on puhekäyttöön hyvä, mutta jos haluan kuunnella lenkillä pääosin musiikkia, valitsen mukaan ehdottomasti Boset. Boseissa äänenlaatu on huomattavasti erottelukykyisempi ja täyteläisempi. Ilmeisesti mikrofonin laatu on huono, koska vastapuoli on todella usein maininnut, että kuuluu erittäin huonosti tai ei saa selvää. Tämä sekä sisällä, että ulkona, vastamelu päällä ja poissa. Ääni on vastapuolien mukaan heti parantunut, jos olen vaihtanut äänet puhelimeen. Puhelimenani on iPhone 11 Pro, joten ei luulisi senkään heikentävän tilannetta.
-  
-  Ostaisin nämä käytettävyyden vuoksi uudelleen, mutta musiikkinautintoihin mielellään paremmat, kuten Boset.`;
-  
-
 
 const useStyles = makeStyles({
     rootContainer:{

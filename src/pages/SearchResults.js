@@ -4,7 +4,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import ProductsApollo from '../components/ProductsApollo';
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ReviewCardAlt from '../components/Review/ReviewCardAlt';
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -32,21 +36,59 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchResults(props) {
     const classes = useStyles();
     let searchTerm = props.searchTerm ? props.searchTerm : new URLSearchParams(window.location.search).get("q");
-  
-    useEffect(() => {
-      // TODO: tähän api-kutsu searchiin      
-    },[searchTerm]); 
-
-
+    console.log(searchTerm);
     return (
-      <React.Fragment>
-        <CssBaseline />    
-        <Container maxWidth="md"  className={classes.rootContainer}>
-          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tulokset haullesi <i>{searchTerm}</i>: </Typography>
-          <Grid container spacing={4}>
-              <ProductsApollo/>
-          </Grid>
-        </Container>
-      </React.Fragment>
+      <Query
+      query={gql`
+      {
+          search(q:"${searchTerm}") {
+              id
+              model
+              image
+              reviews {
+                  title
+                  createdAt
+                  text
+                  score
+                  origin
+                  variation {
+                      display_name
+                  }
+              }
+          }
+      }
+      `}>
+
+    {({ loading, error, data }) => {
+      if (loading) return (
+        <Box style={{display:'flex', paddingTop:'2em', justifyContent:'center'}}>
+            <CircularProgress size={60} />
+        </Box>
+      )
+      ;
+      if (error) {
+          console.log(error);
+          return <p>Error :(</p>;
+      }
+
+      return (
+        <React.Fragment>
+          <CssBaseline />    
+          <Container maxWidth="md"  className={classes.rootContainer}>
+            <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tulokset haullesi <i>{searchTerm}</i>: </Typography>
+            <Grid container spacing={4}>
+              {data.search.map((product) => (
+                <ReviewCardAlt key={product.id} data={product} />
+              ))
+              }
+            </Grid>
+          </Container>
+        </React.Fragment>
+      )
+    }}
+    </Query>
+    
+      
+
     );
 }

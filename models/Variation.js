@@ -17,7 +17,6 @@ module.exports = (sequelize, type) => {
         model_code: {
           type: type.STRING,
           unique:true
-          
         },
         data:{
           type: type.JSONB
