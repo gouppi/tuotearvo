@@ -33,7 +33,7 @@ function App() {
       <div className="App">
       <Router>
         <Navigation setSearchTerm={setSearchTerm}/>
-        <Container style={{padding:'10px', minHeight:'100vh', height:'100%', backgroundColor:'white'}} maxWidth="md">
+        <Container style={{padding:'124px 10px 10px', minHeight:'100vh', height:'100%', backgroundColor:'white'}} maxWidth="md">
           <Container maxWidth="md">
           <CardMedia
                             style={{maxWidth:1200}}

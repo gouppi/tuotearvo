@@ -89,7 +89,7 @@ export default function Navigation(props) {
 
     return (
         <React.Fragment>
-            <Container style={{backgroundColor:'white'}} maxWidth={false} disableGutters>
+            <Container style={{backgroundColor:'white', position:'fixed', zIndex:'9999'}} maxWidth={false} disableGutters>
             <Container maxWidth="lg" className={classes.kontti}>
                 <AppBar position="static" color="transparent" elevation={0} className={classes.appBar}>
                     <ToolBar className={classes.toolbar} disableGutters={true}>
