@@ -14,7 +14,9 @@ const imgLink =
 
 export default function SingleReview(props) {
     const review = {...props};
-    
+    console.log(review);
+    let localeDate = new Date(parseInt(review.date));
+    localeDate = localeDate.toLocaleString('fi-FI');
     return (
         <Grid style={{padding:'4px 10px'}} container wrap="nowrap" spacing={0}>
           <Grid item xs={1}>
@@ -24,7 +26,7 @@ export default function SingleReview(props) {
             <Grid item container xs={6}>
               <Grid item xs={12}>
                 <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
-                  {review.date ? review.date : 'lisätty 15 minuuttia sitten'}
+                  {review.date ? localeDate : 'lisätty 15 minuuttia sitten'}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -41,7 +43,7 @@ export default function SingleReview(props) {
             <Grid container justify="flex-end" item xs={6}>
               
               <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
-                Arvostelun lähde: Gigantti.fi
+                Arvostelun lähde: {review.origin}
               </Typography>
             </Grid> 
             <Grid item xs={12}>

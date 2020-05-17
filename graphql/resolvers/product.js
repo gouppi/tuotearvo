@@ -27,7 +27,7 @@ module.exports = {
                 }
             ]
         });
-        
+
         return products ? products : [];
     }
 }

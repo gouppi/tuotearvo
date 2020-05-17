@@ -9,6 +9,7 @@ module.exports = (sequelize, type) => {
       text: type.TEXT,
       title: type.STRING,
       score: type.INTEGER,
+      origin: type.STRING
   }, {
     underscored:true
   });

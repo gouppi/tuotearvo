@@ -10,8 +10,8 @@ module.exports = buildSchema(`
         variations: [Variation!]
         reviews: [Review!]
         reviews_count: Int
-        created_at: String
-        updated_at: String
+        createdAt: String
+        updatedAt: String
     }
 
     type Brand {
@@ -34,10 +34,11 @@ module.exports = buildSchema(`
         title: String
         text: String
         score: String
+        origin: String
         user: User
         variation: Variation!
-        created_at: String
-        updated_at: String
+        createdAt: String
+        updatedAt: String
     }
 
     type User {
