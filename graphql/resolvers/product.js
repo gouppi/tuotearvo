@@ -1,21 +1,33 @@
+
+const Sequelize = require('sequelize');
+
 module.exports = {
     products: async (args,context,info) => {
+        let whereCondition = {};
+        if (args.id) {
+            whereCondition = {
+                id: args.id
+            }
+        }
+
         let products = await context.models.Product.findAll({
+            where: whereCondition,
             include: [
                 {
-                    model: context.models.Review,
-                    include: {
-                        model: context.models.User
-                    }
-                },
-                {
-                    model: context.models.Ean
+                    model: context.models.Variation,
                 },
                 {
                     model: context.models.Brand
+                },
+                {
+                    model: context.models.Review,
+                    include: {
+                        model: context.models.Variation
+                    }
                 }
             ]
         });
+        
         return products ? products : [];
     }
 }

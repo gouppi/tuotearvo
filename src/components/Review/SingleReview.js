@@ -14,41 +14,47 @@ const imgLink =
 
 export default function SingleReview(props) {
     const review = {...props};
-    const defaultText = "Pettymys oli melkoinen, kun 3 viikon käytön jälkeen toinen meni tukkoon. Putsattiin applella...";
     
     return (
-        <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
-        <Grid item>
-          <Avatar alt="Lorem Ipsum" src={imgLink} />
-        </Grid>
-        <Grid item xs zeroMinWidth>
-        <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
-              {review.date ? review.date : 'lisätty 15 minuuttia sitten'}
-           </Typography>
-        
-        <Box style={{display:'flex', alignItems:'center'}}>
-          <Rating
-              style={{paddingRight:'10px'}}
-              size="large"
-              precision={0.1}
-              name="simple-controlled"
-              value={review.score ? review.score : 2.5}
-              label={review.score ? review.score : 2.5}
-              readOnly
-          />
-          {review.isReviewed && (
-          <Badge style={{color:"#06af06"}} badgeContent={123} max={999}>
-            <ThumbUpIcon style={{ fontSize: 18, color:"#06af06",paddingRight:'10px'}}></ThumbUpIcon>
-            </Badge>
-          )}
-          </Box>    
-            
-          <p style={{fontStyle:'italic'}}>{review.text ? review.text : defaultText}</p>
-          <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
-              Lue koko arvostelu <Link>täällä</Link>
-           </Typography>
-          
-        </Grid>
+        <Grid style={{padding:'4px 10px'}} container wrap="nowrap" spacing={0}>
+          <Grid item xs={1}>
+            <Avatar alt="Lorem Ipsum" src={imgLink} />
+          </Grid>
+          <Grid container item xs={11}>
+            <Grid item container xs={6}>
+              <Grid item xs={12}>
+                <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
+                  {review.date ? review.date : 'lisätty 15 minuuttia sitten'}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Rating
+                  size="small"
+                  precision={0.1}
+                  name="simple-controlled"
+                  value={review.score}
+                  label={review.score}
+                  readOnly
+                />
+              </Grid>
+            </Grid>
+            <Grid container justify="flex-end" item xs={6}>
+              
+              <Typography style={{fontStyle:'italic'}} variant="caption" display="block" gutterBottom>
+                Arvostelun lähde: Gigantti.fi
+              </Typography>
+            </Grid> 
+            <Grid item xs={12}>
+              <Typography variant="caption">
+                Tämä arvostelu on kirjoitettu tuotteesta {review.variation_name}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                {review.text ? review.text : ''}
+              </Typography>
+            </Grid>
+          </Grid>
       </Grid>
 
     )

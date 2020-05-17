@@ -12,6 +12,9 @@ import Grid from '@material-ui/core/Grid';
 //import Container from '@material-ui/core/Container';
 import LinkUI from '@material-ui/core/Link';
 import {Link} from 'react-router-dom';
+import Rating from '@material-ui/lab/Rating';
+
+
 const useStyles = makeStyles({
   root: {
     //maxWidth: 250,
@@ -24,9 +27,15 @@ const useStyles = makeStyles({
 });
 
 export default function ImgMediaCard(props) {
+
+  function truncate(str, n){
+    return (str.length > n) ? str.substr(0, n-1) + '...' : str;
+  };
+
   const classes = useStyles();
-  const { id,name,image } = props.data;
- // console.log("Id: ", id, "Name: ", name, "Image: ", image);
+  const { id,model,image } = props.data;
+  const recentReview = props.data.reviews[0];
+  console.log(recentReview);
 
   return (
     <Grid item xs={6} md={3}>
@@ -42,13 +51,21 @@ export default function ImgMediaCard(props) {
             />
             <CardContent>
             <Typography style={{fontWeight:100,fontSize:'1rem',overflow:'hidden', display:'-webkit-box', 'WebkitBoxOrient':'vertical', 'WebkitLineClamp':'2', textOverflow:'ellipsis' }} gutterBottom variant="h6">
-                {name}
+                {model}
             </Typography>
+            <Rating
+              size="small"
+              precision={0.1}
+              name="simple-controlled"
+              value={recentReview.score}
+              label={recentReview.score}
+              readOnly
+              />
                 <Typography variant="subtitle2" component="p">30.4.2020 klo 20:33:14</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                    across all continents except Antarctica
+                    {truncate(recentReview.text, 70)}
                 </Typography>
+
             </CardContent>
         </CardActionArea>
         </Card>

@@ -7,8 +7,9 @@ module.exports = buildSchema(`
         model_code: String!
         image: String!
         brand: Brand
-        reviews: [Review!]!
-        eans: [Ean!]
+        variations: [Variation!]
+        reviews: [Review!]
+        reviews_count: Int
         created_at: String
         updated_at: String
     }
@@ -18,15 +19,23 @@ module.exports = buildSchema(`
         name: String!
     }
 
-    type Ean {
+    type Variation {
         id: ID!
         ean: String!
+        display_name: String!
+        model_code: String
+        reviews: [Review!]
     }
 
     type Review {
         id: ID!
+        display_name: String
+        model_code: String
+        title: String
         text: String
+        score: String
         user: User
+        variation: Variation!
         created_at: String
         updated_at: String
     }
@@ -38,7 +47,7 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        products: [Product!]!
+        products(id: Int): [Product!]! 
     }
 
     schema {

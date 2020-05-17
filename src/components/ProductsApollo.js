@@ -11,23 +11,15 @@ const ProductsApollo = () => (
             products {
                 id
                 model
-                model_code
                 image
-                eans {
-                    ean
-                }
-                brand {
-                    name
-                }
                 reviews {
+                    title
                     text
-                    created_at
-                    user {
-                        username
-                        avatar
+                    score
+                    variation {
+                        display_name
                     }
                 }
-
             }
         }
         `}

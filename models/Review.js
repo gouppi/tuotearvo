@@ -5,12 +5,16 @@ module.exports = (sequelize, type) => {
         primaryKey: true,
         autoIncrement: true
       },
-      text: type.STRING
+      ext_id: type.STRING,
+      text: type.TEXT,
+      title: type.STRING,
+      score: type.INTEGER,
   }, {
     underscored:true
   });
 
   Review.associate = (models) => {
+    Review.belongsTo(models.Variation);
     Review.belongsTo(models.Product);
     Review.belongsTo(models.User);
   };

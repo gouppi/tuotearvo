@@ -25,9 +25,9 @@ const seed = () => {
     models.Review.create({text:"Oli ihan kiva tuote"}),
     models.Review.create({text:"Ei ollut ihan niin kiva"}),
     models.Review.create({text:"Kakkostuotteen eka arvostelija oon"}),
-    models.Ean.create({ean:'1231231231231'}),
-    models.Ean.create({ean:'0101020203300'}),
-    models.Ean.create({ean:'2294829109482'})
+    models.Variation.create({ean:'1231231231231'}),
+    models.Variation.create({ean:'0101020203300'}),
+    models.Variation.create({ean:'2294829109482'})
   ]).then(([apple, user,phone11,phone9,arvostelu1,arvostelu2,arvostelu3,ean1,ean2,ean3]) => {
     return Promise.all([
       phone11.setBrand(apple),
@@ -45,8 +45,8 @@ const seed = () => {
   .catch(error => console.log(error));
 };
 
-models.sequelize.sync({force:true}).then(() => {
-  seed();
+models.sequelize.sync().then(() => {
+  
 }).then(() => {
   app.listen(4000);
   console.log('Running a GraphQL API server at http://localhost:4000/graphql');

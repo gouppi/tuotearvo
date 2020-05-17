@@ -18,8 +18,11 @@ import SingleReviewComponent from '../components/Review/SingleReview';
 import ProductInfo from '../components/SingleProduct/ProductInfo';
 import ProductStores from '../components/SingleProduct/ProductStores';
 import ReviewModal from '../components/NewReview/ReviewModal';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
   
- 
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
   const superLong = `Käytän Airpodeja monipuolisesti podcast-, ääni-, puhelin-, videoneuvottelu- ja musiikkikäytössä. Ne helpottavat etätyötä erinomaisesti ja voin entistä paremmin kommunikoida ja kuunnella missä tilanteissa vain.\n\n
   Entuudestaan minulla on langattomat Bose Soundsport korvanapit ja on ollut myös Airpodit (ver 1).
@@ -106,109 +109,150 @@ export default function Product() {
         setValue(newValue);
       };
 
+
+      
+
     return (
+      <Query
+      query={gql`
+      {
+          products(id:${productId}) {
+              id
+              model
+              image
+              reviews {
+                  title
+                  text
+                  score
+                  variation {
+                      display_name
+                  }
+              }
+          }
+      }
+      `}
+  >
+      {({ loading, error, data }) => {
+      if (loading) return (
+        <Box style={{display:'flex', paddingTop:'2em', justifyContent:'center'}}>
+            <CircularProgress size={60} />
+        </Box>
+      )
+      ;
+      if (error) {
+          console.log(error);
+          return <p>Error :(</p>;
+      }
+      let product = data.products[0];
+
+      //console.log(data);
+      return (
         <React.Fragment>
-                <Paper variant='outlined' square className={classes.rootContainer}>
-                <Grid container spacing={2} direction="row">
-                    <Grid item xs={12}>
-                        <Typography style={{fontWeight:100}} variant="h5">Apple AirPods ja langaton latauskotelo -nappikuulokkeet {productId}</Typography>
-                        </Grid>
-                    <Grid item xs={12} sm={5} lg={5}>
-                    <Box className="foobar">
-                        <Badge anchorOrigin={{vertical:'bottom', horizontal:'right'}} badgeContent={3.4} color="secondary">
-                        <Rating
-                            size="large"
-                            precision={0.1}
-                            name="simple-controlled"
-                            value={3.4}
-                            label="3.4"
-                            readOnly
-                            />
-                        </Badge>
-                        
-                        
+        <Paper variant='outlined' square className={classes.rootContainer}>
+        <Grid container spacing={2} direction="row">
+            <Grid item xs={12}>
+                <Typography style={{fontWeight:100}} variant="h5">{product.model}</Typography>
+                </Grid>
+            <Grid item xs={12} sm={5} lg={5}>
+            <Box className="foobar">
+                <Badge anchorOrigin={{vertical:'bottom', horizontal:'right'}} badgeContent={3.4} color="secondary">
+                <Rating
+                    size="large"
+                    precision={0.1}
+                    name="simple-controlled"
+                    value={3.4}
+                    label="3.4"
+                    readOnly
+                    />
+                </Badge>
+                
+                
+            </Box>
+            <CardMedia
+                component="img"
+                alt="Contemplative Reptile"
+                style={{maxWidth:'200px'}}
+                width="auto"
+                image={product.image}
+                title="Contemplative Reptile"
+                />
+
+            </Grid>
+            <Grid item xs={12} sm={7} lg={7}>
+                <div className={classes.root}>
+                    <div className={classes.demo1}>
+                        <BrowserRouter>
+                          <AntTabs variant="fullWidth" centered value={value} onChange={handleChange} aria-label="ant example">
+                            <AntTab component={Link} to={`${url}/stores`} label="Saatavilla kaupoista" />
+                            <AntTab component={Link} to={`${url}/info`}  label="Tuotetiedot" />
+                          </AntTabs>
+
+                          <Switch>
+                            <Route exact path={`${url}`}>
+                              <Redirect to={`${url}/stores`}></Redirect>
+                            </Route>
+                            <Route strict path={`${url}/:subPage`}>
+                              <SubPage baseUrl={url} setState={setValue} />
+                            </Route>
+                            <Route strict path={`${url}`}>
+                              <Redirect from={`${url}/*`} to={`${url}/stores`} />
+                            </Route>
+                          </Switch>
+                        </BrowserRouter>
+                          
+                        <Typography className={classes.padding} />
+                    </div>
+                </div>
+                
+            </Grid>
+        </Grid>
+
+        <Grid container spacing={2} direction="row">
+            <Grid item xs={8} >
+                <Typography style={{fontWeight:100}} variant="h5">{(product.reviews.length)} Tuotearvostelua </Typography>
+            </Grid>
+            <Grid style={{display:'flex'}} item xs={4}>
+              <Button onClick={handleClickOpen} size="small" variant="contained" color="secondary">Kirjoita oma arvostelusi</Button>
+            </Grid>
+           {product.reviews.map((review) => {
+             return (
+              <Grid item xs={12} >
+                  <Paper elevation={3} style={{paddingBottom:'5px'}}>
+                      <SingleReviewComponent date={review.created_at} score={review.score} variation_name={review.variation.display_name} text={review.text}/>
+                  </Paper>
+              </Grid>
+              );
+           })}             
+
+            {/* <Grid item xs={12}>
+              <Paper elevation={3} style={{paddingBottom:'5px'}}>
+                <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
+                  <Grid item>
+                    <Skeleton variant="circle" width={40} height={40} animation="wave" />
+                  </Grid>
+                  <Grid item xs zeroMinWidth>
+                    <Skeleton variant="text" width={150} animation="wave" />
+                    <Box style={{display:'flex', alignItems:'center'}}>
+                      <Skeleton variant="rect" width={150} animation="wave" />
                     </Box>
-                    <CardMedia
-                        component="img"
-                        alt="Contemplative Reptile"
-                        style={{maxWidth:'200px'}}
-                        width="auto"
-                        image="https://www.data-systems.fi/wp-content/uploads/2019/08/69839999_1496498747.jpeg"
-                        title="Contemplative Reptile"
-                        />
-
-                    </Grid>
-                    <Grid item xs={12} sm={7} lg={7}>
-                        <div className={classes.root}>
-                            <div className={classes.demo1}>
-                                <BrowserRouter>
-                                  <AntTabs variant="fullWidth" centered value={value} onChange={handleChange} aria-label="ant example">
-                                    <AntTab component={Link} to={`${url}/stores`} label="Saatavilla kaupoista" />
-                                    <AntTab component={Link} to={`${url}/info`}  label="Tuotetiedot" />
-                                  </AntTabs>
-
-                                  <Switch>
-                                    <Route exact path={`${url}`}>
-                                      <Redirect to={`${url}/stores`}></Redirect>
-                                    </Route>
-                                    <Route strict path={`${url}/:subPage`}>
-                                      <SubPage baseUrl={url} setState={setValue} />
-                                    </Route>
-                                    <Route strict path={`${url}`}>
-                                      <Redirect from={`${url}/*`} to={`${url}/stores`} />
-                                    </Route>
-                                  </Switch>
-                                </BrowserRouter>
-                                  
-                                <Typography className={classes.padding} />
-                            </div>
-                        </div>
-                        
-                    </Grid>
+                    <Box style={{marginTop:'5px'}}>
+                      <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
+                      <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
+                      </Box>
+                  </Grid>
                 </Grid>
+              </Paper>
+            </Grid> */}
+            
+        </Grid>
 
-                <Grid container spacing={2} direction="row">
-                    <Grid item xs={8} >
-                        <Typography style={{fontWeight:100}} variant="h5">123 Tuotearvostelua </Typography>
-                    </Grid>
-                    <Grid style={{display:'flex'}} item xs={4}>
-                      <Button onClick={handleClickOpen} size="small" variant="contained" color="secondary">Kirjoita oma arvostelusi</Button>
-                    </Grid>
-                    <Grid item xs={12} >
-                        <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                            <SingleReviewComponent text={superLong}/>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                    <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                            <SingleReviewComponent/>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                        <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
-                          <Grid item>
-                            <Skeleton variant="circle" width={40} height={40} animation="wave" />
-                          </Grid>
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="text" width={150} animation="wave" />
-                            <Box style={{display:'flex', alignItems:'center'}}>
-                              <Skeleton variant="rect" width={150} animation="wave" />
-                            </Box>
-                            <Box style={{marginTop:'5px'}}>
-                              <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
-                              <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
-                              </Box>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </Grid>
-                    
-                </Grid>
-
-                </Paper>    
-                <ReviewModal open={open} handleClose={handleClose}></ReviewModal>
-        </React.Fragment>
+        </Paper>    
+        <ReviewModal open={open} handleClose={handleClose}></ReviewModal>
+</React.Fragment> 
+      )
+      }}
+  </Query>
+        
     );
 }
 
