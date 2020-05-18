@@ -36,7 +36,7 @@ function App() {
         <Navigation setSearchTerm={setSearchTerm}/>
         
         <Container style={{padding:'124px 10px 10px', minHeight:'100vh', height:'100%', backgroundColor:'white'}} maxWidth="lg">
-          <Grid container>
+          <Grid container spacing={3}>
             <Grid item md={10}>
             <Container maxWidth="md">
             <CardMedia
@@ -55,7 +55,7 @@ function App() {
               <Route exact path="/">
                 <Landing />
               </Route>
-              <Route path="/reviews">
+              <Route path="/products">
                 <Products />
               </Route>
               <Route path="/product/:productId">

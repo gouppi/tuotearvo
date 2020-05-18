@@ -1,5 +1,5 @@
 
-const Sequelize = require('sequelize');
+const {QueryTypes} = require('sequelize');
 
 module.exports = {
     products: async (args,context,info) => {
@@ -29,7 +29,18 @@ module.exports = {
         });
 
         return products ? products : [];
-    }
+    },
+     productInfo: async (args,context,info) => {
+        let products = await context.models.sequelize.query(
+            `SELECT products.id,
+              products.model,
+              products.image,
+              count(reviews.id) AS reviews_count,
+              ROUND(AVG(reviews.score), 1) AS average_score
+              FROM products JOIN reviews ON (reviews.product_id = products.id) GROUP BY products.id`, {type: QueryTypes.SELECT}
+        );
+        return products ? products : [];
+     } 
 }
 
 // events: async () => {

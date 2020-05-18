@@ -8,6 +8,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Hidden from '@material-ui/core/Hidden';
+import Box from '@material-ui/core/Box';
+import Rating from '@material-ui/lab/Rating';
 
 const useStyles = makeStyles({
   card: {
@@ -23,33 +25,65 @@ const useStyles = makeStyles({
 
 export default function ReviewCard(props) {
   const classes = useStyles();
-  const { post } = props;
+  const { post, data } = props;
 
   return (
-    <Grid item xs={12} md={6}>
-      <CardActionArea component="a" href="#">
-        <Card className={classes.card}>
-          <div className={classes.cardDetails}>
-            <CardContent>
-              <Typography component="h2" variant="h5">
-                {post.title}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                {post.date}
-              </Typography>
-              <Typography variant="subtitle1" paragraph>
-                {post.description}
-              </Typography>
-              <Typography variant="subtitle1" color="primary">
-                Continue reading...
-              </Typography>
-            </CardContent>
-          </div>
-          <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image={post.image} title={post.imageTitle} />
-          </Hidden>
-        </Card>
-      </CardActionArea>
+    // <Grid item xs={12} md={12}>
+    //   <CardActionArea component="a" href="#">
+    //     <Card className={classes.card}>
+    //       <div className={classes.cardDetails}>
+    //         <CardContent>
+    //           <Typography component="h2" variant="h5">
+    //             {data.model}
+    //           </Typography>
+    //           <Typography variant="subtitle1" color="textSecondary">
+    //             foo
+    //           </Typography>
+    //           <Typography variant="subtitle1" paragraph>
+    //             bar
+    //           </Typography>
+    //           <Typography variant="subtitle1" color="primary">
+    //             Continue reading...
+    //           </Typography>
+    //         </CardContent>
+    //       </div>
+    //       <Hidden xsDown>
+    //         <CardMedia className={classes.cardMedia} image={data.image} title="fff" />
+    //       </Hidden>
+    //     </Card>
+    //   </CardActionArea>
+    // </Grid>
+
+    <Grid item xs={12}>
+      <Box boxShadow={1} px={2} py={1} mb={1}>
+        <CardActionArea component="a">
+          
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
+              height="80"
+              image={props.data.image}
+              title="Contemplative Reptile"
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <Typography>{props.data.model}</Typography>
+              <Rating
+                size="small"
+                precision={0.1}
+                name="simple-controlled"
+                value={props.data.average_score}
+                label={props.data.average_score}
+                readOnly
+              />
+              <Typography variant="caption" component="p">{props.data.reviews_count} Arvostelua</Typography>
+            </Grid>
+          </Grid>
+          
+        </CardActionArea>
+      </Box>
     </Grid>
   );
 }

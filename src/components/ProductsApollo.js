@@ -3,8 +3,10 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
 import ReviewCardAlt from './Review/ReviewCardAlt';
+import ReviewCard from './Review/ReviewCard';
 
-const ProductsApollo = () => (
+
+const ProductsApollo = (props) => (
     <Query
         query={gql`
         {
@@ -30,7 +32,12 @@ const ProductsApollo = () => (
             console.log(error);
             return <p>Error :(</p>;
         }
-        //console.log(data);
+        
+        if (props.vertical) {
+            return data.products.map((product) => (
+                <ReviewCard key={product.id} data={product} />
+            ));
+        }
         return data.products.map((product) => (
             <ReviewCardAlt key={product.id} data={product} />
         ));

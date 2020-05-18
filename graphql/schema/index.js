@@ -14,6 +14,14 @@ module.exports = buildSchema(`
         updatedAt: String
     }
 
+    type ProductInfo {
+        id: ID!
+        model: String!
+        image: String!
+        reviews_count: Int!
+        average_score: Float
+    }
+
     type Brand {
         id: ID!
         name: String!
@@ -49,10 +57,12 @@ module.exports = buildSchema(`
 
     type RootQuery {
         products(id: Int): [Product!]!
+        productInfo: [ProductInfo!]
         search(q: String!): [Product!]
     }
 
     schema {
         query: RootQuery
+
     }
 `);

@@ -130,7 +130,7 @@ export default function Navigation(props) {
                             <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
                                 Koti
                             </LinkUI>
-                            <LinkUI component={Link} to="/reviews" variant="button" color="textPrimary" className={classes.navlink}>
+                            <LinkUI component={Link} to="/products" variant="button" color="textPrimary" className={classes.navlink}>
                                 Tuotteet
                             </LinkUI>
                             <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>

@@ -150,10 +150,10 @@ export default function Product() {
         <Grid container spacing={2} direction="row">
             <Grid item xs={12}>
               <Breadcrumbs aria-label="breadcrumb">
-              <LinkUI component={Link} to="/reviews" variant="button" color="textSecondary" href="/reviews">
+              <LinkUI component={Link} to="/products" variant="button" color="textSecondary" href="/reviews">
                   Tuotteet
                 </LinkUI>
-                <LinkUI component={Link} to="/reviews" variant="button" color="textSecondary" href="/reviews">
+                <LinkUI component={Link} to="/products?cat_id=3" variant="button" color="textSecondary" href="/reviews">
                   Puhelimet
                 </LinkUI>
                 <Typography variant="button" color="textPrimary">{product.model}</Typography>

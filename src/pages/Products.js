@@ -4,7 +4,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import ProductsApollo from '../components/ProductsApollo';
+import ProductInfoApollo from '../components/ProductInfoApollo';
+import ProductFilters from '../components/ProductFilters';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -36,8 +37,14 @@ export default function Products() {
         <CssBaseline />    
         <Container maxWidth="md"  className={classes.rootContainer}>
           <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tuotteet:</Typography>
-          <Grid container spacing={4}>
-              <ProductsApollo/>
+          
+          <Grid container spacing={1}>
+            <Grid item md={3}>
+              <ProductFilters/>
+            </Grid>
+            <Grid item container spacing={2} md={9}>
+              <ProductInfoApollo/>
+              </Grid>
           </Grid>
         </Container>
       </React.Fragment>
