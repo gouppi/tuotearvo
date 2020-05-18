@@ -35,7 +35,7 @@ export default function Products() {
       <React.Fragment>
         <CssBaseline />    
         <Container maxWidth="md"  className={classes.rootContainer}>
-          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Uusimmat arvostelut:</Typography>
+          <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Tuotteet:</Typography>
           <Grid container spacing={4}>
               <ProductsApollo/>
           </Grid>

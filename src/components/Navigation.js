@@ -131,7 +131,7 @@ export default function Navigation(props) {
                                 Koti
                             </LinkUI>
                             <LinkUI component={Link} to="/reviews" variant="button" color="textPrimary" className={classes.navlink}>
-                                Arvostelut
+                                Tuotteet
                             </LinkUI>
                             <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>
                                 Uusi arvostelu

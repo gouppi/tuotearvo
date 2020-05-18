@@ -12,6 +12,9 @@ import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import LinkUI from '@material-ui/core/Link';
+
 import {BrowserRouter, Link, useRouteMatch, useParams, Switch, Route,Redirect} from 'react-router-dom';
 
 import SingleReviewComponent from '../components/Review/SingleReview';
@@ -74,6 +77,11 @@ const AntTabs = withStyles({
     },
     selected: {},
   }))((props) => <Tab disableRipple {...props} />);
+
+function handleClick(event) {
+  event.preventDefault();
+  console.info('You clicked a breadcrumb.');
+}
 
 
 export default function Product() {
@@ -140,6 +148,17 @@ export default function Product() {
         <React.Fragment>
         <Paper variant='outlined' square className={classes.rootContainer}>
         <Grid container spacing={2} direction="row">
+            <Grid item xs={12}>
+              <Breadcrumbs aria-label="breadcrumb">
+              <LinkUI component={Link} to="/reviews" variant="button" color="textSecondary" href="/reviews">
+                  Tuotteet
+                </LinkUI>
+                <LinkUI component={Link} to="/reviews" variant="button" color="textSecondary" href="/reviews">
+                  Puhelimet
+                </LinkUI>
+                <Typography variant="button" color="textPrimary">{product.model}</Typography>
+              </Breadcrumbs>
+            </Grid>
             <Grid item xs={12}>
                 <Typography style={{fontWeight:100}} variant="h5">{product.model}</Typography>
                 </Grid>
