@@ -9,7 +9,14 @@ module.exports = {
                 id: args.id
             }
         }
-
+        
+        let req = false;
+        if (args.required) {
+            req = true;
+        }
+        
+        // TODO: This resolver is used on front page and on product-page.
+        // There might be cases when no reviews are found.
         let products = await context.models.Product.findAll({
             where: whereCondition,
             include: [
@@ -23,7 +30,8 @@ module.exports = {
                     model: context.models.Review,
                     include: {
                         model: context.models.Variation
-                    }
+                    },
+                    required: req
                 }
             ]
         });
@@ -37,7 +45,7 @@ module.exports = {
               products.image,
               count(reviews.id) AS reviews_count,
               ROUND(AVG(reviews.score), 1) AS average_score
-              FROM products JOIN reviews ON (reviews.product_id = products.id) GROUP BY products.id`, {type: QueryTypes.SELECT}
+              FROM products LEFT JOIN reviews ON (reviews.product_id = products.id) GROUP BY products.id`, {type: QueryTypes.SELECT}
         );
         return products ? products : [];
      } 

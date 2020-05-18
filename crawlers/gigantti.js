@@ -15,7 +15,6 @@ const DATA_MODEL_CODE = 30878;
 const DATA_STORAGE = 30718;
 
 const models = require('../models/index');
-
 const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-gigantti-Site/fi_FI/-/EUR/CC_AjaxProductTab-Get?ProductSKU=FOOBAR&TemplateName=CC_ProductSpecificationTab';
 
 (async () => {
@@ -33,21 +32,17 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                     //console.log("Laitetaan tuote crawler-jonoon");
                     let sku = $(link).next('div.product-number').text();
                     let title = $(link).attr('title');
-                    // await crawler.queue({
-                    //     url: $(link).attr('href'),
-                    // });
                     let categories = Array.from($("ol.breadcrumbs li").slice(1).map((i,k) => ($(k).text().trim())));
                     await c2.queue({
                         uri: technical_info_url.replace('FOOBAR', sku),
                         title: title,
                         sku: sku,
-                        categories: categories
+                        categories: categories,
+                        image: 'https://i.picsum.photos/id/197/200/200.jpg'
                         }
                     );
                 });
             }
-            //await crawler.onIdle();
-            //await crawler.close();
             console.log("Nyt on kaikki done");
             done();
         }
@@ -96,8 +91,14 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                 try {
                     
                     //let model = foo.model ? foo.model : foo.display_name ? foo.display_name : 'TUNTEMATON SOTILAS';
-                    let [product,created] = await models.Product.findOrCreate({where: {model: name}}).all();
+                    let [product,created] = await models.Product.findOrCreate({where: {model: name}, }).all();
                     console.log(product.id, created);
+                    if (! created && res.options.image) {
+                        console.log("Päivitetään tuotteen kuvaksi: " + res.options.image);
+                        product.image = res.options.image;
+                        await product.save()
+                    }
+
         
                     let [variation,createdV] = await models.Variation.findOrCreate({
                         where: {
@@ -130,15 +131,8 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
     });
 
   console.log("Haetaan kaikki Applen hakusanaa vastaavat puhelimet ja laitetaan jokainen crawlauksen alle");
-  //c.queue("https://www.gigantti.fi/search?SearchTerm=Acer+Nitro+N50&search=&searchResultTab=");
-  //c.queue("https://www.gigantti.fi/catalog/tietokoneet/fi_poytatietokoneet/poytatietokoneet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3D.zqsGQV5bCcAAAFDoLg2st6C%26discontinued%3D0%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=1&ProductElementCount=&searchResultTab=Products&CategoryName=fi_poytatietokoneet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=100&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/hyvinvointi-ja-terveys/parranajokoneet-ja-trimmerit/fi-partakoneet-trimmerit/partakoneet-ja-trimmerit?PageSize=100");
-  //c.queue("https://www.gigantti.fi/catalog/hyvinvointi-ja-terveys/fi_kihartimet/kihartimet?PageSize=100");
-  //c.queue('https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar');
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar")
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+  c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
 })();
 
 const reviewsApiUrl = "https://api.bazaarvoice.com/data/reviews.json?apiversion=5.5&passkey=m643138kdkbls39wyjo7k8nn5&filter=productid:eq:FOOBAR&excludeFamily=true&Sort=Rating:desc&Limit=100&filter=contentlocale:eq:fi_FI";

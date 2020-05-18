@@ -16,10 +16,12 @@ module.exports = (sequelize, type) => {
     }, {
       underscored:true
     });
+    
+    // TODO pitäis tehdä logiikka tänne.
 
     Category.associate = (models) => {
       Category.hasMany(models.Product);
     };
 
-    return Brand;
+    return Category;
 }

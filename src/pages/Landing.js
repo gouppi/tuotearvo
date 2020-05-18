@@ -14,7 +14,7 @@ export default function Landing() {
             
             <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Hei taas! Nämä arvostelut ovat ilmestyneet viimeisimmän käyntisi jälkeen:</Typography>
             <Grid style={{paddingBottom:'0.5em'}} container spacing={4}>
-              <ProductsApollo/>
+              <ProductsApollo required={true}/>
             </Grid>
             <Typography style={{paddingBottom:'1em',paddingTop:'50px',fontWeight:100}} variant="h4">Kuinka tämä palvelu toimii?</Typography>
             <Grid container spacing={3}>

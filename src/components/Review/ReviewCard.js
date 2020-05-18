@@ -11,6 +11,9 @@ import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 
+import LinkUI from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
+
 const useStyles = makeStyles({
   card: {
     display: 'flex',
@@ -28,34 +31,9 @@ export default function ReviewCard(props) {
   const { post, data } = props;
 
   return (
-    // <Grid item xs={12} md={12}>
-    //   <CardActionArea component="a" href="#">
-    //     <Card className={classes.card}>
-    //       <div className={classes.cardDetails}>
-    //         <CardContent>
-    //           <Typography component="h2" variant="h5">
-    //             {data.model}
-    //           </Typography>
-    //           <Typography variant="subtitle1" color="textSecondary">
-    //             foo
-    //           </Typography>
-    //           <Typography variant="subtitle1" paragraph>
-    //             bar
-    //           </Typography>
-    //           <Typography variant="subtitle1" color="primary">
-    //             Continue reading...
-    //           </Typography>
-    //         </CardContent>
-    //       </div>
-    //       <Hidden xsDown>
-    //         <CardMedia className={classes.cardMedia} image={data.image} title="fff" />
-    //       </Hidden>
-    //     </Card>
-    //   </CardActionArea>
-    // </Grid>
-
     <Grid item xs={12}>
       <Box boxShadow={1} px={2} py={1} mb={1}>
+        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${props.data.id}`}>
         <CardActionArea component="a">
           
           <Grid container spacing={3}>
@@ -83,6 +61,7 @@ export default function ReviewCard(props) {
           </Grid>
           
         </CardActionArea>
+        </LinkUI>
       </Box>
     </Grid>
   );

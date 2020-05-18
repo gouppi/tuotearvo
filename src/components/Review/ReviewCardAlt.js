@@ -34,8 +34,9 @@ export default function ImgMediaCard(props) {
 
   const classes = useStyles();
   const { id,model,image } = props.data;
-  const recentReview = props.data.reviews[0];
-  console.log(recentReview);
+  const recentReview = props.data.reviews[0] ? props.data.reviews[0] : {};
+  
+  
 
   return (
     <Grid item xs={6} md={3}>
@@ -57,13 +58,13 @@ export default function ImgMediaCard(props) {
               size="small"
               precision={0.1}
               name="simple-controlled"
-              value={recentReview.score}
-              label={recentReview.score}
+              value={recentReview.hasOwnProperty('score') ? recentReview.score : 0}
+              label={recentReview.hasOwnProperty('score') ? recentReview.score : 0}
               readOnly
               />
                 <Typography variant="subtitle2" component="p">30.4.2020 klo 20:33:14</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {truncate(recentReview.text, 70)}
+                    {recentReview.hasOwnProperty('text') ?truncate(recentReview.text, 70) : ''}
                 </Typography>
 
             </CardContent>
