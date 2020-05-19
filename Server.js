@@ -16,36 +16,17 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
 }));
 
-const seed = () => {
-  return Promise.all([
-    models.Brand.create({name:'Apple'}),
-    models.User.create({username:'Pekka Perusjätkä', avatar:'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}),
-    models.Product.create({ model: 'Iphone 11 Pro', model_code:'MWC52FS/A / MWC52', image:'https://placekitten.com/g/200/200'}),
-    models.Product.create({ model: 'Iphone 9', model_code:'MWMC2FS/A / MWMC2', image:'https://placekitten.com/g/200/200'}),
-    models.Review.create({text:"Oli ihan kiva tuote"}),
-    models.Review.create({text:"Ei ollut ihan niin kiva"}),
-    models.Review.create({text:"Kakkostuotteen eka arvostelija oon"}),
-    models.Variation.create({ean:'1231231231231'}),
-    models.Variation.create({ean:'0101020203300'}),
-    models.Variation.create({ean:'2294829109482'})
-  ]).then(([apple, user,phone11,phone9,arvostelu1,arvostelu2,arvostelu3,ean1,ean2,ean3]) => {
-    return Promise.all([
-      phone11.setBrand(apple),
-      phone9.setBrand(apple),
-      arvostelu1.setProduct(phone11),
-      arvostelu2.setProduct(phone11),
-      arvostelu3.setProduct(phone9),
-      arvostelu1.setUser(user),
-      arvostelu3.setUser(user),
-      ean1.setProduct(phone11),
-      ean2.setProduct(phone11),
-      ean3.setProduct(phone9)
-    ])
-  })
-  .catch(error => console.log(error));
-};
+const seed2 = async () => {
+  console.log("seed2");
+  let c1 = await models.Category.create({name: 'Päätaso'});
+  let c2 = await models.Category.create({name: 'Lapsitaso'});
+  let c4 = await models.Category.create({name: 'Päätaso Toinen'});
+  let c3 = await models.Category.create({name:'lapsenlapsi'});
+  await c2.addChild(c3);
+  await c1.addChild(c2);
+}
 
-models.sequelize.sync().then(() => {
+models.sequelize.sync().then(async () => {
   
 }).then(() => {
   app.listen(4000);

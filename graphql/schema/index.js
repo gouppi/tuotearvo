@@ -14,6 +14,13 @@ module.exports = buildSchema(`
         updatedAt: String
     }
 
+    type Category {
+        id: ID!
+        name: String!
+        parentId: Int
+        children: [Category!]
+    }
+
     type ProductInfo {
         id: ID!
         model: String!
@@ -59,6 +66,7 @@ module.exports = buildSchema(`
         products(id: Int, required: Boolean): [Product!]!
         productInfo: [ProductInfo!]
         search(q: String!): [Product!]
+        categories: [Category!]
     }
 
     schema {

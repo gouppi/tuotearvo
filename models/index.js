@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+require('sequelize-hierarchy')(Sequelize);
 
 var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
     host: 'localhost',
@@ -11,6 +12,7 @@ const models = {
     Variation: sequelize.import('./Variation'),
     Review: sequelize.import('./Review'),
     User: sequelize.import('./User'),
+    Category: sequelize.import('./Category'),
 };
 
 Object.keys(models).forEach((modelName) => {

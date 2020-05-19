@@ -5,9 +5,6 @@ module.exports = (sequelize, type) => {
           primaryKey: true,
           autoIncrement: true
         },
-        parent_id: {
-          type: type.INTEGER,
-        },
         name: {
             type: type.STRING,
             allowNull: false,
@@ -16,12 +13,7 @@ module.exports = (sequelize, type) => {
     }, {
       underscored:true
     });
-    
-    // TODO pitäis tehdä logiikka tänne.
-
-    Category.associate = (models) => {
-      Category.hasMany(models.Product);
-    };
+    Category.isHierarchy();
 
     return Category;
 }
