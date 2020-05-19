@@ -16,6 +16,7 @@ module.exports = (sequelize, type) => {
       Product.hasMany(models.Variation);
       Product.hasMany(models.Review);
       Product.belongsTo(models.Brand);
+      Product.belongsTo(models.Category);
     };
 
   

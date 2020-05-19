@@ -118,7 +118,7 @@ export default function Product() {
               image
               reviews {
                   title
-                  createdAt
+                  reviewedAt
                   text
                   score
                   origin
@@ -227,7 +227,7 @@ export default function Product() {
              return (
               <Grid item xs={12} >
                   <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                      <SingleReviewComponent origin={review.origin} date={review.createdAt} score={review.score} variation_name={review.variation.display_name} text={review.text}/>
+                      <SingleReviewComponent origin={review.origin} date={review.reviewedAt} score={review.score} variation_name={review.variation.display_name} text={review.text}/>
                   </Paper>
               </Grid>
               );

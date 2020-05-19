@@ -14,6 +14,8 @@ const DATA_MANUFACTURER_MODEL_CODE = 31416;
 const DATA_MODEL_CODE = 30878;
 const DATA_STORAGE = 30718;
 
+const BASE_URL = 'https://www.gigantti.fi';
+
 const models = require('../models/index');
 const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-gigantti-Site/fi_FI/-/EUR/CC_AjaxProductTab-Get?ProductSKU=FOOBAR&TemplateName=CC_ProductSpecificationTab';
 
@@ -38,7 +40,7 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                         title: title,
                         sku: sku,
                         categories: categories,
-                        image: 'https://i.picsum.photos/id/197/200/200.jpg'
+                        image: $(link).find('.product-image:last-child').attr('src')
                         }
                     );
                 });
@@ -56,7 +58,6 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                 console.log("Crawlausvirhe rivillä 58");
                 console.log(error);
             }else{
-                console.log("C2 tekee duunia  nyt");
                 //console.log(res);
                 let $ = res.$;
                 let foo = {
@@ -73,7 +74,7 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                     sku: res.options.sku,
                     categories: res.options.categories
                 };
-                console.log(foo);
+                //console.log(foo);
                 if (foo.model_code_2 && (foo.model).includes(foo.model_code_2)) {
                     foo.model = (foo.model).replace(foo.model_code_2, '').trim();
                 }
@@ -83,21 +84,43 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                     foo.model = (foo.model).replace(foo.manufacturer, '').trim();
                 }
 
+                
+
                 let name = foo.manufacturer.trim() + ' ' + foo.model.trim();
                 console.log("Teen tuotteen, jonka nimeksi tulee: " + name);
                 let variation_name = name + ", " + foo.storage + " " + foo.color + " " + foo.model_code + " " + foo.model_code_2;
                 console.log("Variaation nimeksi voisi tulla: " + name + ", " + foo.storage + " " + foo.color + " " + foo.model_code + " " + foo.model_code_2);
-                
+
+                let CategoryName = res.options.categories.pop();
+                console.log("Kategoriaksi tulee: ", CategoryName);
                 try {
+                    let [category, isCreated] = await models.Category.findOrCreate({
+                        where: {
+                            name: CategoryName
+                        }
+                    }).all()
+
+                    // If we have created category to db, we have id and can use it to product.
+                    let defaults = {};
                     
                     //let model = foo.model ? foo.model : foo.display_name ? foo.display_name : 'TUNTEMATON SOTILAS';
-                    let [product,created] = await models.Product.findOrCreate({where: {model: name}, }).all();
-                    console.log(product.id, created);
+                    let [product,created] = await models.Product.findOrCreate(
+                        {
+                            where: {
+                                model: name
+                            },
+                            defaults: defaults
+                        }).all();
                     if (! created && res.options.image) {
                         console.log("Päivitetään tuotteen kuvaksi: " + res.options.image);
-                        product.image = res.options.image;
+                        product.image = BASE_URL + res.options.image;
                         await product.save()
+                        if (category) {
+                            await category.addProduct(product);
+                        }
                     }
+
+                    
 
         
                     let [variation,createdV] = await models.Variation.findOrCreate({
@@ -131,8 +154,8 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
     });
 
   console.log("Haetaan kaikki Applen hakusanaa vastaavat puhelimet ja laitetaan jokainen crawlauksen alle");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+  c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
 })();
 
 const reviewsApiUrl = "https://api.bazaarvoice.com/data/reviews.json?apiversion=5.5&passkey=m643138kdkbls39wyjo7k8nn5&filter=productid:eq:FOOBAR&excludeFamily=true&Sort=Rating:desc&Limit=100&filter=contentlocale:eq:fi_FI";
@@ -145,6 +168,7 @@ const fetchReviews = (product, variation, sku) => {
         console.log("Tähtiä: ", review.Rating);
         console.log("Otsikko: ", review.Title);
         console.log("Arvostelu: ", review.ReviewText);
+        console.log("Annettu: ", review.SubmissionTime);
 
         let [newReview, created] = await models.Review.findOrCreate({
             where: {
@@ -154,6 +178,7 @@ const fetchReviews = (product, variation, sku) => {
                 score: review.Rating,
                 title: review.Title,
                 text: review.ReviewText.replace(/(\r\n|\n|\r)/gm," "),
+                reviewed_at: review.SubmissionTime
                 //created_at: review.SubmissionTime
             }}).all();
         if(newReview) {

@@ -7,6 +7,7 @@ module.exports = buildSchema(`
         model_code: String!
         image: String!
         brand: Brand
+        categoryId: Int
         variations: [Variation!]
         reviews: [Review!]
         reviews_count: Int
@@ -54,6 +55,7 @@ module.exports = buildSchema(`
         variation: Variation!
         createdAt: String
         updatedAt: String
+        reviewedAt: String
     }
 
     type User {

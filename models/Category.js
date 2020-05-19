@@ -14,6 +14,9 @@ module.exports = (sequelize, type) => {
       underscored:true
     });
     Category.isHierarchy();
+    Category.associate = (models) => {
+        Category.hasMany(models.Product);
+    };
 
     return Category;
 }

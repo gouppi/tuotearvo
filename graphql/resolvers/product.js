@@ -9,6 +9,11 @@ module.exports = {
                 id: args.id
             }
         }
+
+        // If categoryId provided, show only products for that category
+        if (args.catId) {
+            whereCondition = {...whereCondition, categoryId: args.catId};
+        }
         
         let req = false;
         if (args.required) {
@@ -22,6 +27,9 @@ module.exports = {
             include: [
                 {
                     model: context.models.Variation,
+                },
+                {
+                    model: context.models.Category,
                 },
                 {
                     model: context.models.Brand

@@ -17,7 +17,6 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 const seed2 = async () => {
-  console.log("seed2");
   let c1 = await models.Category.create({name: 'Päätaso'});
   let c2 = await models.Category.create({name: 'Lapsitaso'});
   let c4 = await models.Category.create({name: 'Päätaso Toinen'});
