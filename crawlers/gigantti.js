@@ -178,8 +178,8 @@ const fetchReviews = (product, variation, sku) => {
                 score: review.Rating,
                 title: review.Title,
                 text: review.ReviewText.replace(/(\r\n|\n|\r)/gm," "),
-                reviewed_at: review.SubmissionTime
-                //created_at: review.SubmissionTime
+                reviewed_at: review.SubmissionTime,
+                origin: 'gigantti.fi', // TODO make better thing for this, 
             }}).all();
         if(newReview) {
             variation.addReview(newReview);
