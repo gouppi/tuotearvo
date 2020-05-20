@@ -39,8 +39,11 @@ module.exports = {
                     include: {
                         model: context.models.Variation
                     },
-                    required: req
-                }
+                    required: req,
+                },
+            ],
+            order: [
+                ['reviews','reviewed_at','desc']
             ]
         });
 

@@ -96,8 +96,9 @@ export default function Navigation(props) {
                         
                         <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
                             <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                                TUOTEARVOSTELUT
+                                TUOTEARVOSTELUT.NET
                             </Typography>
+                            {/* <Typography variant="caption">123 421 Arvostelua</Typography> */}
                         </LinkUI>
                         <FormControl className={classes.searchBox}>
                             <Input placeholder="Etsi arvosteluja tuotteille"

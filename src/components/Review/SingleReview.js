@@ -47,9 +47,12 @@ export default function SingleReview(props) {
               </Typography>
             </Grid> 
             <Grid item xs={12}>
-              <Typography variant="caption">
-                Tämä arvostelu on kirjoitettu tuotteesta {review.variation_name}
-              </Typography>
+              {review.variation_name && (
+                <Typography variant="caption">
+                  Tämä arvostelu on kirjoitettu tuotteesta {review.variation_name}
+                </Typography>
+              )}
+              
             </Grid>
             <Grid item xs={12}>
               <Typography>

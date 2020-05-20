@@ -227,34 +227,12 @@ export default function Product() {
              return (
               <Grid item xs={12} >
                   <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                      <SingleReviewComponent origin={review.origin} date={review.reviewedAt} score={review.score} variation_name={review.variation.display_name} text={review.text}/>
+                      <SingleReviewComponent origin={review.origin} date={review.reviewedAt} score={review.score} variation_name={review.variation ? review.variation.display_name : null} text={review.text}/>
                   </Paper>
               </Grid>
               );
-           })}             
-
-            {/* <Grid item xs={12}>
-              <Paper elevation={3} style={{paddingBottom:'5px'}}>
-                <Grid style={{padding:'8px 10px'}} container wrap="nowrap" spacing={2}>
-                  <Grid item>
-                    <Skeleton variant="circle" width={40} height={40} animation="wave" />
-                  </Grid>
-                  <Grid item xs zeroMinWidth>
-                    <Skeleton variant="text" width={150} animation="wave" />
-                    <Box style={{display:'flex', alignItems:'center'}}>
-                      <Skeleton variant="rect" width={150} animation="wave" />
-                    </Box>
-                    <Box style={{marginTop:'5px'}}>
-                      <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
-                      <Skeleton variant="rect" style={{marginBotton:'6px'}} width={'100%'} animation="wave" />
-                      </Box>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid> */}
-            
+           })}                         
         </Grid>
-
         </Paper>    
         <ReviewModal open={open} handleClose={handleClose}></ReviewModal>
 </React.Fragment> 

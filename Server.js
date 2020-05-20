@@ -28,7 +28,7 @@ const seed2 = async () => {
 models.sequelize.sync().then(async () => {
   
 }).then(() => {
-  app.listen(4000);
+  app.listen(4000); 
   console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 });
 

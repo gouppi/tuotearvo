@@ -52,7 +52,7 @@ module.exports = buildSchema(`
         score: String
         origin: String
         user: User
-        variation: Variation!
+        variation: Variation
         createdAt: String
         updatedAt: String
         reviewedAt: String

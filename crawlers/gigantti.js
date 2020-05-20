@@ -120,9 +120,7 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                         }
                     }
 
-                    
-
-        
+                    // Gigantti probably always has variations , but lets imagine this fails for some reason. We still can add possible reviews to product directly.
                     let [variation,createdV] = await models.Variation.findOrCreate({
                         where: {
                             ean: foo.ean
@@ -140,8 +138,9 @@ const technical_info_url = 'https://www.gigantti.fi/INTERSHOP/web/WFS/store-giga
                         if(variation_set) {
                             console.log("Kyllä asetettiin!");
                         }
-                        fetchReviews(product, variation, foo.sku);
                     }
+                    fetchReviews(product, variation, foo.sku);
+
                 } catch (err) {
                     console.log("Nyt tuli virhe try-lohkon sisällä");
                     console.log(err);
@@ -182,7 +181,10 @@ const fetchReviews = (product, variation, sku) => {
                 origin: 'gigantti.fi', // TODO make better thing for this, 
             }}).all();
         if(newReview) {
-            variation.addReview(newReview);
+            // Add review to specific variation only if we have variation to target for.
+            if (variation) {
+                variation.addReview(newReview);
+            }
             product.addReview(newReview);
         } else {
             console.log("________MENI ARVOSTELU HUTI JOSTAIN SYYSTä________");

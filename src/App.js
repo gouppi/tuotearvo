@@ -26,9 +26,7 @@ const client = new ApolloClient({
 
 
 function App() {
- //let searchTerm = '';
   let [searchTerm, setSearchTerm] = useState('');
-  console.log("App kutsutaan kahesti");
   return (
     <ApolloProvider client={client}>
       <div className="App">
