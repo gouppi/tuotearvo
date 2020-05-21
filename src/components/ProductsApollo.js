@@ -11,7 +11,7 @@ const ProductsApollo = (props) => (
     <Query
         query={gql`
         {
-            products(required:${props.required}) {
+            products(required:${props.required}, limit:10) {
                 id
                 model
                 image

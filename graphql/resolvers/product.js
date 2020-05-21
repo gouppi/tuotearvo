@@ -10,7 +10,6 @@ module.exports = {
             }
         }
 
-        console.log(args);
 
         // If categoryId provided, show only products for that category
         if (args.catId) {
@@ -28,9 +27,13 @@ module.exports = {
         // There might be cases when no reviews are found.
         let products = await context.models.Product.findAll({
             where: whereCondition,
+            limit: args.limit ? args.limit : null,
             include: [
                 {
                     model: context.models.Variation,
+                    include: {
+                        model: context.models.Price
+                    }
                 },
                 {
                     model: context.models.Category,
@@ -42,7 +45,8 @@ module.exports = {
                     model: context.models.Review,
                     // TODO: limit 1 here of only the recent review text is needed!!!!
                     include: {
-                        model: context.models.Variation
+                        model: context.models.Variation,
+                        
                     },
                     required: req
                 },
@@ -61,7 +65,13 @@ module.exports = {
               products.image,
               count(reviews.id) AS reviews_count,
               ROUND(AVG(reviews.score), 1) AS average_score
-              FROM products LEFT JOIN reviews ON (reviews.product_id = products.id) GROUP BY products.id`, {type: QueryTypes.SELECT}
+              FROM products LEFT JOIN reviews ON (reviews.product_id = products.id) GROUP BY products.id ORDER BY products.id LIMIT :limit OFFSET :offset `, 
+              {
+                type: QueryTypes.SELECT,
+                replacements: {
+                    limit: args.limit ? args.limit : null,
+                    offset: args.offset ? args.offset : null
+                }}
         );
         return products ? products : [];
      } 

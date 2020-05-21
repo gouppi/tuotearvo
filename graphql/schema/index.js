@@ -71,8 +71,8 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        products(id: Int, required: Boolean, reviewsCount: Int): [Product!]!
-        productInfo: [ProductInfo!]
+        products(id: Int, required: Boolean, reviewsCount: Int, limit:Int, offset:Int): [Product!]!
+        productInfo(limit:Int, offset:Int): [ProductInfo!]
         search(q: String!): [Product!]
         categories: [Category!]
     }
