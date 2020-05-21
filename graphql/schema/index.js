@@ -41,6 +41,7 @@ module.exports = buildSchema(`
         display_name: String!
         model_code: String
         reviews: [Review!]
+        prices: [Price!]
     }
 
     type Review {
@@ -58,6 +59,11 @@ module.exports = buildSchema(`
         reviewedAt: String
     }
 
+    type Price {
+        price: Float!
+        updatedAt: String
+    }
+
     type User {
         id: ID!
         username: String!
@@ -65,7 +71,7 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        products(id: Int, required: Boolean): [Product!]!
+        products(id: Int, required: Boolean, reviewsCount: Int): [Product!]!
         productInfo: [ProductInfo!]
         search(q: String!): [Product!]
         categories: [Category!]

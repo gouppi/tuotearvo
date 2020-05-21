@@ -6,6 +6,7 @@ import ReviewCardAlt from './Review/ReviewCardAlt';
 import ReviewCard from './Review/ReviewCard';
 
 
+
 const ProductsApollo = (props) => (
     <Query
         query={gql`
@@ -18,6 +19,7 @@ const ProductsApollo = (props) => (
                     title
                     text
                     score
+                    reviewedAt
                     variation {
                         display_name
                     }
@@ -33,8 +35,9 @@ const ProductsApollo = (props) => (
             return <p>Error :(</p>;
         }
         
-       
+        console.log(data.products[0]);
         return data.products.map((product) => (
+            
             <ReviewCardAlt key={product.id} data={product} />
         ));
         }}

@@ -33,7 +33,7 @@ export default function ImgMediaCard(props) {
   };
 
   const classes = useStyles();
-  const { id,model,image } = props.data;
+  const { id,model,image,reviewedAt } = props.data;
   const recentReview = props.data.reviews[0] ? props.data.reviews[0] : {};
   
   
@@ -47,7 +47,7 @@ export default function ImgMediaCard(props) {
             component="img"
             alt="Contemplative Reptile"
             height="140"
-            image={image}
+            image={image ? image : 'https://i.picsum.photos/id/400/200/300.jpg'}
             title="Contemplative Reptile"
             />
             <CardContent>
@@ -62,7 +62,7 @@ export default function ImgMediaCard(props) {
               label={recentReview.hasOwnProperty('score') ? recentReview.score : 0}
               readOnly
               />
-                <Typography variant="subtitle2" component="p">30.4.2020 klo 20:33:14</Typography>
+                <Typography variant="subtitle2" component="p">{reviewedAt}</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                     {recentReview.hasOwnProperty('text') ?truncate(recentReview.text, 70) : ''}
                 </Typography>

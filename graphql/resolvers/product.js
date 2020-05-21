@@ -10,6 +10,8 @@ module.exports = {
             }
         }
 
+        console.log(args);
+
         // If categoryId provided, show only products for that category
         if (args.catId) {
             whereCondition = {...whereCondition, categoryId: args.catId};
@@ -20,6 +22,8 @@ module.exports = {
             req = true;
         }
         
+        // TODO: front page resolver needs only 1 possible review?
+
         // TODO: This resolver is used on front page and on product-page.
         // There might be cases when no reviews are found.
         let products = await context.models.Product.findAll({
@@ -36,15 +40,16 @@ module.exports = {
                 },
                 {
                     model: context.models.Review,
+                    // TODO: limit 1 here of only the recent review text is needed!!!!
                     include: {
                         model: context.models.Variation
                     },
-                    required: req,
+                    required: req
                 },
             ],
             order: [
                 ['reviews','reviewed_at','desc']
-            ]
+            ],
         });
 
         return products ? products : [];

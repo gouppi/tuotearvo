@@ -9,6 +9,7 @@ module.exports = (sequelize, type) => {
           type: type.STRING,
           unique: true
         }
+        // TODO: alternatives array/json where e.g. 'Bang & Olufsen' could have 'B&O'
 
     }, {
       underscored:true

@@ -13,6 +13,8 @@ const models = {
     Review: sequelize.import('./Review'),
     User: sequelize.import('./User'),
     Category: sequelize.import('./Category'),
+    Price: sequelize.import('./Price'),
+    Shop: sequelize.import('./Shop'),
 };
 
 Object.keys(models).forEach((modelName) => {
