@@ -31,7 +31,7 @@ const ProductInfoApollo = (props) => (
             return data.productInfo.map((product, i) => (
                 <React.Fragment key={i}>
                     <ReviewCard key={product.id} data={product} />
-                    {i % 5 == 0 && (
+                    {i % 5 === 0 && (
                         <Grid item xs={12}>
                         <h4>TÄSSÄ VÄLIMAINOS</h4>
                         </Grid>

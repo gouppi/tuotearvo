@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
@@ -9,6 +9,11 @@ import EuroIcon from '@material-ui/icons/Euro';
 import ProductsApollo from '../components/ProductsApollo';
 
 export default function Landing() {
+
+    useEffect(() => {
+        document.title = 'Tuotearvostelut'
+    });
+
     return (
         <Container maxWidth="md">
             

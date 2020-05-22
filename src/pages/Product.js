@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -88,6 +88,11 @@ export default function Product() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [open, setOpen] = React.useState(false);
+    const [productName, setProductName] = React.useState('');
+
+    useEffect(() => {
+      document.title = 'Tuotearvostelut - ' + productName
+    });
 
     let {  url } = useRouteMatch();
     let {productId} = useParams();
@@ -142,7 +147,7 @@ export default function Product() {
           return <p>Error :(</p>;
       }
       let product = data.products[0];
-
+      setProductName(product.model);
       //console.log(data);
       return (
         <React.Fragment>

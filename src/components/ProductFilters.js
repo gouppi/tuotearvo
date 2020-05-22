@@ -1,4 +1,7 @@
 import React from 'react'
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 
@@ -9,64 +12,71 @@ import { Typography } from '@material-ui/core';
 
 import Divider from '@material-ui/core/Divider';
 
+const FILTERS_QUERY = gql`
+query ProductFilters {
+  productFilters {
+        categories {
+            id
+            name
+        }
+        brands {
+            id
+            name
+        }
+      }
+}
+`;
+
+
+
 const ProductFilters = () => {
     const [checked, setChecked] = React.useState(true);
 
     const handleChange = (event) => {
-      setChecked(event.target.checked);
+        setChecked(event.target.checked);
     };
 
     return (
-        <React.Fragment>
-            <FormControl component="fieldset">
-                <FormLabel component="p">Tuotekategoriat</FormLabel>
-                <FormGroup aria-label="position" row>
-                    <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label={<Typography>Puhelimet (123)</Typography>}
-                        checked={checked}
-                        labelPlacement="right"
-                        />
-                        <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label="Telefoonit"
-                        labelPlacement="right"
-                        />
-                        <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label="Kämmykät"
-                        labelPlacement="right"
-                        />
-                </FormGroup>
-            </FormControl>
-            <FormControl component="fieldset">
-                <FormLabel component="p">Valmistajat</FormLabel>
-                <FormGroup aria-label="position" row>
-                    <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label={<Typography>Apple (3)</Typography>}
-                        checked={checked}
-                        labelPlacement="right"
-                        />
-                        <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label="Sannisunni"
-                        labelPlacement="right"
-                        />
-                        <FormControlLabel
-                        value="puhelimet"
-                        control={<Checkbox color="primary" />}
-                        label="Nokia?"
-                        labelPlacement="right"
-                        />
-                </FormGroup>
-            </FormControl>
-        </React.Fragment>
+        <Query query={FILTERS_QUERY}>
+            {({ loading, error, data, fetchMore }) => {
+                if (loading) return <p>Loading...</p>;
+                if (error) {
+                    console.log(error);
+                    return <p>Error :(</p>;
+                }
+                console.log(data);
+                return (
+                    <React.Fragment>
+                        <FormControl component="fieldset">
+                            <FormLabel component="p">Tuotekategoriat</FormLabel>
+                            <FormGroup aria-label="position" row>
+                                {data.productFilters.categories.map((category) => (
+                                    <FormControlLabel
+                                        value={category.id}
+                                        control={<Checkbox color="primary" />}
+                                        label={<Typography>{category.name}</Typography>}
+                                        labelPlacement="right"
+                                    />
+                                ))}
+                            </FormGroup>
+                        </FormControl>
+                        <FormControl component="fieldset">
+                            <FormLabel component="p">Valmistajat</FormLabel>
+                            <FormGroup aria-label="position" row>
+                                {data.productFilters.brands.map((brand) => (
+                                    <FormControlLabel
+                                        value={brand.id}
+                                        control={<Checkbox color="primary" />}
+                                        label={<Typography>{brand.name}</Typography>}
+                                        labelPlacement="right"
+                                    />
+                                ))}
+                            </FormGroup>
+                        </FormControl>
+                    </React.Fragment>
+                )
+            }}
+        </Query>
     )
 };
 

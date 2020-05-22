@@ -70,9 +70,16 @@ module.exports = buildSchema(`
         avatar: String
     }
 
+    type ProductFilters {
+        categories: [Category!]!
+        brands: [Brand!]!
+    }
+
+
     type RootQuery {
         products(id: Int, required: Boolean, reviewsCount: Int, limit:Int, offset:Int): [Product!]!
-        productInfo(limit:Int, offset:Int): [ProductInfo!]
+        productInfo(limit:Int, offset:Int, categoryId:[Int!], brandId: [Int!]): [ProductInfo!]
+        productFilters: ProductFilters!
         search(q: String!): [Product!]
         categories: [Category!]
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +6,8 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import ProductInfoApollo from '../components/ProductInfoApollo';
 import ProductFilters from '../components/ProductFilters';
+
+
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -32,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Products() {
     const classes = useStyles();
+    useEffect(() => {
+      document.title = 'Tuotearvostelut - Tuotteet'
+    });
     return (
       <React.Fragment>
         <CssBaseline />    
