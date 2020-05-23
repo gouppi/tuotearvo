@@ -14,8 +14,7 @@ let category_map = {
 
 //let iphone11 = "https://web-api.service.verkkokauppa.com/search?filter=category%3A10215d&filter=category%3A10216d&filter=category%3A10217d&query=iphone+11&rrSessionId=8c4fb94c-fb35-4436-846f-6bbe2d4034e7&rrRcs=eF5j4cotK8lM4bO0sNQ11DVkKU32MDAwSzVMTDbWNUk0NdU1MUoGEiZpSbqmhqbJJokWJmZGZikAgl4N0A";
 let televisiot ="https://web-api.service.verkkokauppa.com/search?pageNo=1&context=category_page&contextFilter=438b&rrSessionId=227cb921-d20d-4e07-b65b-b4661f509281&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A";
-let reviews_url = "https://web-api.service.verkkokauppa.com/product/FOOBAR/reviews";
-
+let reviews_url = "https://web-api.service.verkkokauppa.com/product/FOOBAR/reviews?pageNo=MUFASA";
 
 const setStore = async () => {
     if (! Shop) {
@@ -171,34 +170,41 @@ async function fetchReviews(variation, pid) {
         // Fetch reviews from api endpoint.
         // Filter only this variation specific reviews.
         // Filter only new reviews (review.id must not be found in this variation review ext ids.)
-        axios.get(url)
-        .then((response) => {
-            response.data.reviews
-            .filter(review => review.ProductId == pid)
-            .filter(review => ! existing.includes(review.Id)) 
-            .map(async(review) => {
-                let [newReview, created] = await models.Review.findOrCreate({
-                    where: {
-                        ext_id: review.Id
-                    },
-                    defaults: {
-                        score: review.Rating,
-                        title: review.Title,
-                        text: review.ReviewText.replace(/(\r\n|\n|\r)/gm," "),
-                        origin: 'verkkokauppa.com',
-                        reviewedAt: review.SubmissionTime
-                    }}).all();
-                if(newReview) {
-                    await variation.addReview(newReview);
-                    await product.addReview(newReview);
-                } else {
-                    console.log("________MENI ARVOSTELU HUTI JOSTAIN SYYSTä________");
-                }
-
-                
     
+        const fetchData = (url, i) => {
+            let replacedUrl = url.replace('MUFASA', i);
+            axios.get(replacedUrl).then((response) => {
+                response.data.reviews
+                .filter(review => review.ProductId == pid)
+                .filter(review => ! existing.includes(review.Id)) 
+                .map(async(review) => {
+                    let [newReview, created] = await models.Review.findOrCreate({
+                        where: {
+                            ext_id: review.Id
+                        },
+                        defaults: {
+                            score: review.Rating,
+                            title: review.Title,
+                            text: review.ReviewText.replace(/(\r\n|\n|\r)/gm," "),
+                            origin: 'verkkokauppa.com',
+                            reviewedAt: review.SubmissionTime
+                        }}).all();
+                    if(newReview) {
+                        await variation.addReview(newReview);
+                        await product.addReview(newReview);
+                    } else {
+                        console.log("________MENI ARVOSTELU HUTI JOSTAIN SYYSTä________");
+                    } 
+                })
+                return response;
+            }).then((response) => {
+                if (i < response.data.numPages) {
+                    console.log("Olin sivulla " + i + ", numPages sanoo että on: " + response.data.numPages + " kutsun siis uudestaan seuraavaa sivua");
+                    fetchData(url, ++i);
+                }
             })
-        });
+        }
+        fetchData(url,0);
 
     } catch (err) {
         console.log(err);
