@@ -10,6 +10,8 @@ const models = {
     Brand: sequelize.import('./Brand'),
     Product: sequelize.import('./Product'),
     Variation: sequelize.import('./Variation'),
+    VariationEan: sequelize.import('./VariationEan'),
+    VariationModelCode: sequelize.import('./VariationModelCode'),
     Review: sequelize.import('./Review'),
     User: sequelize.import('./User'),
     Category: sequelize.import('./Category'),

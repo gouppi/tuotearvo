@@ -29,6 +29,9 @@ module.exports = (sequelize, type) => {
       Variation.belongsTo(models.Product);
       Variation.hasMany(models.Review);
       Variation.hasMany(models.Price);
+      Variation.hasMany(models.VariationEan);
+      Variation.hasMany(models.VariationModelCode);
+
     };
 
     return Variation;

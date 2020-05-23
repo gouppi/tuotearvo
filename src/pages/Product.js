@@ -129,7 +129,7 @@ export default function Product() {
                   origin
                   variation {
                       display_name
-                  }
+              }
               }
           }
       }

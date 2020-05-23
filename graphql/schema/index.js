@@ -62,6 +62,13 @@ module.exports = buildSchema(`
     type Price {
         price: Float!
         updatedAt: String
+        shop: Shop!
+    }
+
+    type Shop {
+        id: ID!
+        name: String!
+        link: String!
     }
 
     type User {
@@ -79,7 +86,7 @@ module.exports = buildSchema(`
     type RootQuery {
         products(id: Int, required: Boolean, reviewsCount: Int, limit:Int, offset:Int): [Product!]!
         productInfo(limit:Int, offset:Int, categoryId:[Int!], brandId: [Int!]): [ProductInfo!]
-        productFilters: ProductFilters!
+        productFilters(category_id: [Int], brand_id:[Int]): ProductFilters!
         search(q: String!): [Product!]
         categories: [Category!]
     }

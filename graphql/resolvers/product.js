@@ -47,7 +47,13 @@ module.exports = {
                     // TODO: limit 1 here of only the recent review text is needed!!!!
                     include: {
                         model: context.models.Variation,
-                        
+                        include: {
+                            model: context.models.Price,
+                            include: {
+                                model: context.models.Shop
+                            }
+                            
+                        }
                     },
                     required: req
                 },

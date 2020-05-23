@@ -13,8 +13,8 @@ import { Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 
 const FILTERS_QUERY = gql`
-query ProductFilters {
-  productFilters {
+query ProductFilters($category_id: [Int], $brand_id: [Int]) {
+  productFilters(category_id:$category_id , brand_id: $brand_id) {
         categories {
             id
             name

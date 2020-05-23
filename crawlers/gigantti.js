@@ -83,7 +83,6 @@ let Shop;
                 console.log("Crawlausvirhe rivillä 58");
                 console.log(error);
             }else{
-                console.log(res.options);
                 let $ = res.$;
                 let foo = {
                     display_name: res.options.title,
@@ -159,13 +158,8 @@ let Shop;
                         console.log("Variaation nimeksi voisi tulla: " + name + ", " + foo.storage + " " + foo.color + " " + foo.model_code + " " + foo.model_code_2);
                     }
 
-
-
-
-
                     let CategoryName = res.options.categories.pop();
                     console.log("Kategoriaksi tulee: ", CategoryName);
-
 
                     // Try to find category by category name. if no such is found, create one.
                     let [category, isCreated] = await models.Category.findOrCreate({
@@ -243,11 +237,27 @@ let Shop;
                     }
 
 
-                    let price = await models.Price.create({
-                        price: res.options.price
+                    let [price,createdPrice] = await models.Price.findOrCreate({
+                        where: {
+                            variation_id: variation.get('id'),
+                            shop_id: Shop.get('id'),
+                        },
+                        defaults: {
+                            price: res.options.price
+                        }
                     });
-                    await variation.addPrice(price);            
-                    await Shop.addPrice(price);
+                    
+                    if (createdPrice) {
+                        console.log("Didn't find price for variation_id: " + variation.get('id') + " , shop_id: " + Shop.get('id'))
+                        await variation.addPrice(price);            
+                        await Shop.addPrice(price);
+                    } else {
+                        console.log("Found an existing price for variation, now I'm updating it");
+                        // Force update updated_at timestamp even if price doesn't change.
+                        price.changed('updated_at',true);
+                        price.changed('price', res.options.price);
+                        await price.save()
+                    }
                    
                     fetchReviews(product, variation, foo.sku);
 
@@ -263,20 +273,20 @@ let Shop;
     });
 
   console.log("Haetaan kaikki Applen hakusanaa vastaavat puhelimet ja laitetaan jokainen crawlauksen alle");
-  c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DSony%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-//c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DTCL%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DGrundig%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBose%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-//  c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBang%2B%2526%2BOlufsen%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBose%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar")
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DOnePlus_or_Honor_or_Nokia_or_Sony_or_Xiaomi%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DHUAWEI%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DGalaxy%2BA40%2BEnterprise%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
-  //c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DSony%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DTCL%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/tv-ja-video/fi-tv/televisiot?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DEq.sGQV5dncAAAFDpMM2st6C%26discontinued%3D0%26ManufacturerName%3DGrundig%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-tv&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBose%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBang%2B%2526%2BOlufsen%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/audio-ja-hifi/fi-kuulokkeita/kuulokkeet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DW_GsGQV59PEAAAFDn8c2st6C%26discontinued%3D0%26Kuulokkeen%2Btyyppi%3DAround-ear%2Bkuuloke%26ManufacturerName%3DBose%26online%3D1%26%40Sort.SoldQuantity%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-kuulokkeita&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar")
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DOnePlus_or_Honor_or_Nokia_or_Sony_or_Xiaomi%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=99&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DHUAWEI%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DGalaxy%2BA40%2BEnterprise%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=12&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DSamsung%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26Malli%3DiPhone%2B11%2BPro%2BMax_or_iPhone%2B11_or_iPhone%2B11%2BPro%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
+    c.queue("https://www.gigantti.fi/catalog/puhelimet-ja-gps/fi-puhelimet/puhelimet?SearchParameter=%26%40QueryTerm%3D*%26ContextCategoryUUID%3DstmsGQV5fqMAAAFDI7k2st6C%26discontinued%3D0%26ManufacturerName%3DApple%26online%3D1%26%40Sort.ViewCount%3D1%26%40Sort.ProductListPrice%3D0&PageSize=80&ProductElementCount=&searchResultTab=Products&CategoryName=fi-puhelimet&CategoryDomainName=store-gigantti-ProductCatalog#filter-sidebar");
 })();
 
 const reviewsApiUrl = "https://api.bazaarvoice.com/data/reviews.json?apiversion=5.5&passkey=m643138kdkbls39wyjo7k8nn5&filter=productid:eq:FOOBAR&excludeFamily=true&Sort=Rating:desc&Limit=100&filter=contentlocale:eq:fi_FI";
@@ -285,14 +295,6 @@ const fetchReviews = (product, variation, sku) => {
     axios.get(url)
     .then(function (response) {
      response.data.Results.map(async (review) => {
-        // console.log("--ARVOSTELU--");
-        // console.log("Tähtiä: ", review.Rating);
-        // console.log("Otsikko: ", review.Title);
-        // console.log("Arvostelu: ", review.ReviewText);
-        // console.log("Annettu: ", review.SubmissionTime);
-
-        // console.log("Reviewed at KELLONAIKA: ", review.SubmissionTime);
-
         let [newReview, created] = await models.Review.findOrCreate({
             where: {
                 ext_id: review.Id
