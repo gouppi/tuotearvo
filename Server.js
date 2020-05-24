@@ -5,6 +5,7 @@ var cors = require('cors')
 const models = require('./models/index');
 const graphqlSchema = require('./graphql/schema/index');
 const graphqlResolvers = require('./graphql/resolvers/index');
+const maps = require('./crawlers/map');
 
 var app = express();
 app.use(cors())
@@ -12,23 +13,30 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: graphqlSchema,
   rootValue: graphqlResolvers,
-  context: {models},
+  context: { models },
   graphiql: true,
 }));
 
 const seed2 = async () => {
-  let c1 = await models.Category.create({name: 'Päätaso'});
-  let c2 = await models.Category.create({name: 'Lapsitaso'});
-  let c4 = await models.Category.create({name: 'Päätaso Toinen'});
-  let c3 = await models.Category.create({name:'lapsenlapsi'});
-  await c2.addChild(c3);
-  await c1.addChild(c2);
+  const hierarchy = async (children, parent) => {
+    for (let [k, v] of Object.entries(children)) {
+      let childParent = await models.Category.create({
+        name: k
+      });
+      if (parent) {
+        await parent.addChild(childParent);
+      }
+      await hierarchy(v, childParent);
+    }
+  }
+
+  await hierarchy(maps.category_tree);
 }
 
 models.sequelize.sync().then(async () => {
-  
+  //seed2();
 }).then(() => {
-  app.listen(4000); 
+  app.listen(4000);
   console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 });
 

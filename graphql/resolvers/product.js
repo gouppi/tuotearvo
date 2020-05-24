@@ -104,7 +104,7 @@ module.exports = {
         // TODO: args.brandId selected -> select only categories with corresponding brands in items
         // TODO: args.categoryID selected -> select only brands from products inside selected categories
         // TODO: count -> how many products in selected brand/category
-        let categories = await context.models.Category.findAll();
+        let categories = await context.models.Category.findAll({hierarchy:true});
         let brands = await context.models.Brand.findAll();
 
         return {
