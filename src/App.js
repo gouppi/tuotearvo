@@ -10,6 +10,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import SearchResults from './pages/SearchResults';
 import Grid from '@material-ui/core/Grid';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 //import Box from '@material-ui/core/Box';
 import './App.css';
@@ -21,7 +22,8 @@ import {BrowserRouter as Router,
 
 const client = new ApolloClient({
   //uri: 'http://localhost:9002/graphql'
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache()
 });
 
 

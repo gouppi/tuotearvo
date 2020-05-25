@@ -9,9 +9,11 @@ let Shop;
 
 let category_map = {
     '438b': 'Televisiot',
-    '658b': 'Puhelimet'
+    '658b': 'Puhelimet',
+    '1500b': ''
 };
 
+//let lastentarvikkeet = "https://web-api.service.verkkokauppa.com/search?context=category_page&contextFilter=55a&sort=releaseDate%3Adesc&rrSessionId=220730d5-d247-4037-b559-01fc5fd197be&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A";
 //let iphone11 = "https://web-api.service.verkkokauppa.com/search?filter=category%3A10215d&filter=category%3A10216d&filter=category%3A10217d&query=iphone+11&rrSessionId=8c4fb94c-fb35-4436-846f-6bbe2d4034e7&rrRcs=eF5j4cotK8lM4bO0sNQ11DVkKU32MDAwSzVMTDbWNUk0NdU1MUoGEiZpSbqmhqbJJokWJmZGZikAgl4N0A";
 let televisiot ="https://web-api.service.verkkokauppa.com/search?pageNo=1&context=category_page&contextFilter=438b&rrSessionId=227cb921-d20d-4e07-b65b-b4661f509281&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A";
 let reviews_url = "https://web-api.service.verkkokauppa.com/product/FOOBAR/reviews?pageNo=MUFASA";
@@ -56,7 +58,7 @@ async function getFromUrl(url) {
                 eans: product.eans,
                 pid: product.pid,
                 img: img,
-                categories: category,
+                categories: product.category.path,
                 origin: Shop.get('name')
             };
 
@@ -82,6 +84,9 @@ async function getFromUrl(url) {
                 if (variations.length === 0) {
                     
                     if (await utils.isDataValidForCreation(data.eans,data.model_codes)) {
+                        if (!category) {
+                        //    throw new Error("Yritin luoda uutta tuotetta: " + display_name + ", mutta kategoriatiedot ovat puutteelliset");
+                        }
                         p = await utils.createNewProduct(display_name, img);
                         console.log("Luotiinko uusi product? ", p.get('id'));
 
@@ -175,7 +180,7 @@ async function fetchReviews(variation, pid) {
             let replacedUrl = url.replace('MUFASA', i);
             axios.get(replacedUrl).then((response) => {
                 response.data.reviews
-                .filter(review => review.ProductId == pid)
+                .filter(review => review.ProductId === pid)
                 .filter(review => ! existing.includes(review.Id)) 
                 .map(async(review) => {
                     let [newReview, created] = await models.Review.findOrCreate({

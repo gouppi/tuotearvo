@@ -20,9 +20,9 @@ module.exports = (sequelize, type) => {
   });
 
   Review.associate = (models) => {
-    Review.belongsTo(models.Variation);
+
     Review.belongsTo(models.Product);
-    Review.belongsTo(models.User);
+
   };
 
   return Review;

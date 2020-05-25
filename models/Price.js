@@ -28,7 +28,7 @@ module.exports = (sequelize, type) => {
   );
 
   Price.associate = (models) => {
-    Price.belongsTo(models.Variation);
+    Price.belongsTo(models.Product);
     Price.belongsTo(models.Shop);
   };
 

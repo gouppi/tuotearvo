@@ -35,7 +35,6 @@ const FILTERS_QUERY = gql`
 
 const ProductFilters = () => {
   const [checked, setChecked] = React.useState(true);
-  let nodeId = 1;
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
@@ -43,9 +42,8 @@ const ProductFilters = () => {
   const treeStructure = (category) => {
     let returnable = [];
     category.forEach((cat) => {
-        console.log(cat.name);
         returnable.push(
-            <TreeItem nodeId={nodeId++} label={cat.name}>
+            <TreeItem nodeId={cat.id} label={cat.name}>
                 {Array.isArray(cat.children) && treeStructure(cat.children)}
             </TreeItem>
         )
@@ -65,6 +63,7 @@ const ProductFilters = () => {
         console.log(data);
         return (
           <TreeView
+            onNodeSelect={(e,v) => {console.log("On Node Select triggers",v);}}
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
           >

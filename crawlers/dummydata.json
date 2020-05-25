@@ -1,0 +1,226 @@
+{
+  "Sony Xperia 10 II": [
+    {
+      "name_original": "Sony Xperia 10 II -Android-puhelin Dual-SIM, 128 Gt, valkoinen",
+      "name_parsed": "Sony Xperia 10 II",
+      "category": {
+          "id": "4793c",
+          "name": "Android",
+          "path": [
+            {
+                "name": "Puhelimet",
+                "id": "22a"
+            },
+            {
+                "name": "Puhelimet",
+                "id": "658b"
+            },
+            {
+                "name": "Android",
+                "id": "4793c"
+            }
+            ]
+      },
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 369,
+      "external_id": "51649",
+      "product_page_link": "/fi/product/51649/nkfxc/Sony-Xperia-10-II-Android-puhelin-Dual-SIM-128-Gt-valkoinen",
+      "images": [Array]
+    },
+    {
+      "name_original": "Sony Xperia 10 II -Android-puhelin Dual-SIM, 128 Gt, musta",
+      "name_parsed": "Sony Xperia 10 II",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 369,
+      "external_id": "9325",
+      "product_page_link": "/fi/product/9325/nkfqn/Sony-Xperia-10-II-Android-puhelin-Dual-SIM-128-Gt-musta",
+      "images": [Array]
+    }
+  ],
+  "Nokia 5.3": [
+    {
+      "name_original": "Nokia 5.3 -Android-puhelin Dual-SIM, 64 Gt, musta",
+      "name_parsed": "Nokia 5.3",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 199,
+      "external_id": "52859",
+      "product_page_link": "/fi/product/52859/nkxfq/Nokia-5-3-Android-puhelin-Dual-SIM-64-Gt-musta",
+      "images": [Array]
+    },
+    {
+      "name_original": "Nokia 5.3 -Android-puhelin Dual-SIM, 64 Gt, hiekka",
+      "name_parsed": "Nokia 5.3",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 199,
+      "external_id": "10268",
+      "product_page_link": "/fi/product/10268/nnxnt/Nokia-5-3-Android-puhelin-Dual-SIM-64-Gt-hiekka",
+      "images": [Array]
+    },
+    {
+      "name_original": "Nokia 5.3 -Android-puhelin Dual-SIM, 64 Gt, vihreä",
+      "name_parsed": "Nokia 5.3",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 199,
+      "external_id": "58370",
+      "product_page_link": "/fi/product/58370/nkxft/Nokia-5-3-Android-puhelin-Dual-SIM-64-Gt-vihrea",
+      "images": [Array]
+    }
+  ],
+  "Samsung Galaxy A41": [
+    {
+      "name_original": "Samsung Galaxy A41-Android-puhelin 64 Gt Dual-SIM, musta",
+      "name_parsed": "Samsung Galaxy A41",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 299,
+      "external_id": "7719",
+      "product_page_link": "/fi/product/7719/nmdcx/Samsung-Galaxy-A41-Android-puhelin-64-Gt-Dual-SIM-musta",
+      "images": [Array]
+    },
+    {
+      "name_original": "Samsung Galaxy A41-Android-puhelin 64 Gt Dual-SIM, valkoinen",
+      "name_parsed": "Samsung Galaxy A41",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 299,
+      "external_id": "39840",
+      "product_page_link": "/fi/product/39840/nmddm/Samsung-Galaxy-A41-Android-puhelin-64-Gt-Dual-SIM-valkoinen",
+      "images": [Array]
+    },
+    {
+      "name_original": "Samsung Galaxy A41-Android-puhelin 64 Gt Dual-SIM, sininen",
+      "name_parsed": "Samsung Galaxy A41",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 299,
+      "external_id": "63484",
+      "product_page_link": "/fi/product/63484/nmdfc/Samsung-Galaxy-A41-Android-puhelin-64-Gt-Dual-SIM-sininen",
+      "images": [Array]
+    }
+  ],
+  "Xiaomi Poco F2 Pro": [
+    {
+      "name_original": "Xiaomi Poco F2 Pro -Android-puhelin, 8 / 256 Gt, Electric Purple",
+      "name_parsed": "Xiaomi Poco F2 Pro",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 599,
+      "external_id": "53337",
+      "product_page_link": "/fi/product/53337/nnrbm/Xiaomi-Poco-F2-Pro-Android-puhelin-8-256-Gt-Electric-Purple",
+      "images": [Array]
+    },
+    {
+      "name_original": "Xiaomi Poco F2 Pro -Android-puhelin, 8 / 256 Gt, Cyber Grey",
+      "name_parsed": "Xiaomi Poco F2 Pro",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 599,
+      "external_id": "39135",
+      "product_page_link": "/fi/product/39135/nnrbr/Xiaomi-Poco-F2-Pro-Android-puhelin-8-256-Gt-Cyber-Grey",
+      "images": [Array]
+    }
+  ],
+  "Motorola Edge+ 5G": [
+    {
+      "name_original": "Motorola Edge+ 5G -Android-puhelin, harmaa",
+      "name_parsed": "Motorola Edge+ 5G",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 1099,
+      "external_id": "54074",
+      "product_page_link": "/fi/product/54074/nmrft/Motorola-Edge-5G-Android-puhelin-harmaa",
+      "images": [Array]
+    }
+  ],
+  "Motorola Edge 5G": [
+    {
+      "name_original": "Motorola Edge 5G -Android-puhelin, musta",
+      "name_parsed": "Motorola Edge 5G",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 599,
+      "external_id": "18322",
+      "product_page_link": "/fi/product/18322/nmrgs/Motorola-Edge-5G-Android-puhelin-musta",
+      "images": [Array]
+    }
+  ],
+  "Honor 9X Lite": [
+    {
+      "name_original": "Honor 9X Lite -Android -puhelin Dual SIM, 128 Gt, musta",
+      "name_parsed": "Honor 9X Lite",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 199,
+      "external_id": "29093",
+      "product_page_link": "/fi/product/29093/nmgtc/Honor-9X-Lite-Android-puhelin-Dual-SIM-128-Gt-musta",
+      "images": [Array]
+    },
+    {
+      "name_original": "Honor 9X Lite -Android -puhelin Dual SIM, 128 Gt, vihreä",
+      "name_parsed": "Honor 9X Lite",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 199,
+      "external_id": "52474",
+      "product_page_link": "/fi/product/52474/nmgtk/Honor-9X-Lite-Android-puhelin-Dual-SIM-128-Gt-vihrea",
+      "images": [Array]
+    }
+  ],
+  "Samsung Galaxy S20 Ultra 5G": [
+    {
+      "name_original": "Samsung Galaxy S20 Ultra 5G -Android-puhelin, Cloud White",
+      "name_parsed": "Samsung Galaxy S20 Ultra 5G",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [],
+      "eans": [],
+      "price": 1399,
+      "external_id": "3458",
+      "product_page_link": "/fi/product/3458/nnkxn/Samsung-Galaxy-S20-Ultra-5G-Android-puhelin-Cloud-White",
+      "images": [Array]
+    },
+    {
+      "name_original": "Samsung Galaxy S20 Ultra 5G -Android-puhelin, Cosmic Gray",
+      "name_parsed": "Samsung Galaxy S20 Ultra 5G",
+      "category": [Object],
+      "brand": [Object],
+      "mpns": [Array],
+      "eans": [Array],
+      "price": 1399,
+      "external_id": "40564",
+      "product_page_link": "/fi/product/40564/nfxxg/Samsung-Galaxy-S20-Ultra-5G-Android-puhelin-Cosmic-Gray",
+      "images": [Array]
+    }
+};

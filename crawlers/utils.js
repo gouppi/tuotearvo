@@ -3,20 +3,22 @@ const axios = require('axios').default;
 const {Op,QueryTypes } = require("sequelize");
 const maps = require('./map');
 
+let brands;
+
 /**
  * Finds and returns Shop with given parameters
  * @param {JSON} params JSON key-value pair search query
  * @example {name: 'Verkkokauppa'}
  * @returns Shop ORM object or NULL
  */
-const assignStore = async (params) => {
-    return await models.Shop.findOne({where: params});
+const assignStore = async (name) => {
+    return await models.Shop.findOne({where: {name: name}});
 }
 
 /**
  * Checks if name contains brand in it.
  * If brand is not empty but name doesn't contain it, prepend name with brand.
- * 
+ *
  * @param {string} brand Products brand name
  * @param {string} name Products name as found from shop
  * @returns Product name prepended with possible brand name
@@ -30,27 +32,29 @@ const addBrandToName = async(brand,name) => {
 
 /**
  * Tries to find existing product variation(s) by using given model- or ean-codes.
- * 
- * @param {Array} model_codes an array of found model codes from product. 
- * @param {Array} eans an array containing all ean codes found from product.
- * @returns {Array} an array containing variation ids matched to search query
+ *
+ * @param {Array} ean an array of found EAN-codes from product.
+ * @param {Array} Mpns found from product.
+ * @returns {Array} An array containing possible product matches for this query
  */
-const findVariationsByNameOrEanOrModelCodes = async (model_codes, eans,name) => {
+const findMatchingProduct = async (ean,mpn,name) => {
     let processed = [];
 
-    let search_params = [{display_name: name}];
-    if (eans.length) {
-        eans.map((ean) => search_params.push({ean:ean.padStart(13, '0')}));
+    let search_params = [{name: name}];
+    if (ean.length) {
+        ean.map((ean) => search_params.push({ean:ean.padStart(13, '0')}));
     }
-    let v1 = await models.Variation.findAll({
+
+    let p1 = await models.Product.findAll({
         where: {
             [Op.or]: search_params
         },
-        attributes: [['id', 'variation_id']],
+        attributes: [['id']],
         raw:true
     });
+
     v1.map((v) => processed.push(v.variation_id));
-    
+
     if (model_codes.length) {
         let model_codes_json = model_codes.map((model_code) => ({model_code: model_code.trim()}));
         let v2 = await models.VariationModelCode.findAll({
@@ -62,7 +66,7 @@ const findVariationsByNameOrEanOrModelCodes = async (model_codes, eans,name) => 
         });
         v2.map((v) => processed.push(v.variation_id));
     }
-    
+
     return [...new Set(processed)];
 }
 
@@ -100,8 +104,8 @@ const createNewVariation = async(name,data) => {
 /**
  * Makes sure that we have necessary data for creating new variation.
  * If we can't create variation, there is no need for creating product, either.
- * @param {Array} eans 
- * @param {Array} model_codes 
+ * @param {Array} eans
+ * @param {Array} model_codes
  * @returns {boolean}
  */
 const isDataValidForCreation = async (eans,model_codes) => {
@@ -112,22 +116,79 @@ const isDataValidForCreation = async (eans,model_codes) => {
     return true;
 }
 
-// const checkCategory = async(category_name) => {
-//     let mapped_cat = null;
-//     categories.some((pc) => {
-//         if (pc.id in category_maps) {
-//             mapped_cat = category_maps[pc.id];
-//             return true;
-//         }
-//         return false;
-//     });
-//     return mapped_cat;
-// }
+
+
+
+
+/**
+ * Tries to find brand based on either direct manufacturer name or product name
+ * @param {string} manufacturer
+ * @param {StringConstructor} display_name
+ */
+const findBrand = async (manufacturer, display_name)  => {
+    let Brand = await models.sequelize.query("SELECT id FROM brands WHERE name = :manufacturer OR :display_name ILIKE name || '%'",
+    {
+        replacements: {
+            manufacturer: manufacturer,
+            display_name:display_name
+        },
+        model: models.Brand,
+        plain:true
+    });
+    return Brand;
+
+}
+
+const findCategory = async(name) => {
+    return await models.Category.findOne({where: {name: name}});
+}
+
+const findProducts = async(product) => {
+    let params = [{name: product.name_original}];
+        if (product.eans.length) {
+            let res = product.eans.map((ean) => ({'$product_eans.ean$':ean.padStart(13,'0')}));
+            params = params.concat(res);
+        }
+        if (product.mpns.length) {
+            let res = product.mpns.map(mpn => ({'$product_mpns.mpn$':mpn}));
+            params = params.concat(res);
+        }
+        // This is the part you're after.
+        let P = await models.Product.findAll({
+            where: {
+                [Op.or]: params
+            },
+            include: [
+                {model: models.Ean, as: models.Ean.tableName},
+                {model: models.Mpn, as: models.Mpn.tableName}
+            ]
+        });
+        return P;
+}
+
+
+/**
+ * This function handles the whole data processing in one slot.
+ * Crawlers call this function only after data harvesting.
+ * @param {JSON} payload contains all necessary information for creating new product, variation.
+ * @param {JSON} category contains category name and external code information
+ * @param {String} shop Name of the shop, e.g. "Verkkokauppa.com"
+ */
+const handle = async (payload, category, shop) => {
+    //let C = await findCategory(category.name);
+
+    for (let i = 0; i < payload.length; i++) {
+        let P = await findProducts(payload[i])
+        console.log(P);
+    }
+}
 
 
 exports.assignStore = assignStore;
 exports.addBrandToName = addBrandToName
-exports.findVariationsByNameOrEanOrModelCodes = findVariationsByNameOrEanOrModelCodes
+exports.findProducts = findProducts
 exports.createNewProduct = createNewProduct
 exports.createNewVariation = createNewVariation
 exports.isDataValidForCreation = isDataValidForCreation
+exports.findBrand = findBrand
+exports.handle = handle

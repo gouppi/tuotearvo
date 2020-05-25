@@ -1,20 +1,20 @@
 const Sequelize = require('sequelize');
 require('sequelize-hierarchy')(Sequelize);
 
-var sequelize = new Sequelize('arvostelu','arvostelu','arvostelu', {
+
+var sequelize = new Sequelize(process.env.DB_DATABASE,'arvostelu','arvostelu', {
     host: 'localhost',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging:false
 });
 
 const models = {
     Brand: sequelize.import('./Brand'),
-    Product: sequelize.import('./Product'),
-    Variation: sequelize.import('./Variation'),
-    VariationEan: sequelize.import('./VariationEan'),
-    VariationModelCode: sequelize.import('./VariationModelCode'),
-    Review: sequelize.import('./Review'),
-    User: sequelize.import('./User'),
     Category: sequelize.import('./Category'),
+    Product: sequelize.import('./Product'),
+    Ean: sequelize.import('./Ean'),
+    Mpn: sequelize.import('./Mpn'),
+    Review: sequelize.import('./Review'),
     Price: sequelize.import('./Price'),
     Shop: sequelize.import('./Shop'),
 };

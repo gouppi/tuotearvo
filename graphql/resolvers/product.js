@@ -106,7 +106,7 @@ module.exports = {
         // TODO: count -> how many products in selected brand/category
         let categories = await context.models.Category.findAll({hierarchy:true});
         let brands = await context.models.Brand.findAll();
-
+        
         return {
             categories: categories ? categories : [],
             brands: brands ? brands: []  
