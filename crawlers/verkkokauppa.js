@@ -29,9 +29,9 @@ const setStore = async () => {
     for (let i = 0; i < 15; i++) {
         console.log("\n\nPYYNTÖ LÄHTEE\n\n");
         let url = "https://web-api.service.verkkokauppa.com/search?pageNo="+i+"&context=category_page&contextFilter=438b&rrSessionId=227cb921-d20d-4e07-b65b-b4661f509281&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A";
-        await getFromUrl(url);
+        await getFromUrl(lastentarvikkeet);
     }
-    
+
 }
 
 async function getFromUrl(url) {
@@ -43,7 +43,7 @@ async function getFromUrl(url) {
         .map(async (product) => {
             let name = product.name.fi;
             let brand = product.brand.name;
-            let model_codes = product.mpns; 
+            let model_codes = product.mpns;
             let price = product.price.current;
             let eans = product.eans;
             let pid = product.pid; // Verkkis internal id, reviews link.
@@ -68,7 +68,7 @@ async function getFromUrl(url) {
             console.log("Mallikoodit: ", model_codes);
             console.log("Hinta: ", price);
             console.log("EAN-koodit: ", eans);
-            
+
             name = await utils.addBrandToName(brand,name);
             // Clean unnecessary info from product name (verkkis-suitable formatted names)
             // Fallback to name as found on site.
@@ -77,12 +77,12 @@ async function getFromUrl(url) {
 
             let variation, p;
 
-            try {                
+            try {
 
                 // FIND VARIATIONS USING MODEL CODES AND EAN CODES FOUND FROM VERKKOKAUPPA
                 let variations = await utils.findVariationsByNameOrEanOrModelCodes(model_codes, eans,display_name);
                 if (variations.length === 0) {
-                    
+
                     if (await utils.isDataValidForCreation(data.eans,data.model_codes)) {
                         if (!category) {
                         //    throw new Error("Yritin luoda uutta tuotetta: " + display_name + ", mutta kategoriatiedot ovat puutteelliset");
@@ -108,7 +108,7 @@ async function getFromUrl(url) {
                     console.log("Päivitetään hintatiedot, variaatio_id: ", variation.get('id'));
                     await updatePrice(variation, price)
                     console.log("Päivitetään arvostelut, variaatio_id: " + variation.get('id'));
-                   await fetchReviews(variation, pid);               
+                   await fetchReviews(variation, pid);
                 }
             } catch(error) {
                 console.log(error);
@@ -122,7 +122,7 @@ async function getFromUrl(url) {
 }
 
 
-// Loop through product category list. If we find any category predefined in category_map - object, return it. 
+// Loop through product category list. If we find any category predefined in category_map - object, return it.
 async function checkCategory(categories) {
     let mapped_cat = null;
     categories.some((pc) => {
@@ -144,11 +144,11 @@ async function updatePrice(variation, priceVal) {
         },
         defaults: {
             price: priceVal
-        }   
+        }
     });
     if (createdPrice) {
         console.log("Didn't find price for variation_id: " + variation.get('id') + " , shop_id: " + Shop.get('id'))
-        await variation.addPrice(price);            
+        await variation.addPrice(price);
         await Shop.addPrice(price);
     } else {
         console.log("Found an existing price for variation, now I'm updating it");
@@ -162,26 +162,26 @@ async function updatePrice(variation, priceVal) {
 async function fetchReviews(variation, pid) {
     let url = reviews_url.replace('FOOBAR', pid);
     try {
-        let ext_ids = await models.sequelize.query("SELECT COALESCE(array_agg(ext_id), ARRAY[]::varchar[]) AS ext_ids FROM reviews WHERE variation_id = :variation_id", 
+        let ext_ids = await models.sequelize.query("SELECT COALESCE(array_agg(ext_id), ARRAY[]::varchar[]) AS ext_ids FROM reviews WHERE variation_id = :variation_id",
         {
-            replacements: {variation_id: variation.get('id')}, 
+            replacements: {variation_id: variation.get('id')},
             type: QueryTypes.SELECT,
             raw:true
         });
-        
+
         let existing = ext_ids.shift().ext_ids;
         let product = await models.Product.findByPk(variation.get('productId'));
         console.log("Käsittelen variaatiota " + variation.get('id') + ", Product noudettu, se on tässä: " +  product.get('id'));
         // Fetch reviews from api endpoint.
         // Filter only this variation specific reviews.
         // Filter only new reviews (review.id must not be found in this variation review ext ids.)
-    
+
         const fetchData = (url, i) => {
             let replacedUrl = url.replace('MUFASA', i);
             axios.get(replacedUrl).then((response) => {
                 response.data.reviews
                 .filter(review => review.ProductId === pid)
-                .filter(review => ! existing.includes(review.Id)) 
+                .filter(review => ! existing.includes(review.Id))
                 .map(async(review) => {
                     let [newReview, created] = await models.Review.findOrCreate({
                         where: {
@@ -199,7 +199,7 @@ async function fetchReviews(variation, pid) {
                         await product.addReview(newReview);
                     } else {
                         console.log("________MENI ARVOSTELU HUTI JOSTAIN SYYSTä________");
-                    } 
+                    }
                 })
                 return response;
             }).then((response) => {

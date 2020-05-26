@@ -1,6 +1,5 @@
 const axios = require("axios").default;
-
-const utils = require("./utils");
+const helpers = require("./helpers");
 
 let base_url =
     "https://web-api.service.verkkokauppa.com/search?context=category_page&contextFilter=!CATEGORY!&sort=releaseDate%3Adesc&rrSessionId=7d32a47e-e69a-4984-9075-b4f6bd3ef05c&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A&pageNo=!PAGENUM!";
@@ -60,31 +59,28 @@ const groupData = async (i, url, dataGroups) => {
 };
 
 const init = ( async() => {
-    shop = await utils.assignStore(shop);
+    shop = await helpers.assignStore(shop);
 
     if (null === shop) {
         console.log("No shop assigned.");
         return false;
     }
 
-    for (let i = 0; i < categories.length; i++) {
-        let c = categories[i];
+    //for (let i = 0; i < categories.length; i++) {
+        let c = categories[0];
         console.log("Käsitellään kategoriaa "+ c.name + " - " + c.code);
         let url = base_url.replace('!CATEGORY!', c.code);
         let data = await groupData(0, url, {});
         console.log("Kategoria: " + c.name + " käsitelty, prosessoidaan data");
         console.log(data);
-
-        utils.handle(data, c, shop);
-    }
+        await helpers.handle(data, c, shop);
+    //}
 });
 //init();
 
 const foobar = ( async() => {
-    //let shop = await utils.assignStore(shop);
-
     let data = [{
-        name_original: "Foobar lorem ipsum 123",
+        name: "Foobar lorem ipsum 123",
         name_parsed: "Sony Xperia 10 II",
         category: {
             id: "4793c",
@@ -105,7 +101,7 @@ const foobar = ( async() => {
               ]
         },
         brand: {
-              name:"Sony Mobile Communications",
+              name:"Sony",
               link:"http://www.sonymobile.com/global-en/"
         },
         mpns: ["XQAU52W.EEAC"],
@@ -116,7 +112,7 @@ const foobar = ( async() => {
         images: []
       }];
 
-    await utils.handle(data, categories[0], null);
+    await helpers.handle(data, null);
 
 });
 
@@ -132,7 +128,7 @@ foobar();
 const buildProductJsonData = (product, dataGroups) => {
     let parsed_name = getPlainName(product.name.fi, product.category.id);
     let productJson = {
-        name_original: product.name.fi,
+        name: product.name.fi,
         name_parsed: parsed_name,
         category: {
             id: product.category.id,
