@@ -1,17 +1,13 @@
-const { Sequelize, Op } = require('sequelize');
+const { Op, Sequelize} = require('sequelize');
 require('sequelize-hierarchy')(Sequelize);
 const sequelize = new Sequelize(process.env.DB_DATABASE,'arvostelu','arvostelu', {
-  host: 'localhost',
-  dialect: 'postgres',
-  logging: false
-});
+    host: 'localhost',
+    dialect: 'postgres',
+    logging: false
+  });
 
-/**
- * @property {JSON} models
- * @property {Product} Product
- */
+
 const models = {
-
   Category: sequelize.import('./Category'),
   Ean: sequelize.import('./Ean'),
   Mpn: sequelize.import('./Mpn'),
@@ -28,7 +24,13 @@ Object.keys(models).forEach((modelName) => {
     models[modelName].associate(models);
   }
 
-  /**
+  models.sequelize = sequelize;
+  models.Sequelize = Sequelize;
+
+  module.exports = { ...models };
+});
+
+/**
    * Tries to find all products with given name, ean-codes and model numbers.
    * @returns {Array}
    */
@@ -68,9 +70,41 @@ Object.keys(models).forEach((modelName) => {
     return [];
   }
 
-  models.sequelize = sequelize;
-  models.Sequelize = Sequelize;
+  /**
+   * Will merge given child products to master product.
+   * @param {JSON} master the product to merge to
+   * @param {Array} children all other products that will be merged
+   * @returns {Model} New master model
+   *
+   */
 
-  module.exports = { ...models };
-});
+  models.Product.mergeProducts = async function(master, children) {
+    let eans,mpns = [];
+    let names = [];
 
+    children.map((c) => {
+      if ('eans' in c && c.eans.length > 0) {
+        eans = eans.concat(c.eans);
+      }
+      if ('mpns' in c && c.mpns.length > 0) {
+        mpns = mpns.concat(c.mpns);
+      }
+      names.push(c.name);
+    });
+
+
+  models.Category.findCategory = async function(categories) {
+
+  }
+
+
+
+
+
+
+    // TODO: master tuotteeseen pitää yhdistää kaikkien lasten EAN-koodit
+    // TODO: master tuotteeseen pitää yhdistää kaikkien lasten MPN-koodit
+    // TODO: kaikkien lasten arvostelun product_id pitää vaihtaa masterin id:een
+    // TODO: kaikkien lasten nimi pitää siirtää masterin productNameksi
+
+  }

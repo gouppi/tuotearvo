@@ -41,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "ava",
+    "test": "DB_DATABASE=arvostelu_test node tests/init && ava",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -66,6 +66,9 @@
       "verbose": true,
       "environmentVariables": {
         "DB_DATABASE": "arvostelu_test"
-      }
+      },
+      "files": [
+        "!tests/init.js"
+      ]
   }
 }

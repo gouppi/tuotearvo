@@ -13,16 +13,14 @@ module.exports = (sequelize, type) => {
       reviewedAt: {
         type: type.DATE,
         allowNull: false,
-        defaultValue: sequelize.NOW
+        defaultValue: type.NOW
       }
   }, {
     underscored:true
   });
 
   Review.associate = (models) => {
-
     Review.belongsTo(models.Product);
-
   };
 
   return Review;

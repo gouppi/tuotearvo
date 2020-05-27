@@ -27,11 +27,11 @@ module.exports = (sequelize, type) => {
 		paranoid: true
 	});
 
-
 	Product.associate = (models) => {
 		Product.hasMany(models.Ean);
 		Product.hasMany(models.Mpn);
 		Product.hasMany(models.ProductName);
+		Product.hasMany(models.Review);
 		Product.belongsTo(models.Brand);
 		Product.belongsTo(models.Category);
 	}

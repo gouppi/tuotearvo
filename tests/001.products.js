@@ -1,18 +1,6 @@
 const test = require('ava');
-const {sequelize, Product, Ean, Mpn} = require('../models/index');
-
-
-/**
- * This test is run before any other test.
- */
-test.before("Initialize database", async t => {
-	await sequelize.sync({ force: true });
-	let result = await sequelize.query('SELECT current_database()', {
-		plain: true
-	});
-
-	t.is('arvostelu_test', result.current_database, "Correct database connected");
-})
+const {sequelize, Product, Ean, Mpn, Review} = require('../models/index');
+const P = require('../models/Product');
 
 test.serial('Database has no products', async t => {
 	let productsCount = await Product.count();
@@ -198,3 +186,71 @@ test.serial('Try to find with mismatching data', async t => {
 	let products = await Product.findProducts(payload);
 	t.falsy(products.length)
 });
+
+
+test.serial('Clear database data from existing products and insert two new', async t => {
+	await Product.truncate({cascade:true});
+	let count = await Product.count();
+	t.is(0, count, "Zero products after truncate");
+
+	let P1 = await Product.create({
+		group_name: 'iPhone 11 Pro',
+		name: 'Apple iPhone 11 Pro 64 Gt -puhelin, tähtiharmaa, MWC22',
+		image: 'https://www.image.here',
+		product_eans: [
+			{ ean: '0190199388536' },
+		],
+		product_mpns: [
+			{ mpn: 'MWC22FS/A' },
+		]
+	}, {
+		include: [Ean, Mpn]
+	});
+
+	t.truthy(P1.get('id'));
+
+	let P2 = await Product.create({
+		group_name: 'iPhone 11 Pro',
+		name: 'Apple iPhone 11 Pro 64 Gt -puhelin, space gray, MWC22',
+		image: 'https://www.image.here',
+		product_eans: [
+			{ ean: '0190199388529' },
+		],
+		product_mpns: [
+			{ mpn: 'MWC22QN/A' },
+		]
+	}, {
+		include: [Ean, Mpn]
+	});
+
+	t.truthy(P2.get('id'));
+	count = await Product.count();
+	t.is(2, count);
+
+	let R1 = await Review.create({
+		ext_id: '123123',
+		text: "Tämä on erittäin hyvä puhelin ja tykkään nimestä tähtiharmaa",
+		title:"Erittäin onnellinen iPhone-omistaja",
+		score: 5,
+		origin: "Testi.test",
+	});
+	await P2.addReview(R1);
+
+	count = await Review.count({where: {product_id: P2.get('id')}})
+	t.is(1, count);
+
+});
+
+
+// test.serial("Merging two existing products with overlapping EANS", async t => {
+
+// 	let products = await Product.findProducts({eans: ["0190199388529", "0190199388536"] })
+// 	t.is(2, products.length)
+// 	t.is("Apple iPhone 11 Pro 64 Gt -puhelin, tähtiharmaa, MWC22", products[0].name)
+// 	t.is("Apple iPhone 11 Pro 64 Gt -puhelin, space gray, MWC22", products[1].name)
+
+// 	let merged = await Product.mergeProducts(products.shift(), products);
+// 	t.is("Apple iPhone 11 Pro 64 Gt -puhelin, tähtiharmaa, MWC22", merged.name);
+// 	t.truthy(merged.additional_names.includes("Apple iPhone 11 Pro 64 Gt -puhelin, space gray, MWC22"));
+
+// });

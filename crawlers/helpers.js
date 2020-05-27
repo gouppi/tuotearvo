@@ -93,19 +93,23 @@ const createNewProduct = async(p) => {
 
 const findCategory = async(c) => {
     // From top to bottom
-    console.log(c);
-    let reverse = c.path.reverse();
-    let C;
-    for (let i = 0; i < reverse.length; i++) {
-        let name = reverse[i].name; // "4793c"
-        C = await models.Category.findOne({where:{name:name}});
-        if (C) break;
-    }
+    try {
+        let reverse = c.reverse();
+        let C;
+        for (let i = 0; i < reverse.length; i++) {
+            let name = reverse[i].name; // "4793c"
+            C = await models.Category.findOne({where:{name:name}});
+            if (C) break;
+        }
 
-    if (! C) {
-        throw new Error("Can't map categories to any existing one");
+        if (! C) {
+            throw new Error("Can't map categories to any existing one");
+        }
+        return C;
+    } catch (err) {
+        console.log(err)
+        return null;
     }
-    return C;
 }
 
 
@@ -118,21 +122,28 @@ const findCategory = async(c) => {
  */
 const handle = async (payload, shop) => {
     for (let i = 0; i < payload.length; i++) {
-        let products = await models.Product.findProducts(payload[i])
-        let P = products.shift();
-        if (! P) {
-            try {
+        try {
+            let products = await models.Product.findProducts(payload[i])
+            let P = products.shift();
+            if (! P) {
                 let C = await findCategory(payload[i].category);
                 let B = await findBrand(payload[i].brand.name, payload[i].name);
                 P = await createNewProduct(payload[i]);
                 C.addProduct(P);
                 B.addProduct(P);
-
-
-            } catch (err) {
-                console.log(err);
             }
 
+            if (!P) {
+                throw new Error("Didn't create new product " + payload[i].name);
+            }
+
+
+
+
+        }
+
+        catch (err) {
+            console.log(err);
         }
 
     }
@@ -145,3 +156,4 @@ exports.createNewProduct = createNewProduct
 exports.isDataValidForCreation = isDataValidForCreation
 exports.findBrand = findBrand
 exports.handle = handle
+exports.findCategory = findCategory
