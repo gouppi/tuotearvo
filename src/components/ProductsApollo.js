@@ -11,7 +11,7 @@ const ProductsApollo = (props) => (
     <Query
         query={gql`
         {
-            products(required:${props.required}, limit:10) {
+            products(limit:10) {
                 id
                 model
                 image
@@ -34,10 +34,10 @@ const ProductsApollo = (props) => (
             console.log(error);
             return <p>Error :(</p>;
         }
-        
+
         console.log(data.products[0]);
         return data.products.map((product) => (
-            
+
             <ReviewCardAlt key={product.id} data={product} />
         ));
         }}

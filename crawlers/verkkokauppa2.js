@@ -5,6 +5,7 @@ let base_url =
     "https://web-api.service.verkkokauppa.com/search?context=category_page&contextFilter=!CATEGORY!&sort=releaseDate%3Adesc&rrSessionId=7d32a47e-e69a-4984-9075-b4f6bd3ef05c&rrRcs=eF5jYSlN9jAwMEs1TEw21jVJNDXVNTFKBhImaUm6poamySaJFiZmRmYpXLllJZkpfJYWlrqGuoYAf0wN0A&pageNo=!PAGENUM!";
 
 let shop = 'Verkkokauppa';
+let reviews_url = "https://web-api.service.verkkokauppa.com/product/!PRODUCTID!/reviews?pageNo=!PAGENUM!"
 
 let categories = [
     {
@@ -32,33 +33,47 @@ let categories = [
         "parent": "Puhelimet",
         "code": "6504c"
     },
+    {
+        "name": "Televisiot",
+        "parent": "TV ja Video",
+        "code": "438b"
+    }
 ];
+
 
 /**
  *
  * @param {*} i
  * @param {*} url
- * @param {*} dataGroups
  */
-const groupData = async (i, url, dataGroups) => {
+const groupData = async (i, url) => {
     console.log("groupData, ollaan menossa indeksissä numero " + i);
-    console.log("DataGroupsin sisällä on " + Object.keys(dataGroups).length + " avainta");
     let response = await axios.get(url.replace("!PAGENUM!", i));
-    response.data.products
-        .filter((product) => product.bundleProducts.length === 0)
-        .map((product, j) => {
-            console.log("Prosessoidaan kierroksen: " + i + " tuotetta: " + j);
-            buildProductJsonData(product, dataGroups);
-            return true;
-        });
+
+    for (let i = 0; i < response.data.products.length; i++) {
+        let p = response.data.products[i];
+        if (p.bundleProducts.length > 0) {
+            continue;
+        }
+
+        let json = buildProductJsonData(p);
+        let Product = await helpers.handle(json, shop);
+        if (null === Product) {
+            console.log("Ei löydetty/luotu tuotetta: ", json.name);
+            continue;
+        }
+
+        await fetchReviews(Product,0);
+    }
 
     if (response.data.numPages && response.data.numPages > i) {
-        dataGroups = await groupData(++i, url, dataGroups);
+        await groupData(++i, url);
     }
-    return dataGroups;
-};
+    return true;
+}
 
-const init = ( async() => {
+
+const init = (async () => {
     shop = await helpers.assignStore(shop);
 
     if (null === shop) {
@@ -66,58 +81,15 @@ const init = ( async() => {
         return false;
     }
 
-    //for (let i = 0; i < categories.length; i++) {
-        let c = categories[0];
-        console.log("Käsitellään kategoriaa "+ c.name + " - " + c.code);
+    for (let i = 0; i < categories.length; i++) {
+        let c = categories[i];
+        console.log("Käsitellään kategoriaa " + c.name + " - " + c.code);
         let url = base_url.replace('!CATEGORY!', c.code);
-        let data = await groupData(0, url, {});
+        await groupData(0, url);
         console.log("Kategoria: " + c.name + " käsitelty, prosessoidaan data");
-        console.log(data);
-        await helpers.handle(data, c, shop);
-    //}
+    }
 });
-//init();
-
-const foobar = ( async() => {
-    let data = [{
-        name: "Foobar lorem ipsum 123",
-        name_parsed: "Sony Xperia 10 II",
-        category: {
-            id: "4793c",
-            name: "Android",
-            path: [
-              {
-                  name: "Puhelimet",
-                  id: "22a"
-              },
-              {
-                  name: "Puhelimet",
-                  id: "658b"
-              },
-              {
-                  name: "Android",
-                  id: "4793c"
-              }
-              ]
-        },
-        brand: {
-              name:"Sony",
-              link:"http://www.sonymobile.com/global-en/"
-        },
-        mpns: ["XQAU52W.EEAC"],
-        eans: ["0000000123123","0000000242424"],
-        price: 369,
-        external_id: "51649",
-        product_page_link: "/fi/product/51649/nkfxc/Sony-Xperia-10-II-Android-puhelin-Dual-SIM-128-Gt-valkoinen",
-        images: []
-      }];
-
-    await helpers.handle(data, null);
-
-});
-
-foobar();
-
+init();
 
 
 /**
@@ -127,14 +99,12 @@ foobar();
  */
 const buildProductJsonData = (product, dataGroups) => {
     let parsed_name = getPlainName(product.name.fi, product.category.id);
+    let image = product.images.shift();
+    image = image.hasOwnProperty('orig') ? image.orig : null;
     let productJson = {
         name: product.name.fi,
         name_parsed: parsed_name,
-        category: {
-            id: product.category.id,
-            name: product.category.name,
-            path: product.category.path,
-        },
+        category: product.category.path,
         brand: {
             name: product.brand.name,
             link: product.brand.url,
@@ -142,11 +112,12 @@ const buildProductJsonData = (product, dataGroups) => {
         mpns: product.mpns,
         eans: product.eans,
         price: product.price.current,
-        external_id: product.productId,
+        external_id: product.pid,
         product_page_link: product.href.fi,
-        images: product.images,
+        image: image,
+        images: product.images
     };
-    return dataGroups.push(productJson);
+    return productJson;
 }
 
 /**
@@ -182,6 +153,7 @@ const getAdditionalRules = (category_id) => {
     let parse_rules = {
         "4793c": new RegExp(/-?Android/gi),
         "4820c": new RegExp(/-?konferenssikaiutin|-?kaiutinmikrofoni/gi),
+        "438b": new RegExp(/-televisio/gi),
     };
     return parse_rules.hasOwnProperty(category_id)
         ? parse_rules[category_id]
@@ -200,3 +172,32 @@ const skipParsingForCategory = (category_id) => {
     ];
     return skip_list.includes(category_id);
 };
+
+
+const fetchReviews = async (Product, i) => {
+    let url = reviews_url.replace('!PRODUCTID!', Product.get('fetch_data').external_id).replace('!PAGENUM!', i);
+    let response = await axios.get(url);
+
+    for (let i = 0; i < response.data.reviews.length; i++) {
+        let review = response.data.reviews[i];
+        let reviewData = {
+            external_id: review.Id,
+            recommends: review.IsRecommended,
+            rating: review.Rating,
+            secondaryRatings: review.SecondaryRatings,
+            reviewText: review.ReviewText,
+            reviewTitle: review.Title,
+            reviewedAt: review.SubmissionTime
+        }
+        let R = await helpers.createReview(reviewData,shop);
+        if (!R ) {
+            continue;
+        }
+        await Product.addReview(R);
+    }
+
+    if (response.data.hasOwnProperty('numPages') && response.data.numPages > i+1) {
+        await fetchReviews(Product, ++i);
+    }
+    return true;
+}

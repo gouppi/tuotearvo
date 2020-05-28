@@ -16,12 +16,12 @@ module.exports = {
         if (args.catId) {
             whereCondition = {...whereCondition, categoryId: args.catId};
         }
-        
+
         let req = false;
         if (args.required) {
             req = true;
         }
-        
+
         // TODO: front page resolver needs only 1 possible review?
 
         // TODO: This resolver is used on front page and on product-page.
@@ -30,18 +30,7 @@ module.exports = {
             where: whereCondition,
             limit: args.limit ? args.limit : null,
             include: [
-                {
-                    model: context.models.Variation,
-                    include: {
-                        model: context.models.Price
-                    }
-                },
-                {
-                    model: context.models.Category,
-                },
-                {
-                    model: context.models.Brand
-                },
+                
                 {
                     model: context.models.Review,
                     // TODO: limit 1 here of only the recent review text is needed!!!!
@@ -52,7 +41,7 @@ module.exports = {
                             include: {
                                 model: context.models.Shop
                             }
-                            
+
                         }
                     },
                     required: req
@@ -92,7 +81,7 @@ module.exports = {
               products.image,
               count(reviews.id) AS reviews_count,
               ROUND(AVG(reviews.score), 1) AS average_score
-            FROM products LEFT JOIN reviews ON (reviews.product_id = products.id) ${whereQry} GROUP BY products.id ORDER BY products.id LIMIT :limit OFFSET :offset `, 
+            FROM products LEFT JOIN reviews ON (reviews.product_id = products.id) ${whereQry} GROUP BY products.id ORDER BY products.id LIMIT :limit OFFSET :offset `,
               {
                 type: QueryTypes.SELECT,
                 replacements: replacements}
@@ -106,11 +95,21 @@ module.exports = {
         // TODO: count -> how many products in selected brand/category
         let categories = await context.models.Category.findAll({hierarchy:true});
         let brands = await context.models.Brand.findAll();
-        
+
         return {
             categories: categories ? categories : [],
-            brands: brands ? brands: []  
+            brands: brands ? brands: []
         };
+     },
+
+     productGroup: async (args,context,info) => {
+         let Products = context.models.sequelize.query(`
+         SELECT DISTINCT id, group_name, image, FROM`)
+         console.log(Products);
+         return Products;
+        }
+    }
+/*`)
      }
 }
 
@@ -124,3 +123,4 @@ module.exports = {
 //         throw err;
 //     }
 // },
+*/

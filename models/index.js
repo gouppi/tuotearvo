@@ -3,7 +3,7 @@ require('sequelize-hierarchy')(Sequelize);
 const sequelize = new Sequelize(process.env.DB_DATABASE,'arvostelu','arvostelu', {
     host: 'localhost',
     dialect: 'postgres',
-    logging: false
+
   });
 
 
@@ -12,7 +12,7 @@ const models = {
   Ean: sequelize.import('./Ean'),
   Mpn: sequelize.import('./Mpn'),
   Product: sequelize.import('./Product'),
-  ProductName: sequelize.import('./ProductName'),
+  Family: sequelize.import('./Family'),
   Brand: sequelize.import('./Brand'),
   Review: sequelize.import('./Review'),
   Price: sequelize.import('./Price'),

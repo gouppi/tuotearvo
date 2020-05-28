@@ -28,12 +28,13 @@ module.exports = (sequelize, type) => {
 	});
 
 	Product.associate = (models) => {
+		Product.belongsTo(models.Family);
 		Product.hasMany(models.Ean);
 		Product.hasMany(models.Mpn);
-		Product.hasMany(models.ProductName);
+		//Product.hasMany(models.ProductName);
 		Product.hasMany(models.Review);
-		Product.belongsTo(models.Brand);
-		Product.belongsTo(models.Category);
+		//Product.belongsTo(models.Brand);
+		//Product.belongsTo(models.Category);
 	}
 
 	return Product;

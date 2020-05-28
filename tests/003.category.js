@@ -92,3 +92,9 @@ test.serial('Helper function with empty array', async t => {
     let C = await helpers.findCategory([]);
     t.falsy(C, "Empty array returns null")
 })
+
+test.serial('Helper function with null', async t => {
+    let C = await helpers.findCategory(null);
+    t.falsy(C, "Null returns null");
+});
+

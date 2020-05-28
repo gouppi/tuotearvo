@@ -1,6 +1,6 @@
 const models = require('../models/index');
 const axios = require('axios').default;
-const {Op,QueryTypes } = require("sequelize");
+const { Op, QueryTypes } = require("sequelize");
 const maps = require('./map');
 
 let brands;
@@ -12,7 +12,7 @@ let brands;
  * @returns Shop ORM object or NULL
  */
 const assignStore = async (name) => {
-    return await models.Shop.findOne({where: {name: name}});
+    return await models.Shop.findOne({ where: { name: name } });
 }
 
 /**
@@ -23,7 +23,7 @@ const assignStore = async (name) => {
  * @param {string} name Products name as found from shop
  * @returns Product name prepended with possible brand name
  */
-const addBrandToName = async(brand,name) => {
+const addBrandToName = async (brand, name) => {
     if (brand.length > 0 && !name.toLowerCase().includes(brand.toLowerCase())) {
         name = `${brand} ${name}`;
     }
@@ -39,26 +39,33 @@ const addBrandToName = async(brand,name) => {
 
 // TODO : MITEN TÄMÄ SAADAAN SIIRRETTYÄ BRANDS MODELIN ALLE??????
 
-const findBrand = async (brand, display_name)  => {
+const findBrand = async (brand, display_name) => {
     let Brand = await models.sequelize.query("SELECT * FROM brands WHERE name = :brand OR :display_name ILIKE name || '%'",
-    {
-        replacements: {
-            brand: brand,
-            display_name:display_name
-        },
-        model: models.Brand,
-        plain:true
-    });
+        {
+            replacements: {
+                brand: brand,
+                display_name: display_name
+            },
+            model: models.Brand,
+            plain: true
+        });
+
     if (!Brand) {
-        throw new Error("Couldn't find brand for " + brand);
+        Brand = await models.Brand.create({
+            name: brand
+        });
     }
+
+    if (!Brand) {
+        console.log("Cannot create new brand named " + brand);
+    }
+
     return Brand;
 }
 
 
 /**
- * Makes sure that we have necessary data for creating new variation.
- * If we can't create variation, there is no need for creating product, either.
+ * Makes sure that we have necessary data for creating new product.
  * @param {JSON} payload
  * @returns {boolean}
  */
@@ -66,50 +73,87 @@ const isDataValidForCreation = async (data) => {
     return true;
 }
 
-const createNewProduct = async(p) => {
+const createNewProduct = async (p) => {
+    console.log("Create New Product");
+    let P = null;
     try {
         isDataValidForCreation(p);
-        let P = await models.Product.create({
+        P = await models.Product.create({
             group_name: p.name_parsed,
             name: p.name,
-            image: 'https://www.image.here',
-            product_eans: p.eans.map((ean) => ({ean: ean})),
-            product_mpns: p.mpns.map((mpn) => ({mpn:mpn})),
+            image: p.image,
+            product_eans: p.eans.map((ean) => ({ ean: ean })),
+            product_mpns: p.mpns.map((mpn) => ({ mpn: mpn })),
+            fetch_data: p,
         }, {
             include: [{
                 model: models.Ean,
 
-            },{
+            }, {
                 model: models.Mpn,
 
             }]
         });
-        return P;
     } catch (err) {
         console.log(err);
     }
-    return null;
+
+    return P;
 }
 
-const findCategory = async(c) => {
+const createNewFamily = async (name, image) => {
+    // TODO: tänne uuden tuoteperheen luontifunktiota
+    console.log("Create new Family, name: " + name + ", image: " + image);
+    let F = await models.Family.create({
+        name: name,
+        image: image
+    });
+    console.log("Uusi tuoteperhe luotu, iD on: " + F.get('id'));
+    return F;
+}
+
+const findCategory = async (c) => {
     // From top to bottom
+    let C = null;
     try {
+        if (null === c) {
+            throw new Error("Given category structure is not valid for finding proper category");
+        }
         let reverse = c.reverse();
-        let C;
         for (let i = 0; i < reverse.length; i++) {
             let name = reverse[i].name; // "4793c"
-            C = await models.Category.findOne({where:{name:name}});
-            if (C) break;
+            C = await models.Category.findOne({ where: { name: name } });
+            if (C) {
+                console.log("Found category : " + C.name);
+                break;
+            }
         }
 
-        if (! C) {
-            throw new Error("Can't map categories to any existing one");
+        if (!C) {
+            throw new Error("Can't map categories to any existing one: ", c);
         }
-        return C;
+
     } catch (err) {
-        console.log(err)
-        return null;
+        console.log(err);
     }
+    return C;
+}
+
+const findFamily = async (name) => {
+    let F = null;
+    try {
+        if (null === name) {
+            throw new Error("Cannot find product family without proper search word");
+        }
+        F = await models.Family.findOne({ where: { name: name } });
+        if (!F) {
+            throw new Error("Didn't find family with given parameter");
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
+    return F;
 }
 
 
@@ -121,31 +165,69 @@ const findCategory = async(c) => {
  * @param {String} shop Name of the shop, e.g. "Verkkokauppa.com"
  */
 const handle = async (payload, shop) => {
-    for (let i = 0; i < payload.length; i++) {
-        try {
-            let products = await models.Product.findProducts(payload[i])
-            let P = products.shift();
-            if (! P) {
-                let C = await findCategory(payload[i].category);
-                let B = await findBrand(payload[i].brand.name, payload[i].name);
-                P = await createNewProduct(payload[i]);
-                C.addProduct(P);
-                B.addProduct(P);
+    //for (let i = 0; i < payload.length; i++) {
+
+    try {
+        let products = await models.Product.findProducts(payload)
+        let P = products.shift();
+
+        if (!P) {
+            console.log("Did not find existing product, lets create new");
+            // Try to find suitable family for this product
+            let Family = await findFamily(payload.name_parsed);
+            //console.log("Family name: " + Family.name);
+            // Didn't find one, try to find category + brand for this product and create new family and product
+            if (!Family) {
+                console.log("Perhettä ei löytynyt, pitää luoda uusi");
+                let C = await findCategory(payload.category);
+                console.log("Category name:" + C.name);
+                let B = await findBrand(payload.brand.name, payload.name);
+                console.log("Brand name:" + B.name);
+                if (C !== null && B !== null) {
+                    Family = await createNewFamily(payload.name_parsed, payload.image);
+                    await Family.setBrand(B);
+                    await Family.setCategory(C);
+                }
             }
 
-            if (!P) {
-                throw new Error("Didn't create new product " + payload[i].name);
+            if (!Family) {
+                throw new Error("Didn't create new family: " + payload.name_parsed);
             }
-
-
-
-
+            P = await createNewProduct(payload);
+            await Family.addProduct(P);
         }
 
-        catch (err) {
-            console.log(err);
+        if (!P) {
+            throw new Error("Didn't create new product " + payload.name);
         }
 
+        return P;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
+const createReview = async (reviewData, shop) => {
+    try {
+        let R = await models.Review.create({
+            external_id: reviewData.external_id,
+            text: reviewData.reviewText,
+            title: reviewData.reviewTitle,
+            recommends: reviewData.recommends,
+            rating: reviewData.rating,
+            origin: shop.name,
+            reviewedAt: reviewData.reviewedAt,
+            fetch_data: reviewData
+        });
+        console.log("Arvostelu luotu");
+        return R;
+    } catch (err) {
+        if ('constraint' in err && err.constraint !== 'reviews_external_id_key') {
+            console.log(err.detail);
+        }
+        return null;
     }
 }
 
@@ -157,3 +239,4 @@ exports.isDataValidForCreation = isDataValidForCreation
 exports.findBrand = findBrand
 exports.handle = handle
 exports.findCategory = findCategory
+exports.createReview = createReview

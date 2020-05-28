@@ -5,16 +5,22 @@ module.exports = (sequelize, type) => {
         primaryKey: true,
         autoIncrement: true
       },
-      ext_id: type.STRING,
+      external_id: {
+        type: type.STRING,
+        allowNull: false,
+        unique: true
+      },
       text: type.TEXT,
       title: type.STRING,
-      score: type.INTEGER,
+      recommends: type.BOOLEAN,
+      rating: type.INTEGER,
       origin: type.STRING,
       reviewedAt: {
         type: type.DATE,
         allowNull: false,
         defaultValue: type.NOW
-      }
+      },
+      fetch_data: type.JSONB
   }, {
     underscored:true
   });

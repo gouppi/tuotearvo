@@ -21,13 +21,16 @@
             }
             ]
       },
-      "brand": [Object],
-      "mpns": [Array],
-      "eans": [Array],
+      "brand": {
+            "name":"Sony Mobile Communications",
+            "link":"http://www.sonymobile.com/global-en/"
+      },
+      "mpns": ["XQAU52W.EEAC"],
+      "eans": ["7311271631712"],
       "price": 369,
       "external_id": "51649",
       "product_page_link": "/fi/product/51649/nkfxc/Sony-Xperia-10-II-Android-puhelin-Dual-SIM-128-Gt-valkoinen",
-      "images": [Array]
+      "images": []
     },
     {
       "name_original": "Sony Xperia 10 II -Android-puhelin Dual-SIM, 128 Gt, musta",
