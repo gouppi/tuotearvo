@@ -5,6 +5,7 @@ module.exports = buildSchema(`
     type Product {
         id: ID!
         name: String!
+        group_name: String!
         image: String!
         reviews: [Review!]
         reviews_count: Int
@@ -26,17 +27,14 @@ module.exports = buildSchema(`
 
     type Review {
         id: ID!
-        display_name: String
-        model_code: String
-        title: String
         text: String
-        score: String
+        text_short: String
+        title: String
+        recommends: Boolean
+        rating: Int
         origin: String
-
-
-        createdAt: String
-        updatedAt: String
         reviewedAt: String
+        product: Product!
     }
 
     type Price {
@@ -69,6 +67,7 @@ module.exports = buildSchema(`
     type RootQuery {
         families(limit: Int, offset: Int): [Family!]
         products(limit: Int, offset: Int): [Product!]!
+        recentReviews: [Review!]!
     }
 
     schema {

@@ -26,45 +26,45 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ImgMediaCard(props) {
+export default function ImgMediaCard(props,i) {
 
   function truncate(str, n){
     return (str.length > n) ? str.substr(0, n-1) + '...' : str;
   };
 
   const classes = useStyles();
-  const { id,model,image,reviewedAt } = props.data;
-  const recentReview = props.data.reviews[0] ? props.data.reviews[0] : {};
-  
-  
+  const { rating,text,title,product,reviewedAt } = props.data;
+
+
+
 
   return (
-    <Grid item xs={6} md={3}>
-        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${id}/stores`}>
+    <Grid key={i} item xs={6} md={3}>
+        <LinkUI style={{textDecoration:'none'}} component={Link} to={`/product/${product.id}/stores`}>
         <Card className={classes.root}>
         <CardActionArea>
             <CardMedia
             component="img"
             alt="Contemplative Reptile"
             height="140"
-            image={image ? image : 'https://i.picsum.photos/id/400/200/300.jpg'}
+            image={product.image ? product.image : 'https://i.picsum.photos/id/400/200/300.jpg'}
             title="Contemplative Reptile"
             />
             <CardContent>
             <Typography style={{fontWeight:100,fontSize:'1rem',overflow:'hidden', display:'-webkit-box', 'WebkitBoxOrient':'vertical', 'WebkitLineClamp':'2', textOverflow:'ellipsis' }} gutterBottom variant="h6">
-                {model}
+                {product.group_name}
             </Typography>
             <Rating
               size="small"
               precision={0.1}
               name="simple-controlled"
-              value={recentReview.hasOwnProperty('score') ? recentReview.score : 0}
-              label={recentReview.hasOwnProperty('score') ? recentReview.score : 0}
+              value={rating}
+              label={rating}
               readOnly
               />
                 <Typography variant="subtitle2" component="p">{reviewedAt}</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {recentReview.hasOwnProperty('text') ?truncate(recentReview.text, 70) : ''}
+                    {truncate(text, 70)}
                 </Typography>
 
             </CardContent>

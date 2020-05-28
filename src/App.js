@@ -34,8 +34,8 @@ function App() {
       <div className="App">
       <Router>
         <Navigation setSearchTerm={setSearchTerm}/>
-        
-        <Container style={{padding:'124px 10px 10px', minHeight:'100vh', height:'100%', backgroundColor:'white'}} maxWidth="lg">
+
+        <Container style={{padding:'124px 10px 10px', minHeight:'100vh', height:'100%', backgroundColor:'white'}} maxWidth="xl">
           <Grid container spacing={3}>
             <Grid item md={10}>
             <Container maxWidth="md">
@@ -49,8 +49,8 @@ function App() {
                               />
                               </Container>
 
-            
-            
+
+
             <Switch>
               <Route exact path="/">
                 <Landing />
@@ -81,7 +81,7 @@ function App() {
                                 />
               </Grid>
             </Grid>
-          
+
         </Container>
       </Router>
       </div>

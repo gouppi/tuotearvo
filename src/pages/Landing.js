@@ -6,7 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import EuroIcon from '@material-ui/icons/Euro';
 
-import ProductsApollo from '../components/ProductsApollo';
+//import ProductsApollo from '../components/ProductsApollo';
+import RecentReviews from '../components/Apollo/RecentReviews';
 
 export default function Landing() {
 
@@ -15,11 +16,11 @@ export default function Landing() {
     });
 
     return (
-        <Container maxWidth="md">
-            
+        <Container maxWidth="xl">
             <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Hei taas! Nämä arvostelut ovat ilmestyneet viimeisimmän käyntisi jälkeen:</Typography>
             <Grid style={{paddingBottom:'0.5em'}} container spacing={4}>
-              <ProductsApollo required={true}/>
+            <RecentReviews/>
+
             </Grid>
             <Typography style={{paddingBottom:'1em',paddingTop:'50px',fontWeight:100}} variant="h4">Kuinka tämä palvelu toimii?</Typography>
             <Grid container spacing={3}>
@@ -37,7 +38,7 @@ export default function Landing() {
                     </Paper>
                 </Grid>
                 <Grid item xs={6} md={4}>
-                    <Paper square>                    
+                    <Paper square>
                     <Typography style={{fontWeight:100}} variant="h3" align="center"><EuroIcon style={{fontSize:'100px'}}></EuroIcon></Typography>
                     <Typography style={{fontWeight:100}} variant="h6" align="center">Lorem ipsum dolor sit</Typography>
 
