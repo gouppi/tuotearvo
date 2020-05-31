@@ -9,6 +9,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASE,'arvostelu','arvostelu',
 
 const models = {
   Category: sequelize.import('./Category'),
+  CategoryAlias: sequelize.import('./CategoryAlias'),
   Ean: sequelize.import('./Ean'),
   Mpn: sequelize.import('./Mpn'),
   Product: sequelize.import('./Product'),

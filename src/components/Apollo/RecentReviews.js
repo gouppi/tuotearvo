@@ -16,6 +16,8 @@ const RecentReviews = (props) => (
           origin
           reviewedAt
           product {
+            id
+            product_family_id
             name
             group_name
             image
@@ -31,7 +33,7 @@ const RecentReviews = (props) => (
         return <p>Error :(</p>;
       }
 
-      console.log(data.recentReviews);
+
       return data.recentReviews.map((review) => (
         <ReviewCardAlt key={review.id} data={review} />
       ));

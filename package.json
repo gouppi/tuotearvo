@@ -23,6 +23,7 @@
     "jsdom": "^16.2.2",
     "material-ui-dropzone": "^3.0.0",
     "material-ui-icons": "^1.0.0-beta.36",
+    "material-ui-image": "^3.2.3",
     "md5": "^2.2.1",
     "pg": "^8.1.0",
     "pg-hstore": "^2.3.3",
@@ -63,12 +64,12 @@
     "ava": "^3.8.2"
   },
   "ava": {
-      "verbose": true,
-      "environmentVariables": {
-        "DB_DATABASE": "arvostelu_test"
-      },
-      "files": [
-        "!tests/init.js"
-      ]
+    "verbose": true,
+    "environmentVariables": {
+      "DB_DATABASE": "arvostelu_test"
+    },
+    "files": [
+      "!tests/init.js"
+    ]
   }
 }

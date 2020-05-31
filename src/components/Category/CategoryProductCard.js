@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 export default function ImgMediaCard(props, i) {
 
   const classes = useStyles();
-  const { rating, text, title, product, reviewedAt } = props.data;
+  let product = props.data;
 
   return (
     <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
@@ -48,22 +48,22 @@ export default function ImgMediaCard(props, i) {
               <Typography>
                 {product.group_name}
               </Typography>
-              <Typography variant="caption">
-                {title}
+              {/* <Typography variant="caption">
+                {props.title}
               </Typography>
 
               <Rating
                 size="small"
                 precision={0.1}
                 name="simple-controlled"
-                value={rating}
-                label={rating}
+                value={props.rating}
+                label={props.rating}
                 readOnly
-              />
-              <Typography variant="subtitle2" component="p">{new Date(parseInt(reviewedAt)).toLocaleString()}</Typography>
+              /> */}
+              {/* <Typography variant="subtitle2" component="p">{new Date(parseInt(props.reviewedAt)).toLocaleString()}</Typography>
               <Typography color="textSecondary" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
-                {text}
-              </Typography>
+                {props.text}
+              </Typography> */}
 
             </CardContent>
           </Paper>

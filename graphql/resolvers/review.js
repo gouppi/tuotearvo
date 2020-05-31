@@ -19,7 +19,7 @@ module.exports = {
                 ['reviewed_at','desc']
             ],
         });
-
+        console.log("RecentReviews", products[0]   );
         return products ? products : [];
     }
 
