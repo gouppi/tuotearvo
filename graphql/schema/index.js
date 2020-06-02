@@ -9,10 +9,19 @@ module.exports = buildSchema(`
         image: String!
         reviews: [Review!]
         reviews_count: Int
+        rating_avg: Float
         createdAt: String
         updatedAt: String
         product_family_id: Int
+        category: Category!
+        parent_categories: [ParentCategory!]
     }
+
+    type ParentCategory {
+        name: String!
+        seo_name: String!
+    }
+
 
     type Category {
         id: ID!
@@ -68,7 +77,9 @@ module.exports = buildSchema(`
 
     type RootQuery {
         families(limit: Int, offset: Int): [Family!]
-        products(limit: Int, offset: Int, categorySeoName: String): [Product!]!
+        products(limit: Int, offset: Int, categorySeoName: String!): [Product!]!
+        product(id: Int!): Product
+        categoryProducts(limit: Int, categorySeoName: String!): [Product!]
         productFamily(id: Int!): FamilyProduct!
         recentReviews: [Review!]!
         categories: [Category!]!

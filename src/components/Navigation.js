@@ -49,10 +49,14 @@ const FILTERS_QRY = gql`
 `;
 
 const useStyles = makeStyles((theme) => ({
-  appBar: {},
+  appBar: {
+
+      borderBottom: '3px solid orange'
+  },
   subBar: {},
   kontti: {},
   toolbar: {
+
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
@@ -115,6 +119,7 @@ export default function Navigation(props) {
   return (
     <React.Fragment>
       <AppBar
+
         position="sticky"
         color="transparent"
         elevation={0}
@@ -179,7 +184,7 @@ export default function Navigation(props) {
                         </div>
                         */}
           </ToolBar>
-          <Divider />
+          <Divider variant="fullWidth" />
           {/* <ToolBar variant="dense" className={classes.toolbar} disableGutters={true}>
                         <nav>
                             <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
@@ -213,7 +218,7 @@ export default function Navigation(props) {
                         <LinkUI
                           key={i}
                           component={Link}
-                          to={"/kategoriat/"+category.seo_name}
+                          to={"/tuotteet/"+category.seo_name}
                           variant="button"
                           color="textPrimary"
                           href="/asdasdasd"
@@ -240,7 +245,7 @@ export default function Navigation(props) {
           </ToolBar>
         </Container>
       </AppBar>
-      <Divider />
+
 
       <AuthModal
         dialogOpen={dialogOpen}

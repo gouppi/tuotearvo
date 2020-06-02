@@ -5,13 +5,20 @@ import gql from "graphql-tag";
 import CategoryProductCard from "../Category/CategoryProductCard";
 
 const CATEGORY_PRODUCTS_QUERY = gql`
-  query categoryProducts($categorySeoName: String, $limit: Int) {
+  query categoryProducts($categorySeoName: String!, $limit: Int) {
     products(limit: $limit, categorySeoName: $categorySeoName) {
       id
       product_family_id
       image
+      reviews_count
+      rating_avg
       name
       group_name
+      category {
+        id
+        name
+        seo_name
+      }
       reviews {
         id
         text
@@ -33,7 +40,7 @@ const CategoryProducts = (props) => (
         return <p>Error :(</p>;
       }
 
-      console.log("CategoryProducts koko setti tässä", data.products);
+     console.log("CategoryProducts koko setti tässä", data.products);
       return data.products.map((product, i) => (
         <CategoryProductCard key={product.id} data={product} />
       ));

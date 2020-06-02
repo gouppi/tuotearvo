@@ -21,6 +21,13 @@ const RecentReviews = (props) => (
             name
             group_name
             image
+            category {
+              seo_name
+            }
+            parent_categories {
+              name
+              seo_name
+            }
           }
         }
       }
@@ -32,7 +39,6 @@ const RecentReviews = (props) => (
         console.log(error);
         return <p>Error :(</p>;
       }
-
 
       return data.recentReviews.map((review) => (
         <ReviewCardAlt key={review.id} data={review} />

@@ -13,7 +13,12 @@ module.exports = {
             include: [
                 {
                     model: context.models.Product,
-                },
+                    include: [
+                        {
+                            model: context.models.Category,
+                        }
+                    ],
+                }
             ],
             order: [
                 ['reviewed_at','desc']

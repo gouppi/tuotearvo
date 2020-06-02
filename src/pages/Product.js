@@ -45,7 +45,7 @@ const AntTabs = withStyles({
       backgroundColor: '#1890ff',
     },
   })(Tabs);
-  
+
   const AntTab = withStyles((theme) => ({
     root: {
       textTransform: 'none',
@@ -100,7 +100,7 @@ export default function Product() {
     const handleClickOpen = () => {
       setOpen(true);
     };
-  
+
     const handleClose = () => {
       setOpen(false);
     };
@@ -111,7 +111,7 @@ export default function Product() {
       };
 
 
-      
+
 
     return (
       <Query
@@ -179,8 +179,8 @@ export default function Product() {
                     readOnly
                     />
                 </Badge>
-                
-                
+
+
             </Box>
             <CardMedia
                 component="img"
@@ -213,11 +213,11 @@ export default function Product() {
                             </Route>
                           </Switch>
                         </BrowserRouter>
-                          
+
                         <Typography className={classes.padding} />
                     </div>
                 </div>
-                
+
             </Grid>
         </Grid>
 
@@ -236,15 +236,15 @@ export default function Product() {
                   </Paper>
               </Grid>
               );
-           })}                         
+           })}
         </Grid>
-        </Paper>    
+        </Paper>
         <ReviewModal open={open} handleClose={handleClose}></ReviewModal>
-</React.Fragment> 
+</React.Fragment>
       )
       }}
   </Query>
-        
+
     );
 }
 
@@ -258,7 +258,7 @@ function SubPage(props) {
 
   let routes = {
   'info': {
-    'page': <ProductInfo/>, 
+    'page': <ProductInfo/>,
     'index':1
   },
     'stores': {

@@ -37,7 +37,7 @@ export default function ImgMediaCard(props, i) {
 
   return (
     <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
-      <LinkUI style={{ textDecoration: 'none',display:'block', height:'100%' }} component={Link} to={`/product/${product.product_family_id}/stores`}>
+      <LinkUI style={{ textDecoration: 'none',display:'block', height:'100%' }} component={Link} to={`/tuotteet/${product.category.seo_name}/${product.id}`}>
         <Paper style={{height:'100%'}}>
             <Image
               imageStyle={{objectFit:'contain', height:'150px'}}

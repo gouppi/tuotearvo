@@ -25,7 +25,12 @@ export default function Categories() {
         <Container maxWidth="xl">
             <Typography style={{ paddingBottom: '1em', paddingTop: '10px', fontWeight: 100 }} variant="h5"> {"Kategoriat " + (category ? category : 'pohjasivu')}</Typography>
             <Grid container spacing={3}>
-                <CategoryProducts categoryName={category} />
+                <Grid item md={3}>
+                    <Typography>Tähän tulee navigaatiopalkki</Typography>
+                </Grid>
+                <Grid container spacing={2} item md={9}>
+                    <CategoryProducts categoryName={category} />
+                </Grid>
             </Grid>
         </Container>
     );

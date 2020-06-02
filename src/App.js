@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NewReview from './pages/NewReview';
 import Products from './pages/Products';
 import Product from './pages/Product';
+import Product2 from './pages/Product2';
 import Landing from './pages/Landing';
 
 import Categories from './pages/Categories';
@@ -25,7 +26,7 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-
+  
 const client = new ApolloClient({
   //uri: 'http://localhost:9002/graphql'
   uri: 'http://localhost:4000/graphql',
@@ -64,8 +65,11 @@ function App() {
                 <Route path="/product/:productId">
                   <Product />
                 </Route>
-                <Route path="/kategoriat/:category?">
+                <Route exact path="/tuotteet/:category?">
                   <Categories />
+                </Route>
+                <Route exact path="/tuotteet/:category/:product">
+                  <Product2/>
                 </Route>
 
                 {/* <Route path="/create">
@@ -79,7 +83,7 @@ function App() {
             </Grid>
             <Grid item md={2}>
               <CardMedia
-                style={{ maxWidth: 1200 }}
+                style={{ maxWidth: 1200, paddingTop: '10px' }}
                 component="img"
                 alt="Contemplative Reptile"
                 height="auto"
