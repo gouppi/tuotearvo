@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import NewReview from './pages/NewReview';
 import Products from './pages/Products';
-import Product from './pages/Product';
+
 import Product2 from './pages/Product2';
 import Landing from './pages/Landing';
 
 import Categories from './pages/Categories';
-
 
 import Navigation from './components/Navigation';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -15,7 +14,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import SearchResults from './pages/SearchResults';
 import Grid from '@material-ui/core/Grid';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache,defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import Box from '@material-ui/core/box';
 
 //import Box from '@material-ui/core/Box';
@@ -26,11 +25,22 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-  
+
 const client = new ApolloClient({
   //uri: 'http://localhost:9002/graphql'
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache()
+  uri: 'http://192.168.0.106:4000/graphql',
+  cache: new InMemoryCache({
+    dataIdFromObject: object => {
+      //console.log("Objektin tyyppinimi:", object.__typename);
+      //console.log("Itse objekti", object);
+      switch (object.__typename) {
+        //case "CategoryProducts": return object.page; // use the `key` field as the identifier
+        //case 'bar': return `bar:${object.blah}`; // append `bar` to the `blah` field as the identifier
+        // TODO: Pagination + categoryProducts page for specific seo_name + page_id + limit combo?
+        default: return defaultDataIdFromObject(object); // fall back to default handling
+      }
+    }
+  })
 });
 
 
@@ -54,17 +64,12 @@ function App() {
 
         <Container style={{ minHeight: '100vh', height: '100%' }} maxWidth="xl">
           <Grid container spacing={4}>
-            <Grid item md={10}>
+            <Grid item style={{marginTop:"20px"}} md={10}>
               <Switch>
                 <Route exact path="/">
                   <Landing />
                 </Route>
-                {/* <Route path="/products">
-                  <Products />
-                </Route> */}
-                <Route path="/product/:productId">
-                  <Product />
-                </Route>
+
                 <Route exact path="/tuotteet/:category?">
                   <Categories />
                 </Route>

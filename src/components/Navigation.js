@@ -4,7 +4,6 @@ import ToolBar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import LinkUI from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Search from "@material-ui/icons/Search";
 import FormControl from "@material-ui/core/FormControl";
@@ -14,7 +13,7 @@ import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import { useHistory } from "react-router-dom";
 import Box from "@material-ui/core/box";
-import AuthModal from "./Auth/AuthModal";
+//import AuthModal from "./Auth/AuthModal";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import List from '@material-ui/core/List';
@@ -229,8 +228,8 @@ export default function Navigation(props) {
                         </LinkUI>
                         {null !== category.children && (
                             <ul className="categoryListSubMenu">
-                            {category.children.map((child) => {
-                              return <li>{child.name}</li>;
+                            {category.children.map((child, i) => {
+                              return <li key={i}>{child.name}</li>;
                             })}
                             </ul>)
                         }
@@ -247,13 +246,13 @@ export default function Navigation(props) {
       </AppBar>
 
 
-      <AuthModal
+      {/* <AuthModal
         dialogOpen={dialogOpen}
         open={open}
         reg={registerClickOpen}
         log={loginClickOpen}
         handleClose={handleClose}
-      />
+      /> */}
     </React.Fragment>
   );
 }

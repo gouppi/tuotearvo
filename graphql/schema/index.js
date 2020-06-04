@@ -14,7 +14,28 @@ module.exports = buildSchema(`
         updatedAt: String
         product_family_id: Int
         category: Category!
+        brand: Brand!
+        product_eans: [String!]
+        product_mpns: [String!]
         parent_categories: [ParentCategory!]
+    }
+
+    type Ean {
+        ean: String!
+        product_id: Int!
+    }
+
+    type Mpn {
+        mpn: String!
+        product_id: Int!
+    }
+
+    type CategoryProducts {
+
+        page: Int!
+        total_pages: Int!
+        limit: Int!
+        products: [Product!]
     }
 
     type ParentCategory {
@@ -79,10 +100,13 @@ module.exports = buildSchema(`
         families(limit: Int, offset: Int): [Family!]
         products(limit: Int, offset: Int, categorySeoName: String!): [Product!]!
         product(id: Int!): Product
+        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
         categoryProducts(limit: Int, categorySeoName: String!): [Product!]
         productFamily(id: Int!): FamilyProduct!
         recentReviews: [Review!]!
         categories: [Category!]!
+        category(categorySeoName: String, id: Int): Category
+
     }
 
     schema {

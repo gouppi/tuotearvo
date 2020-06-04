@@ -14,7 +14,7 @@ export default function Landing() {
 
     return (
         <Container maxWidth="xl">
-            <Typography style={{paddingBottom:'1em',paddingTop:'10px',fontWeight:100}} variant="h5">Uusimmat tuotearvostelut</Typography>
+            <Typography style={{paddingBottom:'1em',fontWeight:100}} variant="h5">Uusimmat tuotearvostelut</Typography>
             <Grid container spacing={3}>
                 <RecentReviews/>
             </Grid>

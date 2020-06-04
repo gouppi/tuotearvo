@@ -16,8 +16,8 @@ import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Image from "material-ui-image";
 import Paper from "@material-ui/core/paper";
-import Box from '@material-ui/core/box';
-
+import Box from "@material-ui/core/box";
+import Skeleton from "@material-ui/lab/Skeleton";
 const useStyles = makeStyles({
   root: {
     //maxWidth: 250,
@@ -30,13 +30,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ImgMediaCard(props, i) {
+export default function CategoryProductCard(props, i) {
   const classes = useStyles();
   let product = props.data;
-  console.log("CategoryProductCard", product);
+  let skeleton = props.skeleton ? true : false;
 
   return (
-    <Grid key={i} container item xs={12}>
+    <Grid key={i} container className={classes.root} item xs={12}>
       <LinkUI
         style={{
           textDecoration: "none",
@@ -45,24 +45,27 @@ export default function ImgMediaCard(props, i) {
           width: "100%",
         }}
         component={Link}
-        to={`/tuotteet/${product.category.seo_name}/${product.id}`}
+        to={skeleton ? '' : `/tuotteet/${product.category.seo_name}/${product.id}`}
       >
         <Paper square variant="outlined">
           <Grid container>
             <Grid item xs={3}>
-              {/* <Image
-                imageStyle={{ objectFit: "contain", height: "90px" }}
+              {skeleton ? <Skeleton style={{marginLeft:'100px'}} width={100} height={100}/> : (
+              <Image
+                imageStyle={{ objectFit: "contain", height: "100px" }}
                 style={{ height: "100px", paddingTop: "0" }}
                 src={product.image}
-              /> */}
-              <Box style={{backgroundImage: `url(${product.image})`}}>
-
-              </Box>
+              />
+              )}
             </Grid>
-            <Grid xs={9} item alignItems="top">
+            <Grid xs={9} item>
               <CardContent>
-
-                  <Typography>{product.name}</Typography>
+                <Typography>
+                  {skeleton ? <Skeleton width={'50%'} /> : product.name}
+                </Typography>
+                {skeleton ? (
+                  <Skeleton width={100} />
+                ) : (
                   <Rating
                     size="medium"
                     precision={0.1}
@@ -71,20 +74,19 @@ export default function ImgMediaCard(props, i) {
                     label={product.rating_avg}
                     readOnly
                   />
-
+                )}
 
                 <br />
                 <Typography variant="caption">
-                  {product.reviews_count.toString() + " arvostelua"}
+                  {skeleton ? (
+                    <Skeleton width={100} />
+                  ) : (
+                    product.reviews_count.toString() + " arvostelua"
+                  )}
                 </Typography>
               </CardContent>
             </Grid>
           </Grid>
-
-          {/* <Typography variant="subtitle2" component="p">{new Date(parseInt(props.reviewedAt)).toLocaleString()}</Typography>
-              <Typography color="textSecondary" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
-                {props.text}
-              </Typography> */}
         </Paper>
       </LinkUI>
     </Grid>
