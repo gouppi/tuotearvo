@@ -43,6 +43,11 @@ module.exports = buildSchema(`
         seo_name: String!
     }
 
+    type TitleInfo {
+        product_count: Int!
+        review_count: Int!
+    }
+
 
     type Category {
         id: ID!
@@ -100,12 +105,15 @@ module.exports = buildSchema(`
         families(limit: Int, offset: Int): [Family!]
         products(limit: Int, offset: Int, categorySeoName: String!): [Product!]!
         product(id: Int!): Product
+        productReviews(id: Int!): [Review!]
         productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
         categoryProducts(limit: Int, categorySeoName: String!): [Product!]
         productFamily(id: Int!): FamilyProduct!
         recentReviews: [Review!]!
         categories: [Category!]!
         category(categorySeoName: String, id: Int): Category
+        titleInfo: TitleInfo!
+
 
     }
 

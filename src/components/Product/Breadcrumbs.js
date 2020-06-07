@@ -12,6 +12,7 @@ const BreadcrumbsComponent = ({product}) => {
       {product.parent_categories.map((category, i) => {
         return (
           <LinkUI
+            key={i}
             component={Link}
             color={"inherit"}
             aria-current={"page"}

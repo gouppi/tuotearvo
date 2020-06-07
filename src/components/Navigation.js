@@ -6,56 +6,22 @@ import LinkUI from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Search from "@material-ui/icons/Search";
-import FormControl from "@material-ui/core/FormControl";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import { useHistory } from "react-router-dom";
 import Box from "@material-ui/core/box";
-//import AuthModal from "./Auth/AuthModal";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { FILTERS_QUERY, TITLE_INFO_QUERY } from "../components/Apollo/Queries";
 
-import './Navigation.css';
-
-
-const FILTERS_QRY = gql`
-  query categories {
-    categories {
-      id
-      name
-      seo_name
-      parentId
-      children {
-        id
-        name
-        seo_name
-        parentId
-        children {
-          id
-          name
-          seo_name
-          parentId
-        }
-      }
-    }
-  }
-`;
+import "./Navigation.css";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-
-      borderBottom: '3px solid orange'
+    borderBottom: "3px solid #e8e8e8",
   },
-  subBar: {},
-  kontti: {},
   toolbar: {
-
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
@@ -79,27 +45,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navigation(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState("");
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [searchTimeout, setSearchTimeout] = React.useState(0);
   let history = useHistory();
   let timeout = 0;
-
-  // Opens Pop-up dialog, changes state to login
-  const loginClickOpen = () => {
-    setOpen("login");
-    setDialogOpen(true);
-  };
-  // Opens Pop-up dialog, changes state to register
-  const registerClickOpen = () => {
-    setOpen("register");
-    setDialogOpen(true);
-  };
-  // Closes pop-up dialog
-  const handleClose = () => {
-    setOpen("");
-    setDialogOpen(false);
-  };
 
   // Handles top search input redirection
   const handleSearch = (e) => {
@@ -118,7 +65,6 @@ export default function Navigation(props) {
   return (
     <React.Fragment>
       <AppBar
-
         position="sticky"
         color="transparent"
         elevation={0}
@@ -152,10 +98,19 @@ export default function Navigation(props) {
                 >
                   TUOTEARVOSTELUT.NET
                 </Typography>
-                <Typography variant="caption">
-                  2150280 arvostelua, 4123 tuotetta
-                </Typography>
-                {/*  */}
+                <Query query={TITLE_INFO_QUERY}>
+                  {({ loading, error, data }) => {
+                    if (loading) return null;
+                    if (!loading && !error) {
+                      return (
+                        <Typography variant="caption">
+                          {data.titleInfo.review_count} arvostelua,{" "}
+                          {data.titleInfo.product_count} tuotetta
+                        </Typography>
+                      );
+                    }
+                  }}
+                </Query>
               </LinkUI>
             </Box>
 
@@ -172,70 +127,52 @@ export default function Navigation(props) {
                 </InputAdornment>
               }
             />
-
-            {/*<div>
-                            <Button onClick={registerClickOpen} color="secondary" variant="contained" className={classes.link}>
-                                Rekisteröidy
-                            </Button>
-                            <Button onClick={loginClickOpen} color="primary" variant="contained" className={classes.lastlink}>
-                                Kirjaudu sisään
-                            </Button>
-                        </div>
-                        */}
           </ToolBar>
           <Divider variant="fullWidth" />
-          {/* <ToolBar variant="dense" className={classes.toolbar} disableGutters={true}>
-                        <nav>
-                            <LinkUI component={Link} to="/" variant="button" color="textPrimary" href="/asdasdasd" className={classes.navlink}>
-                                Koti
-                            </LinkUI>
-                            <LinkUI component={Link} to="/products" variant="button" color="textPrimary" className={classes.navlink}>
-                                Tuotteet
-                            </LinkUI>
-                            <LinkUI component={Link} variant="button" to="/create" color="secondary" className={classes.navlink}>
-                                Uusi arvostelu
-                            </LinkUI>
-                        </nav>
-                    </ToolBar>*/}
-
           <ToolBar variant="dense" className={classes.toolbar}>
-            <Query query={FILTERS_QRY}>
-              {({ loading, error, data, fetchMore }) => {
-                if (loading) return <p></p>;
+            <Query query={FILTERS_QUERY}>
+              {({ loading, error, data }) => {
+                if (loading) return null;
                 if (error) {
                   console.log(error);
                   return <p>Error :(</p>;
                 }
-                console.log("query filters query", data);
                 return (
                   <nav>
-                      <ul className="categoryList">
+                    <ul className="categoryList">
+                      {data.categories.map((category, i) => {
+                        return (
+                          <li key={i} className="categoryListChild">
+                            <LinkUI
 
-                    {data.categories.map((category, i) => {
-                      return (
-                          <li className="categoryListChild">
-                        <LinkUI
-                          key={i}
-                          component={Link}
-                          to={"/tuotteet/"+category.seo_name}
-                          variant="button"
-                          color="textPrimary"
-                          href="/asdasdasd"
-                          className={classes.navlink}
-                        >
-                          {category.name}
-
-                        </LinkUI>
-                        {null !== category.children && (
-                            <ul className="categoryListSubMenu">
-                            {category.children.map((child, i) => {
-                              return <li key={i}>{child.name}</li>;
-                            })}
-                            </ul>)
-                        }
-                        </li>
-                      );
-                    })}
+                              component={Link}
+                              to={"/tuotteet/" + category.seo_name}
+                              variant="button"
+                              color="textPrimary"
+                              href="/asdasdasd"
+                              className={classes.navlink}
+                            >
+                              {category.name}
+                            </LinkUI>
+                            {null !== category.children && (
+                              <ul className="categoryListSubMenu">
+                                {category.children.map((child, i) => {
+                                  return (
+                                    <li key={i}>
+                                      <LinkUI
+                                        to={"/tuotteet/" + child.seo_name}
+                                        component={Link}
+                                      >
+                                        {child.name}
+                                      </LinkUI>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </nav>
                 );
@@ -244,15 +181,6 @@ export default function Navigation(props) {
           </ToolBar>
         </Container>
       </AppBar>
-
-
-      {/* <AuthModal
-        dialogOpen={dialogOpen}
-        open={open}
-        reg={registerClickOpen}
-        log={loginClickOpen}
-        handleClose={handleClose}
-      /> */}
     </React.Fragment>
   );
 }

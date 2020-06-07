@@ -1,6 +1,8 @@
 const { QueryTypes, Op } = require("sequelize");
 
 module.exports = {
+  productReviews: async (args, context, info) => {},
+
   product: async (args, context, info) => {
     let product = await context.models.Product.findByPk(args.id, {
       include: [
@@ -11,11 +13,11 @@ module.exports = {
           model: context.models.Review,
         },
         {
-          model: context.models.Ean
+          model: context.models.Ean,
         },
         {
-          model: context.models.Mpn
-        }
+          model: context.models.Mpn,
+        },
         // TODO: vois tarvita tuotekortille?
         //  {
         //   model: context.models.Brand
@@ -24,8 +26,14 @@ module.exports = {
     });
 
     // aggregate eans & mpns to single array for faster processing
-    product.product_eans = product.product_eans.reduce((acc, ean) => [...acc, ean.ean], []);
-    product.product_mpns = product.product_mpns.reduce((acc, mpn) => [...acc, mpn.mpn], []);
+    product.product_eans = product.product_eans.reduce(
+      (acc, ean) => [...acc, ean.ean],
+      []
+    );
+    product.product_mpns = product.product_mpns.reduce(
+      (acc, mpn) => [...acc, mpn.mpn],
+      []
+    );
 
     // Assigning parent_categories hierarchy directly to parent so product card can have hierarchy links to individual categories.
     let parentCategories = await product.category.getAncestors();
@@ -47,9 +55,10 @@ module.exports = {
       ? parentCategoriesArray
       : [];
 
-
-
-    let foo = product.reviews.length ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length : 0;
+    let foo = product.reviews.length
+      ? product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+        product.reviews.length
+      : 0;
     product.rating_avg = parseFloat(foo).toFixed(2);
     return product;
   },
@@ -90,8 +99,6 @@ module.exports = {
       ],
     });
 
-
-
     let page = args.page ? args.page : 1;
     // TODO: front page resolver needs only 1 possible review?
     // TODO2: DOES DISTINCT WORK HERE IN TOTAL COUNT AS WELL IF REVIEW IS SORTED BY DATE DESC LIMIT 1?
@@ -100,7 +107,7 @@ module.exports = {
     let rows = await context.models.Product.findAll({
       where: whereCondition,
       limit: args.limit ? args.limit : null,
-      offset: (page-1) * args.limit,
+      offset: (page - 1) * args.limit,
       include: [
         {
           model: context.models.Review,
@@ -167,5 +174,20 @@ module.exports = {
 
   productFilters: async (args, context, info) => {
     let categories = await context.models.Category.findAll({ hierarchy: true });
+  },
+
+  titleInfo: async (args, context, info) => {
+    let product_count = await context.models.sequelize.query(
+      "SELECT count(*) FROM products WHERE deleted_at IS NULL",
+      { type: QueryTypes.SELECT, raw: true, plain: true }
+    );
+    let review_count = await context.models.sequelize.query(
+      "SELECT count(*) FROM reviews ",
+      { type: QueryTypes.SELECT, raw: true, plain: true }
+    );
+    return {
+      product_count: parseInt(product_count.count),
+      review_count: parseInt(review_count.count),
+    };
   },
 };

@@ -169,6 +169,8 @@ const skipParsingForCategory = (category_id) => {
         "2889d", // Konferenssikaiuttimet - tarvikkeet
         "4786c", // Pöytä-GSM
         "118b", // Web-kamerat
+        "10508c", // Turvaistuimet/Lisävarusteet
+            
     ];
     return skip_list.includes(category_id);
 };
