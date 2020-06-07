@@ -1,0 +1,27 @@
+.categoryList {
+    list-style-type: none;
+    display: flex;
+
+}
+
+.categoryListChild {
+    margin-right:10px;
+
+}
+
+.categoryListSubMenu {
+    display: none;
+    list-style-type: none;
+    position: absolute;
+    background-color: white;
+    margin:0;
+    padding:0 10px 10px;
+}
+
+.categoryListSubMenu li {
+    margin-bottom:5px;
+}
+
+.categoryListChild:hover .categoryListSubMenu {
+    display:block;
+}

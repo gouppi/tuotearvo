@@ -1,33 +1,60 @@
 const { buildSchema } = require('graphql')
 
 module.exports = buildSchema(`
+
     type Product {
         id: ID!
-        model: String!
-        model_code: String!
+        name: String!
+        group_name: String!
         image: String!
-        brand: Brand
-        categoryId: Int
-        variations: [Variation!]
         reviews: [Review!]
         reviews_count: Int
+        rating_avg: Float
         createdAt: String
         updatedAt: String
+        product_family_id: Int
+        category: Category!
+        brand: Brand!
+        product_eans: [String!]
+        product_mpns: [String!]
+        parent_categories: [ParentCategory!]
     }
+
+    type Ean {
+        ean: String!
+        product_id: Int!
+    }
+
+    type Mpn {
+        mpn: String!
+        product_id: Int!
+    }
+
+    type CategoryProducts {
+
+        page: Int!
+        total_pages: Int!
+        limit: Int!
+        products: [Product!]
+    }
+
+    type ParentCategory {
+        name: String!
+        seo_name: String!
+    }
+
+    type TitleInfo {
+        product_count: Int!
+        review_count: Int!
+    }
+
 
     type Category {
         id: ID!
         name: String!
+        seo_name: String!
         parentId: Int
         children: [Category!]
-    }
-
-    type ProductInfo {
-        id: ID!
-        model: String!
-        image: String!
-        reviews_count: Int!
-        average_score: Float
     }
 
     type Brand {
@@ -35,28 +62,16 @@ module.exports = buildSchema(`
         name: String!
     }
 
-    type Variation {
-        id: ID!
-        ean: String!
-        display_name: String!
-        model_code: String
-        reviews: [Review!]
-        prices: [Price!]
-    }
-
     type Review {
         id: ID!
-        display_name: String
-        model_code: String
-        title: String
         text: String
-        score: String
+        text_short: String
+        title: String
+        recommends: Boolean
+        rating: Int
         origin: String
-        user: User
-        variation: Variation
-        createdAt: String
-        updatedAt: String
         reviewedAt: String
+        product: Product!
     }
 
     type Price {
@@ -71,24 +86,35 @@ module.exports = buildSchema(`
         link: String!
     }
 
-    type User {
+    type Family {
         id: ID!
-        username: String!
-        avatar: String
+        name: String!
+        image: String
+        category: Category!
+        brand: Brand!
+        products: [Product!]!
     }
 
-    type ProductFilters {
-        categories: [Category!]!
-        brands: [Brand!]!
+    type FamilyProduct {
+        id: ID!
+        name: String!
+        image: String
     }
-
 
     type RootQuery {
-        products(id: Int, required: Boolean, reviewsCount: Int, limit:Int, offset:Int): [Product!]!
-        productInfo(limit:Int, offset:Int, categoryId:[Int!], brandId: [Int!]): [ProductInfo!]
-        productFilters(category_id: [Int], brand_id:[Int]): ProductFilters!
-        search(q: String!): [Product!]
-        categories: [Category!]
+        families(limit: Int, offset: Int): [Family!]
+        products(limit: Int, offset: Int, categorySeoName: String!): [Product!]!
+        product(id: Int!): Product
+        productReviews(id: Int!): [Review!]
+        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
+        categoryProducts(limit: Int, categorySeoName: String!): [Product!]
+        productFamily(id: Int!): FamilyProduct!
+        recentReviews: [Review!]!
+        categories: [Category!]!
+        category(categorySeoName: String, id: Int): Category
+        titleInfo: TitleInfo!
+
+
     }
 
     schema {

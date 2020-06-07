@@ -33,7 +33,8 @@ const category_tree = {
     'TV ja video': {
         'Televisiot': {},
         'Projektorit': {},
-    }
+    },
+    'Puhelimet': {}
 }
 
 

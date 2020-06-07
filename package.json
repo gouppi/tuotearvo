@@ -10,9 +10,11 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "apollo-boost": "^0.4.7",
+    "apollo-cache-inmemory": "^1.6.6",
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^15.0.0",
@@ -21,23 +23,27 @@
     "jsdom": "^16.2.2",
     "material-ui-dropzone": "^3.0.0",
     "material-ui-icons": "^1.0.0-beta.36",
+    "material-ui-image": "^3.2.3",
+    "md5": "^2.2.1",
     "pg": "^8.1.0",
     "pg-hstore": "^2.3.3",
     "react": "^16.13.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.13.1",
+    "react-lazyload": "^2.6.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-waypoint": "^9.0.2",
     "sequelize": "^5.21.10",
     "sequelize-cli": "^5.5.1",
     "sequelize-hierarchy": "^2.0.4",
+    "striptags": "^3.1.1",
     "xmlhttprequest": "^1.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "DB_DATABASE=arvostelu_test node tests/init && ava",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -53,6 +59,18 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "ava": "^3.8.2"
+  },
+  "ava": {
+    "verbose": true,
+    "environmentVariables": {
+      "DB_DATABASE": "arvostelu_test"
+    },
+    "files": [
+      "!tests/init.js"
     ]
   }
 }

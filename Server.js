@@ -1,7 +1,9 @@
+require('dotenv').config()
 var express = require('express');
 var graphqlHTTP = require('express-graphql');
 var { buildSchema } = require('graphql');
 var cors = require('cors')
+
 const models = require('./models/index');
 const graphqlSchema = require('./graphql/schema/index');
 const graphqlResolvers = require('./graphql/resolvers/index');
@@ -29,6 +31,37 @@ const seed2 = async () => {
       await hierarchy(v, childParent);
     }
   }
+  // let P = await  models.Product.create({
+  //   group_name: 'iPhone 11 Pro',
+  //   name: 'Apple iPhone 11 Pro 256gb Space Gray',
+  //   image: 'https://www.image.here',
+  //   product_eans: [
+  //     {ean: '123123'},
+  //     {ean: '234234'},
+  //   ],
+  //   product_mpns: [
+  //     {mpn: 'MX123'},
+  //     {mpn: 'MRT421'}
+  //   ]
+  // }, {
+  //   include: [models.Ean, models.Mpn]
+  // });
+
+  // let P2 = await  models.Product.create({
+  //   group_name: 'iPhone 11 Pro',
+  //   name: 'Apple iPhone 11 Pro 256gb Tähtiharmaa',
+  //   image: 'https://www.image.here',
+  //   product_eans: [
+  //     {ean: '242424'},
+  //     {ean: '525255'},
+  //   ],
+  //   product_mpns: [
+  //     {mpn: 'MX256'},
+  //     {mpn: 'MRT555'}
+  //   ]
+  // }, {
+  //   include: [models.Ean, models.Mpn]
+  // });
 
   await hierarchy(maps.category_tree);
 }
