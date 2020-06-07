@@ -113,8 +113,6 @@ module.exports = buildSchema(`
         categories: [Category!]!
         category(categorySeoName: String, id: Int): Category
         titleInfo: TitleInfo!
-
-
     }
 
     schema {

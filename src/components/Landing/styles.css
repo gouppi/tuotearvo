@@ -1,0 +1,7 @@
+.PaperComponent {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(243, 243, 243) !important;
+  margin: 1em 0;
+  padding: 1em;
+}
