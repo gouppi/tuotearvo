@@ -1,8 +1,6 @@
 const { QueryTypes, Op } = require("sequelize");
 
 module.exports = {
-  productReviews: async (args, context, info) => {},
-
   product: async (args, context, info) => {
     let product = await context.models.Product.findByPk(args.id, {
       include: [
@@ -100,10 +98,6 @@ module.exports = {
     });
 
     let page = args.page ? args.page : 1;
-    // TODO: front page resolver needs only 1 possible review?
-    // TODO2: DOES DISTINCT WORK HERE IN TOTAL COUNT AS WELL IF REVIEW IS SORTED BY DATE DESC LIMIT 1?
-    // TODO: This resolver is used on front page and on product-page.
-    // There might be cases when no reviews are found.
     let rows = await context.models.Product.findAll({
       where: whereCondition,
       limit: args.limit ? args.limit : null,
@@ -131,7 +125,6 @@ module.exports = {
         product.reviews.reduce((acc, review) => review.rating + acc, 0) /
         product.reviews.length;
       product.rating_avg = isNaN(rating_avg) ? 0 : rating_avg;
-      //console.log("Rating average on", product.rating_avg);
       return product;
     });
 
@@ -142,38 +135,6 @@ module.exports = {
       count: count,
       products: rows,
     };
-
-    // return products ? products : [];
-  },
-
-  categoryProducts: async (args, context, info) => {
-    let products = await context.models.sequelize.query(`
-        WITH RECURSIVE cats AS (
-            SELECT id, name, parent_id FROM categories WHERE seo_name = 'lastentarvikkeet'
-            UNION SELECT c2.id, c2.name, c2.parent_id FROM categories c2
-            INNER JOIN cats c ON c.id = c2.parent_id)
-        SELECT * FROM products WHERE category_id IN (SELECT cats.id FROM cats)`);
-
-    let category = await context.models.Category.findOne({
-      where: { seo_name: args.categorySeoName },
-      include: {
-        model: context.models.Category,
-        as: "descendents",
-        hierarchy: true,
-      },
-    });
-
-    let ids = category.children.map((child) => {
-      return child.id;
-    });
-    ids.push(category.id);
-    // KategoriaIDt: [ 14, 15, 13 ] <- näillä voi hakea tuotteita, filtteröinnit yms.
-    console.log("KategoriaIDt:", ids);
-    return [];
-  },
-
-  productFilters: async (args, context, info) => {
-    let categories = await context.models.Category.findAll({ hierarchy: true });
   },
 
   titleInfo: async (args, context, info) => {

@@ -53,8 +53,9 @@ module.exports = buildSchema(`
         id: ID!
         name: String!
         seo_name: String!
-        parentId: Int
+        parent_id: Int
         children: [Category!]
+        parents: [Category!]
     }
 
     type Brand {
@@ -102,16 +103,11 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        families(limit: Int, offset: Int): [Family!]
-        products(limit: Int, offset: Int, categorySeoName: String!): [Product!]!
-        product(id: Int!): Product
-        productReviews(id: Int!): [Review!]
-        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
-        categoryProducts(limit: Int, categorySeoName: String!): [Product!]
-        productFamily(id: Int!): FamilyProduct!
-        recentReviews: [Review!]!
-        categories: [Category!]!
         category(categorySeoName: String, id: Int): Category
+        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
+        recentReviews: [Review!]!
+        product(id: Int!): Product
+        categories: [Category!]!
         titleInfo: TitleInfo!
     }
 

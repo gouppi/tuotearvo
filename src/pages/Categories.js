@@ -60,6 +60,13 @@ export default function Categories(props) {
                     <LinkUI component={Link} color="inherit" to="/">
                       Etusivu
                     </LinkUI>
+                    {data.category.parents.map(parent => (
+                       <LinkUI
+                       component={Link}
+                       color="inherit"
+                       to={"/tuotteet/" + parent.seo_name}
+                     >{parent.name}</LinkUI>
+                    ))}
                     <LinkUI
                       component={Link}
                       color="textPrimary"

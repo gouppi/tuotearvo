@@ -41,12 +41,18 @@ export const CATEGORY_PRODUCTS_QUERY = gql`
       id
       seo_name
       name
+      parents {
+        id
+        seo_name
+        name
+      }
     }
   }
 `;
 
 /**
  * Query for front page most recently occured reviews.
+ * TODO: Vain yksi per tuote.
  */
 
 export const RECENT_REVIEWS_QUERY = gql`
@@ -121,17 +127,17 @@ export const FILTERS_QUERY = gql`
       id
       name
       seo_name
-      parentId
+      parent_id
       children {
         id
         name
         seo_name
-        parentId
+        parent_id
         children {
           id
           name
           seo_name
-          parentId
+          parent_id
         }
       }
     }
