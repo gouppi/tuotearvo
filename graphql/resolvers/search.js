@@ -26,7 +26,7 @@ module.exports = {
             include: [
                 {
                     model: context.models.Variation,
-                    
+
                 },
                 {
                     model: context.models.Brand
