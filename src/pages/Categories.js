@@ -20,7 +20,7 @@ export default function Categories(props) {
   let { category } = useParams();
   let [foobar, setFoobar] = React.useState(false);
   let [page,setPage] = React.useState(1);
-  let [sort, setSort] = React.useState(null);
+  let [sort, setSort] = React.useState('review');
 
   useEffect(() => {
     document.title = "Tuotearvostelut - Kategoriat";
@@ -31,7 +31,7 @@ export default function Categories(props) {
       <Grid container spacing={2} direction="row">
         <Query
           query={CATEGORY_PRODUCTS_QUERY}
-          variables={{ limit: 10, page: 1, categorySeoName: category }}
+          variables={{ limit: 10, page: page, sort:sort, categorySeoName: category }}
         >
           {({ loading, error, data, fetchMore }) => {
             // TODO BIG PERFORMANCE UPGRADE HERE: Not even one categoryProducts category doesn't cache data.
@@ -111,6 +111,7 @@ export default function Categories(props) {
                         shape="rounded"
                         style={{ width: "100%" }}
                         onChange={doFetchMore}
+
                       />
                     </Grid>
                     <Grid
@@ -127,6 +128,7 @@ export default function Categories(props) {
                           id="demo-simple-select-outlined"
                           label="Järjestä"
                           onChange={doFetchMoreChangeSort}
+                          value={sort}
                         >
                           <MenuItem disabled value={"latest"}>Uusimmat</MenuItem>
                           <MenuItem value={"review"}>Arvostelluimmat</MenuItem>
