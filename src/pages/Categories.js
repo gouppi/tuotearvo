@@ -19,6 +19,8 @@ export default function Categories(props) {
 
   let { category } = useParams();
   let [foobar, setFoobar] = React.useState(false);
+  let [page,setPage] = React.useState(1);
+  let [sort, setSort] = React.useState(null);
 
   useEffect(() => {
     document.title = "Tuotearvostelut - Kategoriat";
@@ -35,9 +37,11 @@ export default function Categories(props) {
             // TODO BIG PERFORMANCE UPGRADE HERE: Not even one categoryProducts category doesn't cache data.
             const doFetchMore = (e, page) => {
               setFoobar(true);
+              setPage(page);
               fetchMore({
                 variables: {
                   page: page,
+                  sort: sort
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                   if (!fetchMoreResult) return prev;
@@ -50,9 +54,11 @@ export default function Categories(props) {
             const doFetchMoreChangeSort = (e, props) => {
               const {value} = props.props;
               setFoobar(true);
+              setSort(value);
               fetchMore({
                 variables: {
-                  sort: value
+                  sort: value,
+                  page: page
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                   if (! fetchMoreResult) return prev;
@@ -122,7 +128,7 @@ export default function Categories(props) {
                           label="Järjestä"
                           onChange={doFetchMoreChangeSort}
                         >
-                          <MenuItem value={"latest"}>Uusimmat</MenuItem>
+                          <MenuItem disabled value={"latest"}>Uusimmat</MenuItem>
                           <MenuItem value={"review"}>Arvostelluimmat</MenuItem>
                           <MenuItem value={"az"}>Nimi A-Z</MenuItem>
                           <MenuItem value={"za"}>Nimi Z-A</MenuItem>
