@@ -14,6 +14,8 @@ module.exports = (sequelize, type) => {
 			unique: true,
 			allowNull: false
 		},
+		reviews_count: type.VIRTUAL,
+		rating_avg: type.VIRTUAL,
 		image: {
 			type: type.STRING,
 			unique: false,

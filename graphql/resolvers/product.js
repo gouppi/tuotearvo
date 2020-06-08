@@ -62,14 +62,28 @@ module.exports = {
   },
 
   productsForCategory: async (args, context, info) => {
-    let whereCondition = {};
-    if (args.id) {
-      whereCondition = {
-        id: args.id,
-      };
+    let categoryWhere = {};
+
+    let order = null;
+
+    console.log("sort", args);
+
+    // arvostelluimmat
+    if (args.sort === "review") {
+      order = [[context.models.sequelize.literal(`reviews_count DESC`)]];
+    }
+    // Uusimmat arvostelut
+    else if (args.sort === "latest") {
+      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]/// TODO missing FROM-clause entry for table "reviews"
+    }
+    // name
+    else if (args.sort === "az") {
+      order = [[context.models.sequelize.literal(`name ASC`)]]
+    }
+    else if (args.sort === "za") {
+      order = [[context.models.sequelize.literal(`name DESC`)]]
     }
 
-    let categoryWhere = {};
     if (args.categorySeoName) {
       let cat_ids = await context.models.sequelize.query(
         `
@@ -99,7 +113,23 @@ module.exports = {
 
     let page = args.page ? args.page : 1;
     let rows = await context.models.Product.findAll({
-      where: whereCondition,
+      attributes: {
+        // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
+        // TODO: On vaikea yhdistää tuo suoraan product - taulun alle. Voiko sequelizella edes?
+        include: [
+          [
+            context.models.sequelize.literal(`(
+            SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
+            "reviews_count", // TODO fix this line, not able to set reviewsCount under product alias
+          ],
+          [
+            context.models.sequelize.literal(`(
+            SELECT AVG(rating) FROM reviews WHERE product_id = product.id
+            )`),
+            "rating_avg",
+          ],
+        ],
+      },
       limit: args.limit ? args.limit : null,
       offset: (page - 1) * args.limit,
       include: [
@@ -114,18 +144,7 @@ module.exports = {
           where: categoryWhere,
         },
       ],
-
-      order: [["reviews", "reviewed_at", "desc"]],
-    });
-
-    // TODO How to get review-association counts calculated to own key through Sequelize?
-    rows = rows.map((product) => {
-      product.reviews_count = product.reviews.length;
-      let rating_avg =
-        product.reviews.reduce((acc, review) => review.rating + acc, 0) /
-        product.reviews.length;
-      product.rating_avg = isNaN(rating_avg) ? 0 : rating_avg;
-      return product;
+      order: order
     });
 
     return {

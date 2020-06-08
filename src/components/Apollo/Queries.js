@@ -5,11 +5,12 @@ import gql from "graphql-tag";
  * Query for category listing products
  */
 export const CATEGORY_PRODUCTS_QUERY = gql`
-  query categoryProducts($categorySeoName: String!, $limit: Int, $page: Int) {
+  query categoryProducts($categorySeoName: String!, $limit: Int, $page: Int, $sort: String) {
     productsForCategory(
       limit: $limit
       categorySeoName: $categorySeoName
       page: $page
+      sort: $sort
     ) {
       limit
       page

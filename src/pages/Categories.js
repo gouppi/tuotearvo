@@ -47,6 +47,21 @@ export default function Categories(props) {
               });
             };
 
+            const doFetchMoreChangeSort = (e, props) => {
+              const {value} = props.props;
+              setFoobar(true);
+              fetchMore({
+                variables: {
+                  sort: value
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (! fetchMoreResult) return prev;
+                  setFoobar(false);
+                  return fetchMoreResult;
+                }
+              });
+            };
+
             if (loading) return <p>Loading...</p>;
             if (error) {
               console.log(error);
@@ -105,11 +120,14 @@ export default function Categories(props) {
                           labelId="demo-simple-select-outlined-label"
                           id="demo-simple-select-outlined"
                           label="Järjestä"
-                          value={10}
+                          onChange={doFetchMoreChangeSort}
                         >
-                          <MenuItem value={10}>Arvostelluimmat</MenuItem>
-                          <MenuItem value={20}>Uusimmat</MenuItem>
-                          <MenuItem value={30}>Katsotuimmat</MenuItem>
+                          <MenuItem value={"latest"}>Uusimmat</MenuItem>
+                          <MenuItem value={"review"}>Arvostelluimmat</MenuItem>
+                          <MenuItem value={"az"}>Nimi A-Z</MenuItem>
+                          <MenuItem value={"za"}>Nimi Z-A</MenuItem>
+
+
                         </Select>
                       </FormControl>
                     </Grid>

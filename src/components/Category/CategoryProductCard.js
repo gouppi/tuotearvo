@@ -68,7 +68,7 @@ export default function CategoryProductCard(props, i) {
                   {skeleton ? (
                     <Skeleton width={100} />
                   ) : (
-                    product.reviews_count.toString() + " arvostelua"
+                    product.reviews_count + " arvostelua"
                   )}
                 </Typography>
               </CardContent>

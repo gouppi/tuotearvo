@@ -31,7 +31,6 @@ module.exports = buildSchema(`
     }
 
     type CategoryProducts {
-
         page: Int!
         total_pages: Int!
         limit: Int!
@@ -104,7 +103,7 @@ module.exports = buildSchema(`
 
     type RootQuery {
         category(categorySeoName: String, id: Int): Category
-        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sortBy: String): CategoryProducts!
+        productsForCategory(limit: Int, page: Int, categorySeoName: String!, sort: String): CategoryProducts!
         recentReviews: [Review!]!
         product(id: Int!): Product
         categories: [Category!]!

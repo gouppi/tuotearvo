@@ -21,6 +21,7 @@ module.exports = (sequelize, type) => {
 
     Family.associate = (models) => {
         Family.hasMany(models.Product);
+       // Family.hasMany(models.Review);
         Family.belongsTo(models.Brand);
 		Family.belongsTo(models.Category);
     };
