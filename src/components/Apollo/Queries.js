@@ -1,11 +1,15 @@
 import gql from "graphql-tag";
 
-
 /**
  * Query for category listing products
  */
 export const CATEGORY_PRODUCTS_QUERY = gql`
-  query categoryProducts($categorySeoName: String!, $limit: Int, $page: Int, $sort: String) {
+  query categoryProducts(
+    $categorySeoName: String!
+    $limit: Int
+    $page: Int
+    $sort: String
+  ) {
     productsForCategory(
       limit: $limit
       categorySeoName: $categorySeoName
@@ -146,10 +150,40 @@ export const FILTERS_QUERY = gql`
 `;
 
 export const TITLE_INFO_QUERY = gql`
-    query titleInfo {
-        titleInfo {
-            product_count
-            review_count
-        }
+  query titleInfo {
+    titleInfo {
+      product_count
+      review_count
     }
+  }
+`;
+
+export const SEARCH_QUERY = gql`
+  query searchQuery($q: String!) {
+    search(q: $q) {
+      count
+      products {
+        id
+        product_family_id
+        image
+        reviews_count
+        rating_avg
+        name
+        group_name
+        category {
+          id
+          name
+          seo_name
+        }
+        reviews {
+          id
+          text
+          text_short
+          title
+          recommends
+          rating
+        }
+      }
+    }
+  }
 `;

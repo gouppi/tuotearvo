@@ -1,56 +1,49 @@
-
-const {Sequelize, Op} = require('sequelize');
-
 module.exports = {
-    search: async (args,context,info) => {
-        let whereCondition = {};
-        if (args.q) {
-            whereCondition = {
-                [Op.or]: [
-                    {
-                        model: {
-                            [Op.iLike]:'%'+args.q+'%'
-                        }
-                    },
-                    {
-                        '$variations.ean$': {
-                            [Op.like]:args.q+'%'
-                        }
-                    }
-                ]
-            }
-        }
+  search: async (args, context, info) => {
+    const search_params = args.q
+      .split(" ")
+      .map((q) => q.concat(":*"))
+      .join(" & ");
+    // Tänne tulee monta hakusanaa parhaimmillaan. trimmataan se sopivaksi tsvektoriin wildcardilla.
+    // https://dba.stackexchange.com/questions/157951/get-partial-match-from-gin-indexed-tsvector-column
 
-        let search = await context.models.Product.findAll({
-            where: whereCondition,
-            include: [
-                {
-                    model: context.models.Variation,
+    const [results, meta] = await context.models.sequelize.query(
+      `
+        WITH x AS (
+            SELECT p.*, to_tsvector(name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')) AS tsvector
+            FROM products p
+            JOIN product_eans pe ON (pe.product_id = p.id)
+            JOIN product_mpns pm ON (pm.product_id = p.id)
+            GROUP BY p.id)
+        SELECT id FROM x WHERE x.tsvector @@ to_tsquery(:search)`,
+      { replacements: { search: search_params } }
+    );
 
-                },
-                {
-                    model: context.models.Brand
-                },
-                {
-                    model: context.models.Review,
-                    include: {
-                        model: context.models.Variation
-                    }
-                }
-            ]
-        });
+    const productIds = results.reduce(
+      (agg, product) => [...agg, product.id],
+      []
+    );
+    const products = await context.models.Product.findAll({
+      where: { id: productIds},
+      include: [
+        {
+          model: context.models.Review,
+        },
+        {
+          model: context.models.Family,
+        },
+        {
+          model: context.models.Category,
+        },
+      ],
+    });
 
-        return search ? search : [];
-    }
-}
+    console.log(products);
 
-// events: async () => {
-//     try {
-//         const events = await Event.find();
-//         return events.map(event => {
-//             return transformEvent(event);
-//         });
-//     } catch(err) {
-//         throw err;
-//     }
-// },
+
+    return {
+      count: meta.rowCount,
+      products: products,
+    };
+  },
+};

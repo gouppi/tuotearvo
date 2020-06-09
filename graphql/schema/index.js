@@ -47,6 +47,10 @@ module.exports = buildSchema(`
         review_count: Int!
     }
 
+    type SearchResults {
+        count: Int!
+        products: [Product!]
+    }
 
     type Category {
         id: ID!
@@ -108,6 +112,7 @@ module.exports = buildSchema(`
         product(id: Int!): Product
         categories: [Category!]!
         titleInfo: TitleInfo!
+        search(q: String!): SearchResults!
     }
 
     schema {

@@ -8,7 +8,7 @@ import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ReviewCard from "../components/Review/ReviewCard";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
+import { SEARCH_QUERY } from "../components/Apollo/Queries";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -35,32 +35,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResults(props) {
   const classes = useStyles();
-  let searchTerm = props.searchTerm
+  const q = props.searchTerm
     ? props.searchTerm
     : new URLSearchParams(window.location.search).get("q");
-  console.log(searchTerm);
+  console.log(q);
   return (
-    <Query
-      query={gql`
-      {
-          search(q:"${searchTerm}") {
-              id
-              model
-              image
-              reviews {
-                  title
-                  createdAt
-                  text
-                  score
-                  origin
-                  variation {
-                      display_name
-                  }
-              }
-          }
-      }
-      `}
-    >
+    <Query query={SEARCH_QUERY} variables={{q:q}} >
       {({ loading, error, data }) => {
         if (loading)
           return (
@@ -91,11 +71,11 @@ export default function SearchResults(props) {
                 }}
                 variant="h5"
               >
-                Tulokset haullesi <i>{searchTerm}</i>:{" "}
+                Tulokset haullesi <i>{q}</i>:{" "}
               </Typography>
               <Grid container spacing={4}>
-                {data.search.map((product) => (
-                  <ReviewCard key={product.id} data={product} />
+                {data.search.products.map((product) => (
+                  <Box>{product.name}</Box>
                 ))}
               </Grid>
             </Container>
