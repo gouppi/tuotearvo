@@ -76,6 +76,7 @@ export const RECENT_REVIEWS_QUERY = gql`
         group_name
         image
         category {
+          id
           seo_name
         }
         parent_categories {
