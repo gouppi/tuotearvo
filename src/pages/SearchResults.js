@@ -6,9 +6,10 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ReviewCard from "../components/Review/ReviewCard";
+import SearchResultCard from "../components/SearchResultCard";
 import { Query } from "react-apollo";
 import { SEARCH_QUERY } from "../components/Apollo/Queries";
+import LazyLoad from "react-lazyload";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -40,7 +41,7 @@ export default function SearchResults(props) {
     : new URLSearchParams(window.location.search).get("q");
   console.log(q);
   return (
-    <Query query={SEARCH_QUERY} variables={{q:q}} >
+    <Query query={SEARCH_QUERY} variables={{ q: q }} >
       {({ loading, error, data }) => {
         if (loading)
           return (
@@ -74,9 +75,16 @@ export default function SearchResults(props) {
                 Tulokset haullesi <i>{q}</i>:{" "}
               </Typography>
               <Grid container spacing={4}>
-                {data.search.products.map((product) => (
-                  <Box>{product.name}</Box>
-                ))}
+                {data.search.products.map((product) => {
+                  console.log(product);
+                  return (
+                    <LazyLoad>
+                      <SearchResultCard data={product} />
+                    </LazyLoad>
+
+                  )
+                }
+                )}
               </Grid>
             </Container>
           </React.Fragment>

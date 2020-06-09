@@ -24,7 +24,24 @@ module.exports = {
       []
     );
     const products = await context.models.Product.findAll({
-      where: { id: productIds},
+      attributes: {
+        // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
+        // TODO: On vaikea yhdistää tuo suoraan product - taulun alle. Voiko sequelizella edes?
+        include: [
+          [
+            context.models.sequelize.literal(`(
+                SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
+            "reviews_count", // TODO fix this line, not able to set reviewsCount under product alias
+          ],
+          [
+            context.models.sequelize.literal(`(
+                SELECT AVG(rating) FROM reviews WHERE product_id = product.id
+                )`),
+            "rating_avg",
+          ],
+        ],
+      },
+      where: { id: productIds },
       include: [
         {
           model: context.models.Review,
@@ -39,7 +56,6 @@ module.exports = {
     });
 
     console.log(products);
-
 
     return {
       count: meta.rowCount,
