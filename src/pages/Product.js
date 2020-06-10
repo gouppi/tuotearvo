@@ -25,6 +25,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
+import ProductPrices from '../components/Product/ProductPrices';
 import { PRODUCT_QUERY } from "../components/Apollo/Queries";
 
 const Product = () => {
@@ -78,12 +79,7 @@ const Product = () => {
                 <Typography style={{ fontWeight: 100 }} variant="h5">
                   {data.product.name}
                 </Typography>
-                <Badge
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  badgeContent={data.product.rating_avg}
-                  color="secondary"
-                >
-                  <Rating
+                <Rating
                     size="large"
                     precision={0.1}
                     name="simple-controlled"
@@ -91,6 +87,13 @@ const Product = () => {
                     label={data.product.rating_avg}
                     readOnly
                   />
+                <Badge
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  badgeContent={parseFloat(data.product.rating_avg).toFixed(2)}
+                  color="primary"
+
+                >
+
                 </Badge>
               </Grid>
               <Grid item xs={6}>
@@ -166,10 +169,11 @@ const Product = () => {
                 ))}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <Typography>1</Typography>
+              <ProductPrices prices={data.product.prices}/>
+
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <Typography>2</Typography>
+              <Typography>artikkelit</Typography>
               </TabPanel>
             </Grid>
           </Container>

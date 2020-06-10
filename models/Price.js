@@ -5,26 +5,10 @@ module.exports = (sequelize, type) => {
       price: {
         type: type.FLOAT,
       },
-      variation_id: {
-          type: type.INTEGER,
-          allowNull: false
-      },
-      shop_id: {
-          type: type.INTEGER,
-          allowNull: false
-      }
     },
     {
       underscored: true,
     },
-    {
-      indexes: [
-        {
-          unique: true,
-          fields: ["variation_id", "shop_id"],
-        },
-      ],
-    }
   );
 
   Price.associate = (models) => {

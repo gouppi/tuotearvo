@@ -22,6 +22,11 @@ module.exports = (sequelize, type) => {
       },
       fetch_data: type.JSONB
   }, {
+    indexes: [
+      {
+        fields: ['product_id']
+      },
+    ],
     underscored:true
   });
 

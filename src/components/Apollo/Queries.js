@@ -32,14 +32,6 @@ export const CATEGORY_PRODUCTS_QUERY = gql`
           name
           seo_name
         }
-        reviews {
-          id
-          text
-          text_short
-          title
-          recommends
-          rating
-        }
       }
     }
     category(categorySeoName: $categorySeoName) {
@@ -119,6 +111,15 @@ export const PRODUCT_QUERY = gql`
         name
         seo_name
       }
+      prices {
+        price
+        updatedAt
+        shop {
+          id
+          name
+          link
+        }
+      }
     }
   }
 `;
@@ -183,6 +184,13 @@ export const SEARCH_QUERY = gql`
           title
           recommends
           rating
+        }
+      }
+      filters {
+        filter
+        values {
+          name
+          count
         }
       }
     }

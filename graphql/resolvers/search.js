@@ -52,14 +52,41 @@ module.exports = {
         {
           model: context.models.Category,
         },
+        {
+          model: context.models.Price,
+          include: [
+            {
+              model: context.models.Shop,
+            },
+          ],
+        },
       ],
+      order: [["reviews", "reviewed_at", "ASC"]],
     });
 
-    console.log(products);
+    // get all categories and count occurrences of search matches to these categories.
+    var result = products.reduce(
+      (acc, product) => (
+        (acc[product.category.name] = (acc[product.category.name] || 0) + 1),
+        acc
+      ),
+      {}
+    );
+
+    let categories = [];
+    for (let [key, value] of Object.entries(result)) {
+      categories.push({ name: key, count: value });
+    }
 
     return {
       count: meta.rowCount,
       products: products,
+      filters: [
+        {
+          filter: "Kategoriat",
+          values: categories
+        },
+      ],
     };
   },
 };

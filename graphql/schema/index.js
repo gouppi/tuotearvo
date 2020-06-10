@@ -18,6 +18,7 @@ module.exports = buildSchema(`
         product_eans: [String!]
         product_mpns: [String!]
         parent_categories: [ParentCategory!]
+        prices: [Price!]
     }
 
     type Ean {
@@ -37,6 +38,16 @@ module.exports = buildSchema(`
         products: [Product!]
     }
 
+    type Filter {
+        filter: String!
+        values: [FilterValue!]
+    }
+
+    type FilterValue {
+        name: String!
+        count: Int!
+    }
+
     type ParentCategory {
         name: String!
         seo_name: String!
@@ -50,6 +61,7 @@ module.exports = buildSchema(`
     type SearchResults {
         count: Int!
         products: [Product!]
+        filters: [Filter!]
     }
 
     type Category {

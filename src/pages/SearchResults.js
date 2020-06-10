@@ -11,6 +11,10 @@ import { Query } from "react-apollo";
 import { SEARCH_QUERY } from "../components/Apollo/Queries";
 import LazyLoad from "react-lazyload";
 
+import Paper from '@material-ui/core/Paper';
+
+import ProductFilters from '../components/Product/ProductFilters';
+
 const useStyles = makeStyles((theme) => ({
   layout: {
     padding: "10px",
@@ -41,7 +45,7 @@ export default function SearchResults(props) {
     : new URLSearchParams(window.location.search).get("q");
   console.log(q);
   return (
-    <Query query={SEARCH_QUERY} variables={{ q: q }} >
+    <Query query={SEARCH_QUERY} variables={{ q: q }}>
       {({ loading, error, data }) => {
         if (loading)
           return (
@@ -60,10 +64,13 @@ export default function SearchResults(props) {
           return <p>Error :(</p>;
         }
 
+        console.log("Raw data", data);
+
         return (
           <React.Fragment>
             <CssBaseline />
-            <Container maxWidth="md" className={classes.rootContainer}>
+            <Container maxWidth="xl">
+            <Paper className="PaperComponent" square variant="outlined">
               <Typography
                 style={{
                   paddingBottom: "1em",
@@ -75,17 +82,22 @@ export default function SearchResults(props) {
                 Tulokset haullesi <i>{q}</i>:{" "}
               </Typography>
               <Grid container spacing={4}>
-                {data.search.products.map((product) => {
-                  console.log(product);
-                  return (
-                    <LazyLoad>
-                      <SearchResultCard data={product} />
-                    </LazyLoad>
+                <Grid item md={3}>
+                  <ProductFilters filters={data.search.filters}/>
+                </Grid>
+                <Grid item container md={9} spacing={4}>
 
-                  )
-                }
-                )}
+                  {data.search.products.map((product, i) => {
+                    return (
+                      <LazyLoad key={i}>
+                        <SearchResultCard i={i} data={product} />
+                      </LazyLoad>
+                    );
+                  })}
+
+                </Grid>
               </Grid>
+              </Paper>
             </Container>
           </React.Fragment>
         );

@@ -12,11 +12,11 @@ const models = {
   CategoryAlias: sequelize.import('./CategoryAlias'),
   Ean: sequelize.import('./Ean'),
   Mpn: sequelize.import('./Mpn'),
+  Price: sequelize.import('./Price'),
   Product: sequelize.import('./Product'),
   Family: sequelize.import('./Family'),
   Brand: sequelize.import('./Brand'),
   Review: sequelize.import('./Review'),
-  Price: sequelize.import('./Price'),
   Shop: sequelize.import('./Shop'),
 };
 

@@ -3,6 +3,24 @@ const { QueryTypes, Op } = require("sequelize");
 module.exports = {
   product: async (args, context, info) => {
     let product = await context.models.Product.findByPk(args.id, {
+      attributes: {
+        // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
+        // TODO: On vaikea yhdistää tuo suoraan product - taulun alle. Voiko sequelizella edes?
+        include: [
+          [
+            context.models.sequelize.literal(`(
+            SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
+            "reviews_count", // TODO fix this line, not able to set reviewsCount under product alias
+          ],
+          [
+            context.models.sequelize.literal(`(
+            SELECT AVG(rating) FROM reviews WHERE product_id = product.id
+            )`),
+            "rating_avg",
+          ],
+        ],
+      },
+
       include: [
         {
           model: context.models.Category,
@@ -16,12 +34,19 @@ module.exports = {
         {
           model: context.models.Mpn,
         },
-        // TODO: vois tarvita tuotekortille?
-        //  {
-        //   model: context.models.Brand
-        // }
+        {
+          model: context.models.Price,
+          include: [
+            {
+              model: context.models.Shop
+            }
+          ]
+        }
       ],
+      order: [["reviews","reviewed_at", "DESC"]]
     });
+
+    console.log("Product on ", product);
 
     // aggregate eans & mpns to single array for faster processing
     product.product_eans = product.product_eans.reduce(
@@ -53,11 +78,11 @@ module.exports = {
       ? parentCategoriesArray
       : [];
 
-    let foo = product.reviews.length
-      ? product.reviews.reduce((acc, r) => acc + r.rating, 0) /
-        product.reviews.length
-      : 0;
-    product.rating_avg = parseFloat(foo).toFixed(2);
+    // let foo = product.reviews.length
+    //   ? product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+    //     product.reviews.length
+    //   : 0;
+    // product.rating_avg = parseFloat(foo).toFixed(2);
     return product;
   },
 
@@ -133,9 +158,6 @@ module.exports = {
       limit: args.limit ? args.limit : null,
       offset: (page - 1) * args.limit,
       include: [
-        {
-          model: context.models.Review,
-        },
         {
           model: context.models.Family,
         },

@@ -8,9 +8,9 @@ import Rating from "@material-ui/lab/Rating";
 import Image from "material-ui-image";
 import Paper from "@material-ui/core/paper";
 
-export default function SearchResultCard(props, i) {
+export default function SearchResultCard(props) {
   return (
-    <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
+    <Grid key={props.i} item xs={12} sm={6} md={4} lg={3}>
       <LinkUI
         style={{ textDecoration: "none", display: "block", height: "100%" }}
         component={Link}
@@ -18,8 +18,8 @@ export default function SearchResultCard(props, i) {
       >
         <Paper square variant="outlined" style={{ height: "100%" }}>
           <Image
-            imageStyle={{ objectFit: "contain", height: "150px" }}
-            style={{ height: "150px", paddingTop: "0" }}
+            imageStyle={{ objectFit: "contain", height: "100px",paddingTop:"10px" }}
+            style={{ height: "100px" }}
             src={props.data.image}
           />
           <CardContent>
@@ -31,11 +31,9 @@ export default function SearchResultCard(props, i) {
               label={props.data.rating_avg}
               readOnly
             />
-            <Typography>{props.data.group_name}</Typography>
-            <Typography variant="caption">{props.data.name}</Typography>
-            <br />
+            <Typography component="p" variant="caption">{props.data.name}</Typography>
+            {/* <Typography variant="caption">{props.data.name}</Typography> */}
 
-            <br />
             <Typography variant="caption">
               {props.data.reviews_count + " arvostelua"}
             </Typography>
