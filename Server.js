@@ -23,7 +23,8 @@ const seed2 = async () => {
   const hierarchy = async (children, parent) => {
     for (let [k, v] of Object.entries(children)) {
       let childParent = await models.Category.create({
-        name: k
+        name: k,
+        seo_name: k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, '-').toLowerCase()
       });
       if (parent) {
         await parent.addChild(childParent);
@@ -67,7 +68,7 @@ const seed2 = async () => {
 }
 
 models.sequelize.sync().then(async () => {
-  //seed2();
+
 }).then(() => {
   app.listen(4000);
   console.log('Running a GraphQL API server at http://localhost:4000/graphql');
