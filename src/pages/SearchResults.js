@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchResults(props) {
+  const [filters, setFilters] = React.useState([]);
   const classes = useStyles();
   const q = props.searchTerm
     ? props.searchTerm
@@ -46,7 +47,7 @@ export default function SearchResults(props) {
   console.log(q);
   return (
     <Query query={SEARCH_QUERY} variables={{ q: q }}>
-      {({ loading, error, data }) => {
+      {({ loading, error, data, refetch }) => {
         if (loading)
           return (
             <Box
@@ -64,42 +65,54 @@ export default function SearchResults(props) {
           return <p>Error :(</p>;
         }
 
-        console.log("Raw data", data);
+        const updateFilters = (checkbox) => {
+          console.log("UpdateFilters, fiter:", checkbox);
+          let newFilters = [...filters];
+          if (!newFilters.includes(checkbox)) {
+            newFilters.push(checkbox);
+          } else {
+            newFilters = newFilters.filter(newfilter => newfilter !== checkbox);
+          }
+          setFilters(newFilters);
+          console.log("Uudet filtterit ", newFilters);
+        }
+
+
 
         return (
-          <React.Fragment>
-            <CssBaseline />
-            <Container maxWidth="xl">
-            <Paper className="PaperComponent" square variant="outlined">
-              <Typography
-                style={{
-                  paddingBottom: "1em",
-                  paddingTop: "10px",
-                  fontWeight: 100,
-                }}
-                variant="h5"
-              >
-                Tulokset haullesi <i>{q}</i>:{" "}
-              </Typography>
-              <Grid container spacing={4}>
-                <Grid item md={3}>
-                  <ProductFilters filters={data.search.filters}/>
-                </Grid>
-                <Grid item container md={9} spacing={4}>
-
-                  {data.search.products.map((product, i) => {
-                    return (
-                      <LazyLoad key={i}>
-                        <SearchResultCard i={i} data={product} />
-                      </LazyLoad>
-                    );
-                  })}
-
-                </Grid>
+      <React.Fragment>
+        <CssBaseline />
+        <Container maxWidth="xl">
+          <Paper className="PaperComponent" square variant="outlined">
+            <Typography
+              style={{
+                paddingBottom: "1em",
+                paddingTop: "10px",
+                fontWeight: 100,
+              }}
+              variant="h5"
+            >
+              Tulokset haullesi <i>{q}</i>:{" "}
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item md={3}>
+                <ProductFilters updateFilters={updateFilters} filters={data.search.filters} />
               </Grid>
-              </Paper>
-            </Container>
-          </React.Fragment>
+              <Grid item container md={9} spacing={4}>
+
+                {data.search.products.map((product, i) => {
+                  return (
+                    <LazyLoad key={i}>
+                      <SearchResultCard i={i} data={product} />
+                    </LazyLoad>
+                  );
+                })}
+
+              </Grid>
+            </Grid>
+          </Paper>
+        </Container>
+      </React.Fragment>
         );
       }}
     </Query>

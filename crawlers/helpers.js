@@ -250,11 +250,12 @@ const createReview = async (reviewData, shop) => {
       title: reviewData.reviewTitle,
       recommends: reviewData.recommends,
       rating: reviewData.rating,
-      origin: shop.name,
+      //origin: shop.name,
       reviewedAt: reviewData.reviewedAt,
       fetch_data: reviewData,
     });
-    console.log("Arvostelu luotu");
+    //console.log("Arvostelu luotu");
+    await shop.addReview(R);
     return R;
   } catch (err) {
     if ("constraint" in err && err.constraint !== "reviews_external_id_key") {

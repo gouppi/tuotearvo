@@ -1,3 +1,5 @@
+const { QueryTypes, Op } = require("sequelize");
+
 module.exports = {
   search: async (args, context, info) => {
     const search_params = args.q
@@ -35,6 +37,16 @@ module.exports = {
           ],
           [
             context.models.sequelize.literal(`(
+              SELECT COUNT(*)::int FROM reviews WHERE product_family_id = product.product_family_id)`),
+              "family_reviews_count",
+          ],
+          [
+            context.models.sequelize.literal(`(
+            SELECT AVG(rating) FROM reviews WHERE product_family_id = product.product_family_id)`),
+            "family_rating_avg",
+          ],
+          [
+            context.models.sequelize.literal(`(
                 SELECT AVG(rating) FROM reviews WHERE product_id = product.id
                 )`),
             "rating_avg",
@@ -63,6 +75,8 @@ module.exports = {
       ],
       order: [["reviews", "reviewed_at", "ASC"]],
     });
+
+    console.log(products);
 
     // get all categories and count occurrences of search matches to these categories.
     var result = products.reduce(

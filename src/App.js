@@ -3,6 +3,7 @@ import Product from "./pages/Product";
 import Landing from "./pages/Landing";
 import Categories from "./pages/Categories";
 import Navigation from "./components/Navigation";
+import BottomNavigation from './components/BottomNavigation';
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import ApolloClient from "apollo-boost";
@@ -59,7 +60,7 @@ function App() {
         <Navigation setSearchTerm={setSearchTerm} />
 
         <Container
-          style={{ maxHeight: "100vh", minHeight: "100vh" }}
+          style={{minHeight: "100vh" }}
           maxWidth="xl"
         >
           <Grid container style={{ marginTop: "20px" }} spacing={4}>
@@ -92,7 +93,9 @@ function App() {
               />
             </Grid>
           </Grid>
+          <BottomNavigation/>
         </Container>
+
       </Router>
     </ApolloProvider>
   );

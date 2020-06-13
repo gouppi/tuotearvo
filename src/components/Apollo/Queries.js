@@ -169,7 +169,9 @@ export const SEARCH_QUERY = gql`
         product_family_id
         image
         reviews_count
+        family_reviews_count
         rating_avg
+        family_rating_avg
         name
         group_name
         category {

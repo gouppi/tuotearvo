@@ -14,7 +14,7 @@ module.exports = (sequelize, type) => {
       title: type.STRING,
       recommends: type.BOOLEAN,
       rating: type.INTEGER,
-      origin: type.STRING,
+      //origin: type.STRING,
       reviewedAt: {
         type: type.DATE,
         allowNull: false,
@@ -32,7 +32,8 @@ module.exports = (sequelize, type) => {
 
   Review.associate = (models) => {
     Review.belongsTo(models.Product);
-    //Review.belongsTo(models.Family);
+    Review.belongsTo(models.Family);
+    Review.belongsTo(models.Shop);
   };
 
   return Review;

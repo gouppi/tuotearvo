@@ -7,7 +7,7 @@ import ad_square from "../../img/ad_250_250.png";
 export default function ReviewCardAd(props, i) {
   return (
     <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
-      <Paper square variant="outlined" style={{ height: "100%" }}>
+      <Paper variant="outlined" style={{ height: "100%" }}>
         <Image src={ad_square}></Image>
       </Paper>
     </Grid>

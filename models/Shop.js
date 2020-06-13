@@ -12,13 +12,17 @@ module.exports = (sequelize, type) => {
         },
         link: {
             type: type.STRING,
-        }
+        // },
+        // logo: {
+        //     type: type.STRING,
+         }
     }, {
       underscored:true
     });
 
     Shop.associate = (models) => {
         Shop.hasMany(models.Price);
+        Shop.hasMany(models.Review);
     };
 
     return Shop;

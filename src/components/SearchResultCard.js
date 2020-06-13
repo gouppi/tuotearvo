@@ -27,15 +27,15 @@ export default function SearchResultCard(props) {
               size="small"
               precision={0.1}
               name="simple-controlled"
-              value={props.data.rating_avg}
-              label={props.data.rating_avg}
+              value={props.data.rating_avg ? props.data.rating_avg : props.data.family_rating_avg}
+              label={props.data.rating_avg ? props.data.rating_avg : props.data.family_rating_avg}
               readOnly
             />
             <Typography component="p" variant="caption">{props.data.name}</Typography>
             {/* <Typography variant="caption">{props.data.name}</Typography> */}
 
             <Typography variant="caption">
-              {props.data.reviews_count + " arvostelua"}
+              {props.data.reviews_count + " ("+ props.data.family_reviews_count+") arvostelua"}
             </Typography>
           </CardContent>
         </Paper>

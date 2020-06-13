@@ -68,6 +68,7 @@ const seed2 = async () => {
 }
 
 models.sequelize.sync().then(async () => {
+  //let H = await models.Category.findOne({where: {name: "Lastentarvikkeet"}});
 
 }).then(() => {
   app.listen(4000);

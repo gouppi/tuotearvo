@@ -6,23 +6,25 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Paper from '@material-ui/core/Paper';
 
-const ProductFilters = ({ filters }) => {
+// TODO unique key properties here.
+
+const ProductFilters = ({ updateFilters, filters }) => {
   console.log(filters);
   return (
     <Paper square variant="outlined">
         <FormControl component="fieldset">
-        {filters.map((filter) => {
+        {filters.map((filter, i) => {
             let checkboxes = [];
-            checkboxes.push(<FormLabel component="legend">{filter.filter}</FormLabel>)
-            filter.values.map(f => {
+            checkboxes.push(<FormLabel key={i} component="legend">{filter.filter}</FormLabel>)
+            filter.values.map((f,j) => {
                 checkboxes.push(
-                <FormGroup aria-label="position" column>
-                <FormControlLabel
-                    value={f.name}
-                    control={<Checkbox color="primary" />}
-                    label={f.name + ' (' + f.count + ')'}
-                    labelPlacement="end"
-                />
+                <FormGroup key={i + '_' + j} aria-label="position">
+                    <FormControlLabel
+                        value={f.name}
+                        control={<Checkbox  onClick={() =>{updateFilters(f.name)}} color="primary" />}
+                        label={f.name + ' (' + f.count + ')'}
+                        labelPlacement="end"
+                    />
                 </FormGroup>
                 );
             });

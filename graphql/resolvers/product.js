@@ -4,13 +4,35 @@ module.exports = {
   product: async (args, context, info) => {
     let product = await context.models.Product.findByPk(args.id, {
       attributes: {
-        // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
-        // TODO: On vaikea yhdistää tuo suoraan product - taulun alle. Voiko sequelizella edes?
+        /**
+         *          SubPlan 2
+           ->  Aggregate  (cost=3490.24..3490.26 rows=1 width=4) (actual time=4.109..4.116 rows=1 loops=112)
+                 ->  Seq Scan on reviews reviews_2  (cost=0.00..3490.21 rows=13 width=0) (actual time=0.299..3.575 rows=75 loops=112)
+                       Filter: (product_family_id = product.product_family_id)
+                       Rows Removed by Filter: 9062
+         SubPlan 3
+           ->  Aggregate  (cost=3490.25..3490.26 rows=1 width=32) (actual time=4.144..4.150 rows=1 loops=112)
+                 ->  Seq Scan on reviews reviews_3  (cost=0.00..3490.21 rows=13 width=4) (actual time=0.292..3.601 rows=75 loops=112)
+                       Filter: (product_family_id = product.product_family_id)
+                       Rows Removed by Filter: 9062
+
+            TÄNNE TARTTEE INDEKSIT KYLLÄ!!!
+         */
         include: [
           [
             context.models.sequelize.literal(`(
             SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
-            "reviews_count", // TODO fix this line, not able to set reviewsCount under product alias
+            "reviews_count",
+          ],
+          [
+            context.models.sequelize.literal(`(
+              SELECT COUNT(*)::int FROM reviews WHERE product_family_id = product.product_family_id)`),
+              "family_reviews_count",
+          ],
+          [
+            context.models.sequelize.literal(`(
+            SELECT AVG(rating) FROM reviews WHERE product_family_id = product.product_family_id)`),
+            "family_rating_avg",
           ],
           [
             context.models.sequelize.literal(`(
@@ -46,7 +68,6 @@ module.exports = {
       order: [["reviews","reviewed_at", "DESC"]]
     });
 
-    console.log("Product on ", product);
 
     // aggregate eans & mpns to single array for faster processing
     product.product_eans = product.product_eans.reduce(
@@ -60,8 +81,6 @@ module.exports = {
 
     // Assigning parent_categories hierarchy directly to parent so product card can have hierarchy links to individual categories.
     let parentCategories = await product.category.getAncestors();
-    //console.log(product.category.name);
-    //console.log(product.category.seo_name);
     let parentCategoriesArray = parentCategories.map((parentCategory) => ({
       seo_name: parentCategory.seo_name,
       name: parentCategory.name,
@@ -69,20 +88,15 @@ module.exports = {
     parentCategoriesArray = Array.isArray(parentCategoriesArray)
       ? parentCategoriesArray
       : [];
+
     parentCategoriesArray.push({
       name: product.category.name,
       seo_name: product.category.seo_name,
     });
-    //console.log("Kategorian vanhemmat Array on:", parentCategoriesArray);
     product.parent_categories = parentCategoriesArray
       ? parentCategoriesArray
       : [];
 
-    // let foo = product.reviews.length
-    //   ? product.reviews.reduce((acc, r) => acc + r.rating, 0) /
-    //     product.reviews.length
-    //   : 0;
-    // product.rating_avg = parseFloat(foo).toFixed(2);
     return product;
   },
 

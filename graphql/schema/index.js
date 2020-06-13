@@ -9,7 +9,9 @@ module.exports = buildSchema(`
         image: String!
         reviews: [Review!]
         reviews_count: Int
+        family_reviews_count: Int
         rating_avg: Float
+        family_rating_avg: Float
         createdAt: String
         updatedAt: String
         product_family_id: Int
@@ -124,7 +126,7 @@ module.exports = buildSchema(`
         product(id: Int!): Product
         categories: [Category!]!
         titleInfo: TitleInfo!
-        search(q: String!): SearchResults!
+        search(q: String!, categories: [String!], brands: [String!]): SearchResults!
     }
 
     schema {
