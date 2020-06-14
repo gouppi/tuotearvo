@@ -161,9 +161,11 @@ export const TITLE_INFO_QUERY = gql`
 `;
 
 export const SEARCH_QUERY = gql`
-  query searchQuery($q: String!) {
-    search(q: $q) {
+  query searchQuery($q: String!, $page: Int, $limit: Int, $sort: String) {
+    search(q: $q, page:$page, limit:$limit, sort:$sort) {
       count
+      page
+      total_pages
       products {
         id
         product_family_id

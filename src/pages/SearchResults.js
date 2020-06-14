@@ -11,6 +11,12 @@ import { Query } from "react-apollo";
 import { SEARCH_QUERY } from "../components/Apollo/Queries";
 import LazyLoad from "react-lazyload";
 
+import Pagination from "@material-ui/lab/Pagination";
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import Paper from '@material-ui/core/Paper';
 
 import ProductFilters from '../components/Product/ProductFilters';
@@ -40,14 +46,53 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResults(props) {
   const [filters, setFilters] = React.useState([]);
+  let [page,setPage] = React.useState(1);
+  let [sort,setSort] = React.useState('review');
+  let [foobar, setFoobar] = React.useState(false);
+
   const classes = useStyles();
   const q = props.searchTerm
     ? props.searchTerm
     : new URLSearchParams(window.location.search).get("q");
   console.log(q);
   return (
-    <Query query={SEARCH_QUERY} variables={{ q: q }}>
-      {({ loading, error, data, refetch }) => {
+    <Query query={SEARCH_QUERY} variables={{ q: q,limit: 10, page: page, sort:sort,  }}>
+      {({ loading, error, data, fetchMore }) => {
+
+        const doFetchMore = (e, page) => {
+          console.log("Do Fetch More");
+          setFoobar(true);
+          setPage(page);
+          fetchMore({
+            variables: {
+              page: page,
+              sort: sort
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+              setFoobar(false);
+              return fetchMoreResult;
+            },
+          });
+        };
+
+        const doFetchMoreChangeSort = (e, props) => {
+          const {value} = props.props;
+          setFoobar(true);
+          setSort(value);
+          fetchMore({
+            variables: {
+              sort: value,
+              page: page
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (! fetchMoreResult) return prev;
+              setFoobar(false);
+              return fetchMoreResult;
+            }
+          });
+        };
+
         if (loading)
           return (
             <Box
@@ -99,6 +144,44 @@ export default function SearchResults(props) {
                 <ProductFilters updateFilters={updateFilters} filters={data.search.filters} />
               </Grid>
               <Grid item container md={9} spacing={4}>
+              <Grid container item xs={12}>
+                    <Grid item xs={6}>
+                      <Pagination
+                        count={data.search.total_pages}
+                        page={data.search.page}
+                        variant="outlined"
+                        shape="rounded"
+                        style={{ width: "100%" }}
+                        onChange={doFetchMore}
+
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                      xs={6}
+                    >
+                      <FormControl style={{ flex: "1" }} variant="outlined">
+                        <InputLabel id="demo-simple-select-outlined-label">
+                          Järjestä
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          label="Järjestä"
+                           onChange={doFetchMoreChangeSort}
+                           value={sort}
+                        >
+                          <MenuItem disabled value={"latest"}>Uusimmat</MenuItem>
+                          <MenuItem value={"review"}>Arvostelluimmat</MenuItem>
+                          <MenuItem value={"az"}>Nimi A-Z</MenuItem>
+                          <MenuItem value={"za"}>Nimi Z-A</MenuItem>
+
+
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
 
                 {data.search.products.map((product, i) => {
                   return (

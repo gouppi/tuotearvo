@@ -12,19 +12,55 @@ module.exports = {
     const [results, meta] = await context.models.sequelize.query(
       `
         WITH x AS (
-            SELECT p.*, to_tsvector(name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')) AS tsvector
+            SELECT p.*, c.name AS category_name, to_tsvector(p.name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')) AS tsvector
             FROM products p
+            JOIN categories c ON (c.id = p.category_id)
             JOIN product_eans pe ON (pe.product_id = p.id)
             JOIN product_mpns pm ON (pm.product_id = p.id)
-            GROUP BY p.id)
-        SELECT id FROM x WHERE x.tsvector @@ to_tsquery(:search)`,
+            GROUP BY p.id, category_name)
+        SELECT id,category_name FROM x WHERE x.tsvector @@ to_tsquery(:search) ORDER BY id`,
       { replacements: { search: search_params } }
     );
 
-    const productIds = results.reduce(
+    // // TODO tee tämä loppuun
+    // let order;
+    // if (args.sort === "review") {
+    //   order = [[context.models.sequelize.literal(`reviews_count DESC`)]];
+    // }
+    // // Uusimmat arvostelut
+    // else if (args.sort === "latest") {
+    //   order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]/// TODO missing FROM-clause entry for table "reviews"
+    // }
+    // // name
+    // else if (args.sort === "az") {
+    //   order = [[context.models.sequelize.literal(`name ASC`)]]
+    // }
+    // else if (args.sort === "za") {
+    //   order = [[context.models.sequelize.literal(`name DESC`)]]
+    // }
+
+    let page = args.page || 1;
+    let limit = args.limit || 10;
+
+
+    // TODO tässä tehdään sama reduce samalle resultsille kahdesti. Saako tuota vähä optimoitua?
+    // TODO: jos haluaa sorttailla kategorian pohjalta, tarttee id:n mukaan myös.
+    const productIds = results.slice(limit*(page-1),page*limit).reduce(
       (agg, product) => [...agg, product.id],
       []
     );
+    let cats = results.reduce(
+      (acc, obj) => (
+        (acc[obj.category_name] = (acc[obj.category_name] || 0) + 1),
+        acc
+      ),
+      {}
+    );
+    let categories = [];
+    for (let [key, value] of Object.entries(cats)) {
+      categories.push({ name: key, count: value });
+    }
+
     const products = await context.models.Product.findAll({
       attributes: {
         // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
@@ -64,36 +100,14 @@ module.exports = {
         {
           model: context.models.Category,
         },
-        {
-          model: context.models.Price,
-          include: [
-            {
-              model: context.models.Shop,
-            },
-          ],
-        },
       ],
       order: [["reviews", "reviewed_at", "ASC"]],
     });
 
-    console.log(products);
-
-    // get all categories and count occurrences of search matches to these categories.
-    var result = products.reduce(
-      (acc, product) => (
-        (acc[product.category.name] = (acc[product.category.name] || 0) + 1),
-        acc
-      ),
-      {}
-    );
-
-    let categories = [];
-    for (let [key, value] of Object.entries(result)) {
-      categories.push({ name: key, count: value });
-    }
-
     return {
       count: meta.rowCount,
+      page: page,
+      total_pages: Math.ceil(meta.rowCount / limit),
       products: products,
       filters: [
         {

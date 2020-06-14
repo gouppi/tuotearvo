@@ -62,6 +62,8 @@ module.exports = buildSchema(`
 
     type SearchResults {
         count: Int!
+        page: Int!
+        total_pages: Int!
         products: [Product!]
         filters: [Filter!]
     }
@@ -126,7 +128,7 @@ module.exports = buildSchema(`
         product(id: Int!): Product
         categories: [Category!]!
         titleInfo: TitleInfo!
-        search(q: String!, categories: [String!], brands: [String!]): SearchResults!
+        search(q: String!, categories: [String!], brands: [String!], page: Int, limit: Int, sort:String): SearchResults!
     }
 
     schema {
