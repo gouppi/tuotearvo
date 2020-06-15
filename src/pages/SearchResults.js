@@ -52,9 +52,7 @@ export default function SearchResults(props) {
   let [reloading, setReloading] = React.useState(false);
 
   const classes = useStyles();
-  const q = props.searchTerm
-    ? props.searchTerm
-    : new URLSearchParams(window.location.search).get("q");
+  const q = new URLSearchParams(window.location.search).get("q");
   console.log(q);
   return (
     <Query query={SEARCH_QUERY} variables={{ q: q,limit: 10, page: page, sort:sort,  }}>

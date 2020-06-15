@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "end",
     flexWrap: "wrap",
   },
   toolbarTitle: {
@@ -51,20 +51,23 @@ export default function Navigation(props) {
 
   // Handles top search input redirection
   const handleSearch = (value) => {
-    setSearchValue(value);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    setSearchValue("");
+    history.push("/search?q=" + value);
 
-    if (!value) {
-      return;
-    }
+    // //setSearchValue(value);
+    // if (timerRef.current) {
+    //   clearTimeout(timerRef.current);
+    // }
 
-    timerRef.current = setTimeout(() => {
-      history.push("/search?q=" + value);
-      props.setSearchTerm(value);
-      setSearchValue("");
-    }, 1000);
+    // if (!value) {
+    //   return;
+    // }
+
+    // timerRef.current = setTimeout(() => {
+    //   history.push("/search?q=" + value);
+    //   //props.setSearchTerm(value);
+    //   setSearchValue("");
+    // }, 1000);
 
   };
 
@@ -123,10 +126,15 @@ export default function Navigation(props) {
             <OutlinedInput
               placeholder="Etsi arvosteluja tuotteille"
               id="input-with-icon-adornment"
-              style={{ flex: "1" }}
+              style={{ flex: "1", maxWidth:"50%" }}
               value={searchValue}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch(e.target.value);
+                }
+              }}
               onChange={(e) => {
-                handleSearch(e.target.value);
+                setSearchValue(e.target.value);
               }}
               startAdornment={
                 <InputAdornment position="start">

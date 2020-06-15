@@ -4,16 +4,16 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Search from "@material-ui/icons/Search";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import "./styles.css";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const SearchComponent = () => {
-  const [searchTerm,setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState("");
   let history = useHistory();
 
   const startSearch = (e) => {
-    history.push('/search?q=' + searchTerm);
+    history.push("/search?q=" + searchTerm);
   };
 
   return (
@@ -27,11 +27,11 @@ const SearchComponent = () => {
         style={{ margin: "1em 3em", backgroundColor: "white", flex: "1" }}
         value={searchTerm}
         onKeyPress={(ev) => {
-          if (ev.key === 'Enter') {
+          if (ev.key === "Enter") {
             startSearch();
           }
         }}
-        onChange={event => setSearchTerm(event.target.value)}
+        onChange={(event) => setSearchTerm(event.target.value)}
         startAdornment={
           <InputAdornment position="start">
             <Search />
