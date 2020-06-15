@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import ToolBar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -46,20 +46,26 @@ const useStyles = makeStyles((theme) => ({
 export default function Navigation(props) {
   const classes = useStyles();
   let history = useHistory();
-  let timeout = 0;
+  const timerRef = useRef(null);
+  const [searchValue, setSearchValue] = React.useState("");
 
   // Handles top search input redirection
-  const handleSearch = (e) => {
-    if (!e) {
+  const handleSearch = (value) => {
+    setSearchValue(value);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    if (!value) {
       return;
     }
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(() => {
-      history.push("/search?q=" + e);
-      props.setSearchTerm(e);
-    }, 800);
+
+    timerRef.current = setTimeout(() => {
+      history.push("/search?q=" + value);
+      props.setSearchTerm(value);
+      setSearchValue("");
+    }, 1000);
+
   };
 
   return (
@@ -118,6 +124,7 @@ export default function Navigation(props) {
               placeholder="Etsi arvosteluja tuotteille"
               id="input-with-icon-adornment"
               style={{ flex: "1" }}
+              value={searchValue}
               onChange={(e) => {
                 handleSearch(e.target.value);
               }}

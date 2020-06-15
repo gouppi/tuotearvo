@@ -48,7 +48,8 @@ export default function SearchResults(props) {
   const [filters, setFilters] = React.useState([]);
   let [page,setPage] = React.useState(1);
   let [sort,setSort] = React.useState('review');
-  let [foobar, setFoobar] = React.useState(false);
+  // When triggering fetchMore, render current view partially
+  let [reloading, setReloading] = React.useState(false);
 
   const classes = useStyles();
   const q = props.searchTerm
@@ -61,7 +62,7 @@ export default function SearchResults(props) {
 
         const doFetchMore = (e, page) => {
           console.log("Do Fetch More");
-          setFoobar(true);
+          setReloading(true);
           setPage(page);
           fetchMore({
             variables: {
@@ -70,7 +71,7 @@ export default function SearchResults(props) {
             },
             updateQuery: (prev, { fetchMoreResult }) => {
               if (!fetchMoreResult) return prev;
-              setFoobar(false);
+              setReloading(false);
               return fetchMoreResult;
             },
           });
@@ -78,7 +79,7 @@ export default function SearchResults(props) {
 
         const doFetchMoreChangeSort = (e, props) => {
           const {value} = props.props;
-          setFoobar(true);
+          setReloading(true);
           setSort(value);
           fetchMore({
             variables: {
@@ -87,13 +88,13 @@ export default function SearchResults(props) {
             },
             updateQuery: (prev, { fetchMoreResult }) => {
               if (! fetchMoreResult) return prev;
-              setFoobar(false);
+              setReloading(false);
               return fetchMoreResult;
             }
           });
         };
 
-        if (loading)
+        if (loading && !reloading)
           return (
             <Box
               style={{
@@ -177,13 +178,12 @@ export default function SearchResults(props) {
                           <MenuItem value={"az"}>Nimi A-Z</MenuItem>
                           <MenuItem value={"za"}>Nimi Z-A</MenuItem>
 
-
                         </Select>
                       </FormControl>
                     </Grid>
                   </Grid>
-
-                {data.search.products.map((product, i) => {
+                {reloading && (<CircularProgress size={60} />)}
+                {!reloading && data.search.products.map((product, i) => {
                   return (
                     <LazyLoad key={i}>
                       <SearchResultCard i={i} data={product} />
