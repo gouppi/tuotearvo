@@ -89,12 +89,6 @@ module.exports = {
       where: { id: productIds },
       include: [
         {
-          model: context.models.Review,
-        },
-        {
-          model: context.models.Family,
-        },
-        {
           model: context.models.Category,
         },
       ],

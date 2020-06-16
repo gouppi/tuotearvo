@@ -181,14 +181,6 @@ export const SEARCH_QUERY = gql`
           name
           seo_name
         }
-        reviews {
-          id
-          text
-          text_short
-          title
-          recommends
-          rating
-        }
       }
       filters {
         filter
