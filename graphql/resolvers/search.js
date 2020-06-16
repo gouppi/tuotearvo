@@ -23,36 +23,33 @@ module.exports = {
     );
 
     // // TODO tee tämä loppuun
-    // let order;
-    // if (args.sort === "review") {
-    //   order = [[context.models.sequelize.literal(`reviews_count DESC`)]];
-    // }
-    // // Uusimmat arvostelut
-    // else if (args.sort === "latest") {
-    //   order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]/// TODO missing FROM-clause entry for table "reviews"
-    // }
-    // // name
-    // else if (args.sort === "az") {
-    //   order = [[context.models.sequelize.literal(`name ASC`)]]
-    // }
-    // else if (args.sort === "za") {
-    //   order = [[context.models.sequelize.literal(`name DESC`)]]
-    // }
+    let order = [["reviews", "reviewed_at", "ASC"]];
+    if (args.sort === "review") {
+      order = [[context.models.sequelize.literal(`family_reviews_count DESC, reviews_count DESC`)]];
+    }
+    // Uusimmat arvostelut
+    else if (args.sort === "latest") {
+      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]; /// TODO missing FROM-clause entry for table "reviews"
+    }
+    // name
+    else if (args.sort === "az") {
+      order = [[context.models.sequelize.literal(`name ASC`)]];
+    } else if (args.sort === "za") {
+      order = [[context.models.sequelize.literal(`name DESC`)]];
+    }
 
-    let page = args.page || 1;
     let limit = args.limit || 10;
-
+    let offset = (args.page-1 || 0) * limit;
 
     // TODO tässä tehdään sama reduce samalle resultsille kahdesti. Saako tuota vähä optimoitua?
     // TODO: jos haluaa sorttailla kategorian pohjalta, tarttee id:n mukaan myös.
-    const productIds = results.slice(limit*(page-1),page*limit).reduce(
+    const productIds = results.reduce(
       (agg, product) => [...agg, product.id],
       []
     );
     let cats = results.reduce(
       (acc, obj) => (
-        (acc[obj.category_name] = (acc[obj.category_name] || 0) + 1),
-        acc
+        (acc[obj.category_name] = (acc[obj.category_name] || 0) + 1), acc
       ),
       {}
     );
@@ -74,7 +71,7 @@ module.exports = {
           [
             context.models.sequelize.literal(`(
               SELECT COUNT(*)::int FROM reviews WHERE product_family_id = product.product_family_id)`),
-              "family_reviews_count",
+            "family_reviews_count",
           ],
           [
             context.models.sequelize.literal(`(
@@ -101,18 +98,21 @@ module.exports = {
           model: context.models.Category,
         },
       ],
-      order: [["reviews", "reviewed_at", "ASC"]],
+      order: order,
+      limit: limit,
+      offset: offset,
     });
+
 
     return {
       count: meta.rowCount,
-      page: page,
+      page: args.page,
       total_pages: Math.ceil(meta.rowCount / limit),
       products: products,
       filters: [
         {
           filter: "Kategoriat",
-          values: categories
+          values: categories,
         },
       ],
     };

@@ -43,32 +43,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navigation(props) {
+export default function Navigation() {
   const classes = useStyles();
   let history = useHistory();
-  const timerRef = useRef(null);
   const [searchValue, setSearchValue] = React.useState("");
 
   // Handles top search input redirection
   const handleSearch = (value) => {
     setSearchValue("");
     history.push("/search?q=" + value);
-
-    // //setSearchValue(value);
-    // if (timerRef.current) {
-    //   clearTimeout(timerRef.current);
-    // }
-
-    // if (!value) {
-    //   return;
-    // }
-
-    // timerRef.current = setTimeout(() => {
-    //   history.push("/search?q=" + value);
-    //   //props.setSearchTerm(value);
-    //   setSearchValue("");
-    // }, 1000);
-
   };
 
   return (
