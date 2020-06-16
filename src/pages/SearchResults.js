@@ -10,12 +10,7 @@ import SearchResultCard from "../components/SearchResultCard";
 import { Query } from "react-apollo";
 import { SEARCH_QUERY } from "../components/Apollo/Queries";
 import LazyLoad from "react-lazyload";
-
-import Pagination from "@material-ui/lab/Pagination";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import ListSorting from "../components/Product/ListSorting";
 
 import Paper from "@material-ui/core/Paper";
 
@@ -148,50 +143,19 @@ export default function SearchResults(props) {
                     />
                   </Grid>
                   <Grid container item md={9}>
-                    <Paper square style={{padding:"8px",width:"100%"}} variant="outlined">
+                    <Paper
+                      square
+                      style={{ padding: "8px", width: "100%" }}
+                      variant="outlined"
+                    >
                       <Grid container spacing={4}>
-                        <Grid item style={{display: "flex" }} xs={7}>
-                          <Pagination
-                            color="primary"
-                            count={data.search.total_pages}
-                            page={data.search.page}
-                            variant="outlined"
-                            shape="round"
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              width: "100%",
-                            }}
-                            onChange={doFetchMore}
-                          />
-                        </Grid>
-                        <Grid
-                          item
-                          style={{ display: "flex", width: "100%" }}
-                          xs={5}
-                        >
-                          <FormControl style={{ flex: "1" }} variant="outlined">
-                            <InputLabel id="demo-simple-select-outlined-label">
-                              Järjestä
-                            </InputLabel>
-                            <Select
-                              labelId="demo-simple-select-outlined-label"
-                              id="demo-simple-select-outlined"
-                              label="Järjestä"
-                              onChange={doFetchMoreChangeSort}
-                              value={sort}
-                            >
-                              <MenuItem disabled value={"latest"}>
-                                Uusimmat
-                              </MenuItem>
-                              <MenuItem value={"review"}>
-                                Arvostelluimmat
-                              </MenuItem>
-                              <MenuItem value={"az"}>Nimi A-Z</MenuItem>
-                              <MenuItem value={"za"}>Nimi Z-A</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                        <ListSorting
+                          totalPages={data.search.total_pages}
+                          page={data.search.page}
+                          sort={sort}
+                          doFetchMore={doFetchMore}
+                          doFetchMoreChangeSort={doFetchMoreChangeSort}
+                        />
                       </Grid>
                     </Paper>
 

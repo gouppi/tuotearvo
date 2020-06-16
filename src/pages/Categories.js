@@ -4,16 +4,13 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import CategoryProductCard from "../components/Category/CategoryProductCard";
 import { useParams } from "react-router-dom";
-import Pagination from "@material-ui/lab/Pagination";
 import { Query } from "react-apollo";
 import {CATEGORY_PRODUCTS_QUERY} from '../components/Apollo/Queries';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinkUI from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+
+import ListSorting from '../components/Product/ListSorting';
 
 export default function Categories(props) {
 
@@ -103,42 +100,13 @@ export default function Categories(props) {
                 </Grid>
                 <Grid item md={9}>
                   <Grid container item xs={12}>
-                    <Grid item xs={6}>
-                      <Pagination
-                        count={productsForCategory.total_pages}
-                        page={productsForCategory.page}
-                        variant="outlined"
-                        shape="rounded"
-                        style={{ width: "100%" }}
-                        onChange={doFetchMore}
-
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      style={{ display: "flex", justifyContent: "flex-end" }}
-                      xs={6}
-                    >
-                      <FormControl style={{ flex: "1" }} variant="outlined">
-                        <InputLabel id="demo-simple-select-outlined-label">
-                          Järjestä
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          label="Järjestä"
-                          onChange={doFetchMoreChangeSort}
-                          value={sort}
-                        >
-                          <MenuItem disabled value={"latest"}>Uusimmat</MenuItem>
-                          <MenuItem value={"review"}>Arvostelluimmat</MenuItem>
-                          <MenuItem value={"az"}>Nimi A-Z</MenuItem>
-                          <MenuItem value={"za"}>Nimi Z-A</MenuItem>
-
-
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                  <ListSorting
+                          totalPages={productsForCategory.total_pages}
+                          page={productsForCategory.page}
+                          sort={sort}
+                          doFetchMore={doFetchMore}
+                          doFetchMoreChangeSort={doFetchMoreChangeSort}
+                        />
                   </Grid>
                   <Grid item xs={12}>
                     {foobar
