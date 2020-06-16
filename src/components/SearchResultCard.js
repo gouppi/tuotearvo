@@ -7,18 +7,18 @@ import Grid from "@material-ui/core/Grid";
 import LinkUI from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
-import Image from "material-ui-image";
 import Paper from "@material-ui/core/paper";
 
 export default function SearchResultCard(props) {
   return (
-    <Grid key={props.i} container spacing={1} item xs={12}>
+    <Grid key={props.i} container item xs={12}>
       <LinkUI
         style={{
           textDecoration: "none",
           display: "block",
           width: "100%",
           height: "100%",
+          paddingTop:'8px'
         }}
         component={Link}
         to={`/tuotteet/${props.data.category.seo_name}/${props.data.id}`}
