@@ -2,32 +2,87 @@ const { QueryTypes, Op } = require("sequelize");
 
 module.exports = {
   search: async (args, context, info) => {
+    // Tsvector search syntax here.
+    // https://dba.stackexchange.com/questions/157951/get-partial-match-from-gin-indexed-tsvector-column
     const search_params = args.q
       .split(" ")
       .map((q) => q.concat(":*"))
       .join(" & ");
-    // Tänne tulee monta hakusanaa parhaimmillaan. trimmataan se sopivaksi tsvektoriin wildcardilla.
-    // https://dba.stackexchange.com/questions/157951/get-partial-match-from-gin-indexed-tsvector-column
 
+    // Prefilter all products with matching search query before loading them through Sequelize
+    // TODO: categories & brands filtering incoming here.
     const [results, meta] = await context.models.sequelize.query(
       `
-        WITH x AS (
-            SELECT p.*, c.name AS category_name, to_tsvector(p.name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')) AS tsvector
-            FROM products p
+      WITH x AS (
+        SELECT p.*,
+            c.name AS category_name,
+            c.id AS xcategory_id,
+            b.name AS brand_name,
+            b.id AS xbrand_id,
+            to_tsvector(
+                p.name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')
+            ) AS tsvector
+        FROM products p
             JOIN categories c ON (c.id = p.category_id)
+            JOIN product_families pf ON (pf.id = p.product_family_id)
+            JOIN brands b ON (b.id = pf.brand_id)
             JOIN product_eans pe ON (pe.product_id = p.id)
             JOIN product_mpns pm ON (pm.product_id = p.id)
-            GROUP BY p.id, category_name)
-        SELECT id,category_name FROM x WHERE x.tsvector @@ to_tsquery(:search) ORDER BY id`,
+        GROUP BY p.id,
+            category_name,
+            xcategory_id,
+            brand_name,
+            xbrand_id
+    )
+    SELECT id,
+        category_name,
+        xcategory_id AS category_id,
+        brand_name,
+        xbrand_id AS brand_id
+
+    FROM x
+    WHERE x.tsvector @@ to_tsquery(:search)
+    ORDER BY id`,
       { replacements: { search: search_params } }
     );
 
-    // // TODO tee tämä loppuun
+    // This looks awful, but it works. It calculates each category / brand counts to an object which contains ID,name and count for that particular object.
+    // E.g. { id: 35, name: 'ProCaster', count: 30 }
+    let productIds = [];
+    let categories = {};
+    let brands = {};
+    let counter = { c: {}, b: {} };
+
+    for (let i = 0; i < results.length; i++) {
+      let r = results[i];
+      productIds.push(r.id);
+      counter.c[r.category_name] = (counter.c[r.category_name] || 0) + 1;
+      counter.b[r.brand_name] = (counter.b[r.brand_name] || 0) + 1;
+      categories[r.category_name] = {
+        ...categories[r.category_name],
+        id: r.category_id,
+        name: r.category_name,
+        count: counter.c[r.category_name],
+      };
+      brands[r.brand_name] = {
+        ...categories[r.brand_name],
+        id: r.brand_id,
+        name: r.brand_name,
+        count: counter.b[r.brand_name],
+      };
+    }
+
     let order = [["reviews", "reviewed_at", "ASC"]];
     if (args.sort === "review") {
-      order = [[context.models.sequelize.literal(`family_reviews_count DESC, reviews_count DESC`)]];
+      order = [
+        [
+          context.models.sequelize.literal(
+            `family_reviews_count DESC, reviews_count DESC`
+          ),
+        ],
+      ];
     }
-    // Uusimmat arvostelut
+    // TODO: This does not work yet
     else if (args.sort === "latest") {
       order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]; /// TODO missing FROM-clause entry for table "reviews"
     }
@@ -39,34 +94,15 @@ module.exports = {
     }
 
     let limit = args.limit || 10;
-    let offset = (args.page-1 || 0) * limit;
-
-    // TODO tässä tehdään sama reduce samalle resultsille kahdesti. Saako tuota vähä optimoitua?
-    // TODO: jos haluaa sorttailla kategorian pohjalta, tarttee id:n mukaan myös.
-    const productIds = results.reduce(
-      (agg, product) => [...agg, product.id],
-      []
-    );
-    let cats = results.reduce(
-      (acc, obj) => (
-        (acc[obj.category_name] = (acc[obj.category_name] || 0) + 1), acc
-      ),
-      {}
-    );
-    let categories = [];
-    for (let [key, value] of Object.entries(cats)) {
-      categories.push({ name: key, count: value });
-    }
+    let offset = (args.page - 1 || 0) * limit;
 
     const products = await context.models.Product.findAll({
       attributes: {
-        // TODO: tämä hakee nyt oikein tuotteiden määrän, mutta family_id pitäis olla se linkkaava tekijä näissä muutenkin.
-        // TODO: On vaikea yhdistää tuo suoraan product - taulun alle. Voiko sequelizella edes?
         include: [
           [
             context.models.sequelize.literal(`(
                 SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
-            "reviews_count", // TODO fix this line, not able to set reviewsCount under product alias
+            "reviews_count",
           ],
           [
             context.models.sequelize.literal(`(
@@ -97,7 +133,6 @@ module.exports = {
       offset: offset,
     });
 
-
     return {
       count: meta.rowCount,
       page: args.page,
@@ -106,7 +141,11 @@ module.exports = {
       filters: [
         {
           filter: "Kategoriat",
-          values: categories,
+          values: Object.values(categories),
+        },
+        {
+          filter: "Tuotemerkit",
+          values: Object.values(brands),
         },
       ],
     };
