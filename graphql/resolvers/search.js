@@ -9,8 +9,25 @@ module.exports = {
       .map((q) => q.concat(":*"))
       .join(" & ");
 
+    let params = [search_params];
+
     // Prefilter all products with matching search query before loading them through Sequelize
     // TODO: categories & brands filtering incoming here.
+    let where_category = "";
+    let where_brand = "";
+
+    if (args.filters.categories && args.filters.categories.length > 0) {
+      where_category =
+        " AND category_id IN (" +
+        Array(args.filters.categories.length).fill("?").join() +
+        ")";
+      params = [...params, ...args.filters.categories];
+    }
+    if (args.filters.brands && args.filters.brands.length > 0) {
+      where_brand = " AND brand_id IN (" + Array(args.filters.brands.length).fill("?").join() + ")";
+      params = [...params, ...args.filters.brands];
+    }
+
     const [results, meta] = await context.models.sequelize.query(
       `
       WITH x AS (
@@ -18,7 +35,7 @@ module.exports = {
             c.name AS category_name,
             c.id AS xcategory_id,
             b.name AS brand_name,
-            b.id AS xbrand_id,
+            b.id AS brand_id,
             to_tsvector(
                 p.name || ',' || string_agg(ean, ',') || ',' || string_agg(mpn, ',')
             ) AS tsvector
@@ -32,18 +49,20 @@ module.exports = {
             category_name,
             xcategory_id,
             brand_name,
-            xbrand_id
+            b.id
     )
     SELECT id,
         category_name,
         xcategory_id AS category_id,
         brand_name,
-        xbrand_id AS brand_id
+        brand_id
 
     FROM x
-    WHERE x.tsvector @@ to_tsquery(:search)
+    WHERE x.tsvector @@ to_tsquery(?)
+    ${where_category}
+    ${where_brand}
     ORDER BY id`,
-      { replacements: { search: search_params } }
+      { replacements: params }
     );
 
     // This looks awful, but it works. It calculates each category / brand counts to an object which contains ID,name and count for that particular object.
@@ -63,12 +82,14 @@ module.exports = {
         id: r.category_id,
         name: r.category_name,
         count: counter.c[r.category_name],
+        group: 'categories'
       };
       brands[r.brand_name] = {
         ...categories[r.brand_name],
         id: r.brand_id,
         name: r.brand_name,
         count: counter.b[r.brand_name],
+        group: 'brands'
       };
     }
 

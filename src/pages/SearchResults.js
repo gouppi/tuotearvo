@@ -39,8 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+// Something is totally wrong here. When using refetch, we should use previous fetch data until new data is provided.
+// SearchFilters is having a meltdown because of this and I tried to fix it but now pagination "lags" one action behind (prolly because of state change)
+
 export default function SearchResults(props) {
-  const [filters, setFilters] = React.useState([]);
+  const [filters, setFilters] = React.useState({
+    brands: [],
+    categories: [],
+  });
+  // const [categories,setCategories] = React.useState([]);
+  // const [brands,setBrands] = React.useState([]);
   let [page, setPage] = React.useState(1);
   let [sort, setSort] = React.useState("review");
   // When triggering fetchMore, render current view partially
@@ -52,34 +61,43 @@ export default function SearchResults(props) {
   return (
     <Query
       query={SEARCH_QUERY}
-      variables={{ q: q, limit: 10, page: page, sort: sort }}
+      variables={{ q: q, limit: 10, page: page, sort: sort, filters: filters }}
     >
       {({ loading, error, data, fetchMore }) => {
+        const updateFilters = (group, filter) => {
+          console.log("UpdateFilters, group: " + group + " filter: " + filter);
+          let newFilters = filters;
+          if (!newFilters.hasOwnProperty(group)) {
+            newFilters[group] = [];
+          }
+          if (newFilters[group].includes(filter)) {
+            newFilters[group] = newFilters[group].filter((e) => e !== filter);
+          } else {
+            newFilters[group].push(filter);
+          }
+          setFilters(newFilters);
+          doRefetch();
+        };
+
         const doFetchMore = (e, page) => {
           console.log("Do Fetch More");
-          setReloading(true);
           setPage(page);
-          fetchMore({
-            variables: {
-              page: page,
-              sort: sort,
-            },
-            updateQuery: (prev, { fetchMoreResult }) => {
-              if (!fetchMoreResult) return prev;
-              setReloading(false);
-              return fetchMoreResult;
-            },
-          });
+          doRefetch();
         };
 
         const doFetchMoreChangeSort = (e, props) => {
           const { value } = props.props;
-          setReloading(true);
           setSort(value);
+          doRefetch();
+        };
+
+        const doRefetch = () => {
+          setReloading(true);
           fetchMore({
             variables: {
-              sort: value,
+              sort: sort,
               page: page,
+              filters: filters,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
               if (!fetchMoreResult) return prev;
@@ -89,7 +107,7 @@ export default function SearchResults(props) {
           });
         };
 
-        if (loading && !reloading)
+        if (loading || reloading)
           return (
             <Box
               style={{
@@ -105,20 +123,6 @@ export default function SearchResults(props) {
           console.log(error);
           return <p>Error :(</p>;
         }
-
-        const updateFilters = (checkbox) => {
-          console.log("UpdateFilters, fiter:", checkbox);
-          let newFilters = [...filters];
-          if (!newFilters.includes(checkbox)) {
-            newFilters.push(checkbox);
-          } else {
-            newFilters = newFilters.filter(
-              (newfilter) => newfilter !== checkbox
-            );
-          }
-          setFilters(newFilters);
-          console.log("Uudet filtterit ", newFilters);
-        };
 
         return (
           <React.Fragment>
@@ -139,7 +143,8 @@ export default function SearchResults(props) {
                   <Grid item md={3}>
                     <ProductFilters
                       updateFilters={updateFilters}
-                      filters={data.search.filters}
+                      checked={filters}
+                      filters={data ? data.search.filters : []}
                     />
                   </Grid>
                   <Grid container item md={9}>
@@ -149,18 +154,23 @@ export default function SearchResults(props) {
                       variant="outlined"
                     >
                       <Grid container spacing={4}>
-                        <ListSorting
-                          totalPages={data.search.total_pages}
-                          page={data.search.page}
-                          sort={sort}
-                          doFetchMore={doFetchMore}
-                          doFetchMoreChangeSort={doFetchMoreChangeSort}
-                        />
+                        {reloading && <CircularProgress size={60} />}
+                        {!reloading && !loading && data && (
+                          <ListSorting
+                            totalPages={data.search.total_pages}
+                            page={data.search.page}
+                            sort={sort}
+                            doFetchMore={doFetchMore}
+                            doFetchMoreChangeSort={doFetchMoreChangeSort}
+                          />
+                        )}
                       </Grid>
                     </Paper>
 
                     {reloading && <CircularProgress size={60} />}
                     {!reloading &&
+                      !loading &&
+                      data &&
                       data.search.products.map((product, i) => {
                         return (
                           <LazyLoad key={i}>

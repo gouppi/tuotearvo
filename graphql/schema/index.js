@@ -46,8 +46,10 @@ module.exports = buildSchema(`
     }
 
     type FilterValue {
+        id: Int!
         name: String!
         count: Int!
+        group: String!
     }
 
     type ParentCategory {
@@ -121,6 +123,11 @@ module.exports = buildSchema(`
         image: String
     }
 
+    input SearchFilter {
+        brands:[Int!]
+        categories:[Int!]
+    }
+
     type RootQuery {
         category(categorySeoName: String, id: Int): Category
         productsForCategory(limit: Int, page: Int, categorySeoName: String!, sort: String): CategoryProducts!
@@ -128,7 +135,7 @@ module.exports = buildSchema(`
         product(id: Int!): Product
         categories: [Category!]!
         titleInfo: TitleInfo!
-        search(q: String!, categories: [String!], brands: [String!], page: Int, limit: Int, sort:String): SearchResults!
+        search(q: String!, filters: SearchFilter, page: Int, limit: Int, sort:String): SearchResults!
     }
 
     schema {

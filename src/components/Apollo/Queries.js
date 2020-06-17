@@ -161,8 +161,8 @@ export const TITLE_INFO_QUERY = gql`
 `;
 
 export const SEARCH_QUERY = gql`
-  query searchQuery($q: String!, $page: Int, $limit: Int, $sort: String) {
-    search(q: $q, page:$page, limit:$limit, sort:$sort) {
+  query searchQuery($q: String!, $page: Int, $limit: Int, $sort: String, $filters:SearchFilter) {
+    search(q:$q, page:$page, limit:$limit, sort:$sort, filters:$filters) {
       count
       page
       total_pages
@@ -186,7 +186,9 @@ export const SEARCH_QUERY = gql`
         filter
         values {
           name
+          id
           count
+          group
         }
       }
     }
