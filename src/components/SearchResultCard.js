@@ -9,7 +9,12 @@ import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
 import Paper from "@material-ui/core/paper";
 
+import Skeleton from '@material-ui/lab/Skeleton';
+
 export default function SearchResultCard(props) {
+
+  const {reloading} = props;
+
   return (
     <Grid key={props.i} container item xs={12}>
       <LinkUI
@@ -26,11 +31,25 @@ export default function SearchResultCard(props) {
         <Paper square variant="outlined">
           <Grid container>
             <Grid item xs={3} style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-              <CardMedia style={{width:"75%",height:"75%",backgroundSize:"contain"}} image={props.data.image} title="Paella dish" />
+              {reloading &&
+                <Skeleton width="75%" height="100%" wave/>
+              }
+              {! reloading && <CardMedia style={{width:"75%",height:"75%",backgroundSize:"contain"}} image={props.data.image} title="Paella dish" /> }
+
             </Grid>
             <Grid xs={9} item>
               <CardContent>
-                <Rating
+                {reloading && (
+                  <>
+                  <Skeleton width={120} height={24} wave/>
+                  <Skeleton height={24} wave/>
+                  <Skeleton height={16} width={50} wave />
+                  </>
+                )}
+
+                {!reloading && (
+                  <>
+                  <Rating
                   size="medium"
                   precision={0.1}
                   name="simple-controlled"
@@ -53,6 +72,14 @@ export default function SearchResultCard(props) {
                     props.data.family_reviews_count +
                     ") arvostelua"}
                 </Typography>
+                </>
+                )}
+
+
+
+
+
+
               </CardContent>
             </Grid>
           </Grid>

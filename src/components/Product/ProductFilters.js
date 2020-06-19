@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 // TODO unique key properties here.
 
 const ProductFilters = ({ updateFilters, checked, filters }) => {
-  
+
   return (
     <Paper square variant="outlined">
       <FormControl component="fieldset">
@@ -29,7 +29,7 @@ const ProductFilters = ({ updateFilters, checked, filters }) => {
                     <Checkbox
                       checked={(checked[f.group] || []).includes(f.id)}
                       onClick={() => {
-                        updateFilters(f.group, f.id);
+                        updateFilters(f.group, f.id, f.count);
                       }}
                       color="primary"
                     />
