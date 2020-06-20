@@ -37,8 +37,8 @@ const seed2 = async () => {
   await hierarchy(maps.category_tree);
 }
 
-models.sequelize.sync().then(async () => {
-
+models.sequelize.sync({force: true}).then(async () => {
+  seed2();
   //let H = await models.Category.rebuildHierarchy();
 
 

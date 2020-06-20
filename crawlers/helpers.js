@@ -229,6 +229,8 @@ const handle = async (payload, shop) => {
       P = await createNewProduct(payload);
       await Family.addProduct(P);
       await C.addProduct(P);
+      await P.reload();
+
     }
 
     if (!P) {
@@ -253,9 +255,30 @@ const createReview = async (reviewData, shop) => {
       //origin: shop.name,
       reviewedAt: reviewData.reviewedAt,
       fetch_data: reviewData,
+    //   family: {
+    //     id: reviewData.product_family_id,
+    //   },
+    //   product: {
+    //     id: reviewData.product_id
+    //   }
+    // }, {
+    //   include: [
+    //     {
+    //       association: models.Product
+    //     },
+    //     {
+    //       association: models.Family
+    //     }
+    //   ]
     });
-    //console.log("Arvostelu luotu");
-    await shop.addReview(R);
+
+    let addedReview = await shop.addReview(R);
+    //console.log("AddedReview",addedReview);
+    let P = await models.Product.findByPk(reviewData.product_id);
+    P.addReview(R);
+    let F = await models.Family.findByPk(reviewData.product_family_id);
+    F.addReview(R);
+
     return R;
   } catch (err) {
     if ("constraint" in err && err.constraint !== "reviews_external_id_key") {

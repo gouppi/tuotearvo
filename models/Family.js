@@ -1,6 +1,6 @@
 module.exports = (sequelize, type) => {
     const Family = sequelize.define('product_family', {
-                name: {
+        name: {
             type: type.STRING,
             unique:true,
             allowNull:false,
@@ -21,7 +21,7 @@ module.exports = (sequelize, type) => {
 
     Family.associate = (models) => {
         Family.hasMany(models.Product);
-       // Family.hasMany(models.Review);
+        Family.hasMany(models.Review);
         Family.belongsTo(models.Brand);
 		Family.belongsTo(models.Category);
     };

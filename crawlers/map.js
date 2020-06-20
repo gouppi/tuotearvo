@@ -18,21 +18,21 @@ const category_tree = {
         'Kuulokkeet': {},
         'Kaiuttimet': {},
         'Vahvistimet': {},
-        'Kotiteatterit': {}
+    //    'Kotiteatterit': {}
     },
 
-    'Lastentarvikkeet': {
-        'Vaunut ja rattaat': {},
-        'Turvaistuimet': {},
-        'Elektroniikka': {
-            'Itkuhälyttimet': {},
-            'Unikamerat': {},
-            'Valaisimet': {}
-        },
-    },
+    // 'Lastentarvikkeet': {
+    //     'Vaunut ja rattaat': {},
+    //     'Turvaistuimet': {},
+    //     'Elektroniikka': {
+    //         'Itkuhälyttimet': {},
+    //         'Unikamerat': {},
+    //         'Valaisimet': {}
+    //     },
+    // },
     'TV ja video': {
         'Televisiot': {},
-        'Projektorit': {},
+   //     'Projektorit': {},
     },
     'Puhelimet': {}
 }

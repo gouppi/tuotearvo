@@ -17,7 +17,8 @@ module.exports = (sequelize, type) => {
         //     type: type.STRING,
          }
     }, {
-      underscored:true
+      underscored:true,
+      timestamps:false
     });
 
     Shop.associate = (models) => {

@@ -43,6 +43,10 @@ let categories = [
         "name": "Televisiot",
         "parent": "TV ja Video",
         "code": "438b"
+    },
+    {
+        "name": "Kotiteatterijärjestelmät",
+        "parent": ""
     }
 ];
 
@@ -212,13 +216,19 @@ const fetchReviews = async (Product, i) => {
             secondaryRatings: review.SecondaryRatings,
             reviewText: review.ReviewText,
             reviewTitle: review.Title,
-            reviewedAt: review.SubmissionTime
+            reviewedAt: review.SubmissionTime,
+            product_family_id: Product.get('productFamilyId'),
+            product_id: Product.get('id')
         }
+
+        console.log("Ollaan lisäämässä arvostelua,", reviewData)
+
         let R = await helpers.createReview(reviewData,shop);
         if (!R ) {
             continue;
         }
-        await Product.addReview(R);
+        //await Product.addReview(R);
+
     }
 
     if (response.data.hasOwnProperty('numPages') && response.data.numPages > i+1) {

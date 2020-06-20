@@ -34,7 +34,7 @@ export default function SearchResultCard(props) {
               {reloading &&
                 <Skeleton width="75%" height="100%" wave/>
               }
-              {! reloading && <CardMedia style={{width:"75%",height:"75%",backgroundSize:"contain"}} image={props.data.image} title="Paella dish" /> }
+              {! reloading && <CardMedia style={{width:"75%",height:"75%",backgroundSize:"contain"}} image={props.data.image} title={props.data.name} /> }
 
             </Grid>
             <Grid xs={9} item>
