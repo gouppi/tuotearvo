@@ -21,7 +21,7 @@ module.exports = buildSchema(`
         product_mpns: [String!]
         parent_categories: [ParentCategory!]
         prices: [Price!]
-        family: Family!
+        product_family: Family!
     }
 
     type Ean {
@@ -94,7 +94,8 @@ module.exports = buildSchema(`
         rating: Int
         origin: String
         reviewedAt: String
-        product: Product!
+        product: Product
+        shop: Shop!
     }
 
     type Price {

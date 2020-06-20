@@ -42,8 +42,8 @@ module.exports = (sequelize, type) => {
     //   sourceKey: "product_family_id",
     //   foreignKey: "family_id",
     // });
-    Review.belongsTo(models.Product, {allowNull:false, onDelete:'CASCADE'});
-    Review.belongsTo(models.Family,);
+    Review.belongsTo(models.Product, {onDelete:'CASCADE'});
+    Review.belongsTo(models.Family);
     Review.belongsTo(models.Shop);
   };
 

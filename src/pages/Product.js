@@ -155,9 +155,11 @@ const Product = () => {
               </AppBar>
               <TabPanel value={value} index={0}>
                 {data.product.reviews.map((review,i) => (
-                  <Grid key={i} item xs={12}>
+                  <Grid key={i} item xs={12} style={{paddingTop:"10px"}}>
                     <LazyLoad height={100} offset={100}>
                       <SingleReviewComponent
+                        shop={review.shop}
+                        product={review.product}
                         origin={review.origin}
                         date={review.reviewedAt}
                         score={review.rating}

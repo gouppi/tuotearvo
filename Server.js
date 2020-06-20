@@ -20,6 +20,12 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 const seed2 = async () => {
+
+  await models.Shop.create({
+    name: 'Verkkokauppa',
+    link: 'verkkokauppa.com'
+  });
+
   const hierarchy = async (children, parent) => {
     for (let [k, v] of Object.entries(children)) {
       let childParent = await models.Category.create({
@@ -37,8 +43,8 @@ const seed2 = async () => {
   await hierarchy(maps.category_tree);
 }
 
-models.sequelize.sync({force: true}).then(async () => {
-  seed2();
+models.sequelize.sync().then(async () => {
+  //seed2();
   //let H = await models.Category.rebuildHierarchy();
 
 

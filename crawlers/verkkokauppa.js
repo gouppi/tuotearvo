@@ -9,45 +9,45 @@ let shop = 'Verkkokauppa';
 let reviews_url = "https://web-api.service.verkkokauppa.com/product/!PRODUCTID!/reviews?pageNo=!PAGENUM!"
 
 let categories = [
-    {
-        "name": "Kuulokkeet",
-        "parent": "Audio ja Hifi",
-        "code": "802b"
-    },
-    {
-        "name": "Android-puhelimet",
-        "parent": "Puhelimet",
-        "code": "4793c"
-    },
+    // {
+    //     "name": "Kuulokkeet",
+    //     "parent": "Audio ja Hifi",
+    //     "code": "802b"
+    // },
+    // {
+    //     "name": "Android-puhelimet",
+    //     "parent": "Puhelimet",
+    //     "code": "4793c"
+    // },
     {
         "name": "iPhone-puhelimet",
         "parent": "Puhelimet",
         "code": "10411c",
     },
-    {
-        "name": "Erikoispuhelimet",
-        "parent": "Puhelimet",
-        "code": "4808c"
-    },
+    // {
+    //     "name": "Erikoispuhelimet",
+    //     "parent": "Puhelimet",
+    //     "code": "4808c"
+    // },
     {
         "name": "Peruspuhelimet",
         "parent": "Puhelimet",
         "code": "4813c",
     },
-    {
-        "name": "Radiopuhelimet",
-        "parent": "Puhelimet",
-        "code": "6504c"
-    },
-    {
-        "name": "Televisiot",
-        "parent": "TV ja Video",
-        "code": "438b"
-    },
-    {
-        "name": "Kotiteatterijärjestelmät",
-        "parent": ""
-    }
+    // {
+    //     "name": "Radiopuhelimet",
+    //     "parent": "Puhelimet",
+    //     "code": "6504c"
+    // },
+    // {
+    //     "name": "Televisiot",
+    //     "parent": "TV ja Video",
+    //     "code": "438b"
+    // },
+    // {
+    //     "name": "Kotiteatterijärjestelmät",
+    //     "parent": ""
+    // }
 ];
 
 /**

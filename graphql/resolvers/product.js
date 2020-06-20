@@ -3,52 +3,39 @@ const { QueryTypes, Op } = require("sequelize");
 module.exports = {
   product: async (args, context, info) => {
     let product = await context.models.Product.findByPk(args.id, {
-      attributes: {
-        /**
-         *          SubPlan 2
-           ->  Aggregate  (cost=3490.24..3490.26 rows=1 width=4) (actual time=4.109..4.116 rows=1 loops=112)
-                 ->  Seq Scan on reviews reviews_2  (cost=0.00..3490.21 rows=13 width=0) (actual time=0.299..3.575 rows=75 loops=112)
-                       Filter: (product_family_id = product.product_family_id)
-                       Rows Removed by Filter: 9062
-         SubPlan 3
-           ->  Aggregate  (cost=3490.25..3490.26 rows=1 width=32) (actual time=4.144..4.150 rows=1 loops=112)
-                 ->  Seq Scan on reviews reviews_3  (cost=0.00..3490.21 rows=13 width=4) (actual time=0.292..3.601 rows=75 loops=112)
-                       Filter: (product_family_id = product.product_family_id)
-                       Rows Removed by Filter: 9062
-
-            TÄNNE TARTTEE INDEKSIT KYLLÄ!!!
-         */
-        include: [
-          [
-            context.models.sequelize.literal(`(
-            SELECT COUNT(*)::int FROM reviews where product_id = product.id)`),
-            "reviews_count",
-          ],
-          [
-            context.models.sequelize.literal(`(
-              SELECT COUNT(*)::int FROM reviews WHERE product_family_id = product.product_family_id)`),
-              "family_reviews_count",
-          ],
-          [
-            context.models.sequelize.literal(`(
-            SELECT AVG(rating) FROM reviews WHERE product_family_id = product.product_family_id)`),
-            "family_rating_avg",
-          ],
-          [
-            context.models.sequelize.literal(`(
-            SELECT AVG(rating) FROM reviews WHERE product_id = product.id
-            )`),
-            "rating_avg",
-          ],
-        ],
-      },
-
       include: [
         {
           model: context.models.Category,
         },
         {
           model: context.models.Review,
+          include: [
+            {
+              model: context.models.Shop
+            }
+          ]
+        },
+        {
+          model: context.models.Family,
+          include: [
+            {
+              model: context.models.Review,
+              include: [
+                {
+                  model: context.models.Shop
+                },
+                {
+                  model: context.models.Product,
+                  where: {
+                    id: {
+                      [Op.not]: args.id,
+                    },
+                  },
+                  include: [context.models.Category],
+                },
+              ],
+            },
+          ],
         },
         {
           model: context.models.Ean,
@@ -60,14 +47,31 @@ module.exports = {
           model: context.models.Price,
           include: [
             {
-              model: context.models.Shop
-            }
-          ]
-        }
+              model: context.models.Shop,
+            },
+          ],
+        },
       ],
-      order: [["reviews","reviewed_at", "DESC"]]
+      order: [["reviews", "reviewed_at", "DESC"]],
     });
 
+    product.reviews_count = product.reviews.length;
+    product.family_reviews_count = product.product_family.reviews.length;
+
+    const rating_avg = product.reviews.reduce(
+      (acc, review) => (acc += review.rating),
+      0
+    );
+    product.rating_avg = rating_avg / product.reviews.length || 0;
+
+    const family_rating_avg = product.product_family.reviews
+      .filter((review) => review.product_id !== product.id)
+      .reduce((acc, review) => (acc += review.rating), 0);
+    product.family_rating_avg =
+      family_rating_avg /
+        product.product_family.reviews.filter(
+          (r) => r.product_id !== product.id
+        ).length || 0;
 
     // aggregate eans & mpns to single array for faster processing
     product.product_eans = product.product_eans.reduce(
@@ -78,6 +82,13 @@ module.exports = {
       (acc, mpn) => [...acc, mpn.mpn],
       []
     );
+
+    let new_reviews = product.reviews || [];
+    if (product.product_family && product.product_family.reviews) {
+      new_reviews = new_reviews.concat(product.product_family.reviews);
+    }
+
+    product.reviews = new_reviews;
 
     // Assigning parent_categories hierarchy directly to parent so product card can have hierarchy links to individual categories.
     let parentCategories = await product.category.getAncestors();
@@ -113,14 +124,13 @@ module.exports = {
     }
     // Uusimmat arvostelut
     else if (args.sort === "latest") {
-      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]/// TODO missing FROM-clause entry for table "reviews"
+      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]; /// TODO missing FROM-clause entry for table "reviews"
     }
     // name
     else if (args.sort === "az") {
-      order = [[context.models.sequelize.literal(`name ASC`)]]
-    }
-    else if (args.sort === "za") {
-      order = [[context.models.sequelize.literal(`name DESC`)]]
+      order = [[context.models.sequelize.literal(`name ASC`)]];
+    } else if (args.sort === "za") {
+      order = [[context.models.sequelize.literal(`name DESC`)]];
     }
 
     if (args.categorySeoName) {
@@ -180,7 +190,7 @@ module.exports = {
           where: categoryWhere,
         },
       ],
-      order: order
+      order: order,
     });
 
     return {

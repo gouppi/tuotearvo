@@ -95,12 +95,25 @@ export const PRODUCT_QUERY = gql`
       product_eans
       product_mpns
       reviews {
+        shop {
+          name
+        }
         text
         title
         recommends
         rating
-        origin
+
         reviewedAt
+        product {
+          id
+          name
+          image
+          category {
+            id
+            seo_name
+          }
+
+        }
       }
       category {
         id
