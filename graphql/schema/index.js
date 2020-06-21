@@ -39,6 +39,7 @@ module.exports = buildSchema(`
         total_pages: Int!
         limit: Int!
         products: [Product!]
+        filters: [Filter!]
     }
 
     type Filter {

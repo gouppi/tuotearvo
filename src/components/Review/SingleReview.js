@@ -4,7 +4,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import Paper from "@material-ui/core/Paper";
-import Alert from "@material-ui/lab/Alert";
 import LinkUI from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
 import CardMedia from "@material-ui/core/CardMedia";

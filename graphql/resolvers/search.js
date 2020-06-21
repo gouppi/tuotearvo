@@ -85,7 +85,7 @@ module.exports = {
         group: 'categories'
       };
       brands[r.brand_name] = {
-        ...categories[r.brand_name],
+        ...brands[r.brand_name],
         id: r.brand_id,
         name: r.brand_name,
         count: counter.b[r.brand_name],

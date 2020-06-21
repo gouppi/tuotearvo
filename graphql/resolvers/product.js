@@ -11,9 +11,9 @@ module.exports = {
           model: context.models.Review,
           include: [
             {
-              model: context.models.Shop
-            }
-          ]
+              model: context.models.Shop,
+            },
+          ],
         },
         {
           model: context.models.Family,
@@ -22,7 +22,7 @@ module.exports = {
               model: context.models.Review,
               include: [
                 {
-                  model: context.models.Shop
+                  model: context.models.Shop,
                 },
                 {
                   model: context.models.Product,
@@ -116,15 +116,13 @@ module.exports = {
 
     let order = null;
 
-    console.log("sort", args);
-
     // arvostelluimmat
     if (args.sort === "review") {
       order = [[context.models.sequelize.literal(`reviews_count DESC`)]];
     }
     // Uusimmat arvostelut
     else if (args.sort === "latest") {
-      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]]; /// TODO missing FROM-clause entry for table "reviews"
+      order = [[context.models.sequelize.literal(`reviewedAt DESC`)]];
     }
     // name
     else if (args.sort === "az") {
@@ -151,14 +149,41 @@ module.exports = {
     }
 
     // Get total count of products inside given categories. Doesn't work directly in main query, returns all review-items as well.
-    let count = await context.models.Product.count({
+    let all_products = await context.models.Product.findAll({
       include: [
         {
           model: context.models.Category,
           where: categoryWhere,
         },
+        {
+          model: context.models.Family,
+          include: [
+            {
+              model: context.models.Brand,
+            },
+          ],
+        },
       ],
     });
+
+    let count = all_products.length;
+
+    let brands = {};
+    let counter = { b: {} };
+    for (let i = 0; i < all_products.length; i++) {
+      let r = all_products[i].product_family.brand;
+
+      counter.b[r.name] = (counter.b[r.name] || 0) + 1;
+      brands[r.name] = {
+        ...brands[r.name],
+        id: r.id,
+        name: r.name,
+        count: counter.b[r.name],
+        group: 'brands'
+      };
+    }
+
+    console.log("brandit", brands);
 
     let page = args.page ? args.page : 1;
     let rows = await context.models.Product.findAll({
@@ -184,6 +209,11 @@ module.exports = {
       include: [
         {
           model: context.models.Family,
+          include: [
+            {
+              model: context.models.Review,
+            },
+          ],
         },
         {
           model: context.models.Category,
@@ -199,6 +229,12 @@ module.exports = {
       limit: parseInt(args.limit),
       count: count,
       products: rows,
+      filters: [
+        {
+          filter: "Tuotemerkit",
+          values: Object.values(brands),
+        },
+      ],
     };
   },
 

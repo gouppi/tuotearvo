@@ -33,6 +33,15 @@ export const CATEGORY_PRODUCTS_QUERY = gql`
           seo_name
         }
       }
+      filters {
+        filter
+        values {
+          name
+          id
+          count
+          group
+        }
+      }
     }
     category(categorySeoName: $categorySeoName) {
       id
@@ -112,7 +121,6 @@ export const PRODUCT_QUERY = gql`
             id
             seo_name
           }
-
         }
       }
       category {
@@ -174,8 +182,14 @@ export const TITLE_INFO_QUERY = gql`
 `;
 
 export const SEARCH_QUERY = gql`
-  query searchQuery($q: String!, $page: Int, $limit: Int, $sort: String, $filters:SearchFilter) {
-    search(q:$q, page:$page, limit:$limit, sort:$sort, filters:$filters) {
+  query searchQuery(
+    $q: String!
+    $page: Int
+    $limit: Int
+    $sort: String
+    $filters: SearchFilter
+  ) {
+    search(q: $q, page: $page, limit: $limit, sort: $sort, filters: $filters) {
       count
       page
       total_pages

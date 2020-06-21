@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 export default function CategoryProductCard(props, i) {
   const classes = useStyles();
   let product = props.data;
-  let skeleton = props.skeleton ? true : false;
+  let skeleton = props.reloading ? true : false;
 
   return (
     <Grid key={i} container className={classes.root} item xs={12}>
